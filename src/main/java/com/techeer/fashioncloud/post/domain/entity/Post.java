@@ -24,6 +24,8 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PostCategory weather;
 
+    private WearCategory wear;
+
     private String img_url;
 
     private Double temperature;
@@ -38,11 +40,12 @@ public class Post {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Post(Long id, String img_url, PostCategory weather, Double temperature) {
+    public Post(Long id, String img_url, PostCategory weather, WearCategory wear, Double temperature) {
         this.id = id;
         this.img_url = img_url;
         this.temperature = temperature;
         this.weather = weather;
+        this.wear = wear;
     }
 
 }

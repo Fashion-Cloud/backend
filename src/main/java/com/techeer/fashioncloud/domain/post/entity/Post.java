@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.post.domain.entity;
+package com.techeer.fashioncloud.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

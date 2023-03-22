@@ -2,10 +2,9 @@ package com.techeer.fashioncloud.domain.weather.controller;
 
 import com.techeer.fashioncloud.domain.Coordinate;
 import com.techeer.fashioncloud.domain.Location;
+import com.techeer.fashioncloud.domain.weather.service.WeatherService;
 import com.techeer.fashioncloud.domain.weather.constant.WeatherConstant;
 import com.techeer.fashioncloud.global.config.WeatherConfig;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +19,10 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 public class WeatherController {
 
     private final WeatherConfig weatherConfig;
+    private final WeatherService weatherService;
 
     //현재 위도와 경도를 가지고날씨를 받아오는 api
-    // TODO : url에 현재 위도경도 정보 포함하면 사용자 위치 노출되므로 암호화하거나,, 다른 방법 찾기
+    //TODO : url에 현재 위도경도 정보 포함하면 사용자 위치 노출되므로 암호화하거나,, 다른 방법 찾기
     @GetMapping()
     public String getWeatherHere(
             @RequestParam Double latitude,
@@ -39,7 +39,9 @@ public class WeatherController {
                 .uriBuilderFactory(factory)
                 .build();
 
-        String buildUrl;
+
+        //TODO: 비즈니스 로직 Service단으로 분리
+        //TODO: 지금은 시간 고정되어 있음 -> 현재 시간 값 들어가도록 변경
         String response = webclient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("serviceKey", weatherConfig.getDecodingKey())

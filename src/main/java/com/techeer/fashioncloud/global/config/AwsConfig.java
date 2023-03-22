@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.global;
+package com.techeer.fashioncloud.global.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

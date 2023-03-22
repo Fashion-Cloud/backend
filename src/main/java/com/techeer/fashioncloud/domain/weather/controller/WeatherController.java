@@ -3,6 +3,10 @@ package com.techeer.fashioncloud.domain.weather.controller;
 import com.techeer.fashioncloud.domain.Coordinate;
 import com.techeer.fashioncloud.domain.Location;
 import com.techeer.fashioncloud.domain.weather.constant.WeatherConstant;
+import com.techeer.fashioncloud.global.config.WeatherConfig;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/weather")
 public class WeatherController {
+
+    private final WeatherConfig weatherConfig;
 
     //현재 위도와 경도를 가지고날씨를 받아오는 api
     // TODO : url에 현재 위도경도 정보 포함하면 사용자 위치 노출되므로 암호화하거나,, 다른 방법 찾기
@@ -36,7 +42,7 @@ public class WeatherController {
         String buildUrl;
         String response = webclient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("serviceKey", "디코딩키")
+                        .queryParam("serviceKey", weatherConfig.getDecodingKey())
                         .queryParam("numOfRows",19)
                         .queryParam("pageNo",1)
                         .queryParam("dataType","JSON")

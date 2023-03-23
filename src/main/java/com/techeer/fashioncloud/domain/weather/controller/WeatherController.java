@@ -3,22 +3,16 @@ package com.techeer.fashioncloud.domain.weather.controller;
 import com.techeer.fashioncloud.domain.Coordinate;
 import com.techeer.fashioncloud.domain.Location;
 import com.techeer.fashioncloud.domain.weather.service.WeatherService;
-import com.techeer.fashioncloud.domain.weather.constant.WeatherConstant;
-import com.techeer.fashioncloud.global.config.WeatherConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/weather")
 public class WeatherController {
-
-    private final WeatherConfig weatherConfig;
     private final WeatherService weatherService;
 
     //현재 위도와 경도를 가지고날씨를 받아오는 api
@@ -32,35 +26,10 @@ public class WeatherController {
         //TODO: 위도 경도로 좌표값 구하기
         Coordinate coordinate = Location.getCoordinate(latitude, longitude);
 
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(WeatherConstant.BASE_URL+WeatherConstant.ULTRA_SRT_FCST);
 
 
-        WebClient webclient = WebClient.builder()
-                .uriBuilderFactory(factory)
-                .build();
 
-
-        //TODO: 비즈니스 로직 Service단으로 분리
-        //TODO: 지금은 시간 고정되어 있음 -> 현재 시간 값 들어가도록 변경
-        String response = webclient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("serviceKey", weatherConfig.getDecodingKey())
-                        .queryParam("numOfRows",19)
-                        .queryParam("pageNo",1)
-                        .queryParam("dataType","JSON")
-                        .queryParam("base_date",20230322)
-                        .queryParam("base_time",1730)
-                        .queryParam("nx",55)
-                        .queryParam("ny",123)
-                .build()
-
-                )
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-
-
-        return response;
+        return weatherService.getUltraSrtFcst();
 
     }
 

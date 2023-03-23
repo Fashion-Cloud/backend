@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -17,32 +18,22 @@ public class WeatherService {
     private final WeatherConfig weatherConfig;
 
     //기상청 초단기예보 api 호출
-    public String getUltraSrtFcst () {
-
+    public String getUltraSrtFcst (Integer nx, Integer ny) {
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(WeatherConstant.BASE_URL+WeatherConstant.ULTRA_SRT_FCST);
-
 
         WebClient webclient = WebClient.builder()
                 .uriBuilderFactory(factory)
                 .build();
 
-        //weatherService.getUltraSrtFcst() //초단기예보 호출
-
-        LocalDate now = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formatedNow = now.format(formatter);
-
-        System.out.println(formatedNow);
-        //TODO: 지금은 시간 고정되어 있음 -> 현재 시간 값 들어가도록 변경
         String response = webclient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("serviceKey", weatherConfig.getDecodingKey())
                         .queryParam("numOfRows",19)
                         .queryParam("pageNo",1)
                         .queryParam("dataType",WeatherConstant.RESPONSE_TYPE)
-                        .queryParam("base_date", 20230322)
-                        .queryParam("base_time",1730)
+                        .queryParam("base_date", setBaseDate())
+                        .queryParam("base_time",setBaseTime())
                         .queryParam("nx",55)
                         .queryParam("ny",123)
                         .build())
@@ -52,6 +43,9 @@ public class WeatherService {
 
         //parseSkyData(초단기예보 api response);
         return response;
+    }
+
+
     }
 
     public boolean isValidParameter() {
@@ -71,4 +65,26 @@ public class WeatherService {
 //
 //        return SKY정보;
 //    }
+
+
+    public Integer setBaseDate () {
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return Integer.parseInt(now.format(formatter));
+    }
+
+    public String setBaseTime () {
+        LocalDateTime unformattedNow = LocalDateTime.now();
+        DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
+        DateTimeFormatter minuteFormatter = DateTimeFormatter.ofPattern("HH");
+
+        String nowHour = unformattedNow.format(hourFormatter);
+        String nowMinute = unformattedNow.format(minuteFormatter);
+
+        if (Integer.parseInt(nowMinute) >= 45) {
+            return Integer.toString(Integer.parseInt(nowHour) - 1) + "30";
+        } else {
+            return nowHour + "30";
+        }
+    }
 }

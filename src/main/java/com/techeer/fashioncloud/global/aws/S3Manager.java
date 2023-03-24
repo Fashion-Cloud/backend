@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.global;
+package com.techeer.fashioncloud.global.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

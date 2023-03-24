@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.post.service;
 
-import com.techeer.fashioncloud.global.S3Manager;
+import com.techeer.fashioncloud.global.aws.S3Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

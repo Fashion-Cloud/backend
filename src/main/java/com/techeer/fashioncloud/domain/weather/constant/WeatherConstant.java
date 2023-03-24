@@ -10,5 +10,6 @@ public class WeatherConstant {
 
     public static final String VILAGE_FCST = "getVilageFcst"; //단기예보조회
 
-    public static final String RESPONSE_TYPE = "JSON";
+
+
 }

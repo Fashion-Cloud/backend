@@ -5,6 +5,10 @@ import com.techeer.fashioncloud.domain.weather.constant.WeatherConstant;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherResponse;
 import com.techeer.fashioncloud.global.config.WeatherConfig;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.parser.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -19,9 +23,11 @@ public class WeatherService {
 
     private final WeatherConfig weatherConfig;
 
-    public WeatherResponse getNowWeather (Integer nx, Integer ny){
+    public WeatherResponse getNowWeather (Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
 
-        // isValidXY - 유효한 격자점인지 확인
+        // TODO: isValidXY - 유효한 격자점인지 확인
+
+        // TODO: getWeather() - 온도 습도 등 나머지 날씨 구하기
 
         return WeatherResponse.builder()
                 .sky(getSkyCondition(nx, ny))
@@ -34,7 +40,7 @@ public class WeatherService {
     }
 
     // 격자 좌표로 기상청 초단기예보 api 호출
-    public Integer getSkyCondition (Integer nx, Integer ny) {
+    public Integer getSkyCondition (Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
 
         // isValidXY(nx, ny) - 격자 좌표 유효성 검사
 
@@ -51,7 +57,7 @@ public class WeatherService {
                         .queryParam("pageNo",1)
                         .queryParam("dataType","JSON")
                         .queryParam("base_date", setBaseDate())
-                        .queryParam("base_time",setBaseTime())
+                        .queryParam("base_time", setBaseTime())
                         .queryParam("nx",nx)
                         .queryParam("ny",ny)
                         .build())
@@ -59,20 +65,32 @@ public class WeatherService {
                 .bodyToMono(String.class)
                 .block();
 
-        // TODO: 하늘상태 정보만 파싱
-        Integer skyCondition = 1;
-
-        //parseSkyData(초단기예보 api response);
-        return skyCondition;
+        return parseSkyCondition(response);
     }
 
 
-
-
-    //격자좌표가 유효한지 확인
+    // TODO: 격자좌표가 유효한지 확인
     public boolean isValidXY() {
 
         return true;
+    }
+
+    // TODO: 파싱 코드 개선
+    // 하늘상태 정보 파싱
+    public Integer parseSkyCondition(String apiResponse) throws org.json.simple.parser.ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(apiResponse);
+
+
+        JSONObject jsonResponse = (JSONObject) jsonObject.get("response");
+        JSONObject jsonBody = (JSONObject) jsonResponse.get("body");
+        JSONObject jsonItems = (JSONObject) jsonBody.get("items");
+        JSONArray jsonItem = (JSONArray) jsonItems.get("item");
+
+        JSONObject skyData = (JSONObject) jsonItem.get(18);
+        Integer skyValue = Integer.parseInt((String) skyData.get("fcstValue"));
+
+        return skyValue;
     }
 
 
@@ -95,9 +113,9 @@ public class WeatherService {
 
         // api 호출 시간에 따라 base_time 다르게 설정
         if (Integer.parseInt(nowMinute) >= UltraSrtFcstConstant.API_AVALIABLE_TIME) {
-            baseHour = Integer.toString(Integer.parseInt(nowHour) - 1);
-        } else {
             baseHour = nowHour;
+        } else {
+            baseHour = Integer.toString(Integer.parseInt(nowHour) - 1);
         }
         return baseHour + UltraSrtFcstConstant.BASE_MINUTE;
     }

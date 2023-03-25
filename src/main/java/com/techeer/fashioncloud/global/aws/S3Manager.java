@@ -23,7 +23,7 @@ import java.util.UUID;
 public class S3Manager {
 
     @Getter
-    private final String dirName = "JMT-Review-Image";
+    private final String dirName = "FashionCloud-Image";
     private final AmazonS3 amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")

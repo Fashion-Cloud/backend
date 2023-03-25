@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class WeatherInfoResponse  implements ForecastResponse {
+public class WeatherInfoResponse {
     private Integer sky;
     private Double temperature;
     private Integer hourRainfall;

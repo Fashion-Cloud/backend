@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain;
+package com.techeer.fashioncloud.domain.weather.position;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class WeatherResponse {
-    private Integer sky;
-    private Integer temperature;
+public class UltraSrtNcstResponse implements ForecastResponse {
+
+    private Double temperature;
     private Integer hourRainfall;
     private Integer humidity;
     private Integer rainfallType;
-    private Integer windSpeed;
+    private Double windSpeed;
+
 }

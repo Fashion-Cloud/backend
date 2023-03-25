@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.weather.entity;
 
+import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import org.json.simple.parser.ParseException;
 
 import java.time.LocalDate;

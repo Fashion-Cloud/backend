@@ -24,6 +24,7 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PostCategory weather;
 
+    @Enumerated(EnumType.STRING)
     private WearCategory wear;
 
     private String img_url;

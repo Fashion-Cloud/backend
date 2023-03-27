@@ -25,10 +25,9 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.430'
 
-
-
-	// swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1' //json parser
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' //webClient
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2' // swagger
 
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'

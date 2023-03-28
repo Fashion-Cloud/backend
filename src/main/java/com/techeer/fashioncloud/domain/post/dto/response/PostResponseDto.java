@@ -13,6 +13,6 @@ public class PostResponseDto extends BaseEntity {
 
     private UUID id; // post id
 
-    private UUID user; // 임시 유저
+    private UUID userId; // 임시 유저
 
 }

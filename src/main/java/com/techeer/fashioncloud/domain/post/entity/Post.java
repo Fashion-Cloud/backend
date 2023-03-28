@@ -24,7 +24,7 @@ public class Post extends BaseEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
-    private UUID user = UUID.randomUUID(); // 임시 유저
+    private UUID userId = UUID.randomUUID(); // 임시 유저
 
     private String name;
 

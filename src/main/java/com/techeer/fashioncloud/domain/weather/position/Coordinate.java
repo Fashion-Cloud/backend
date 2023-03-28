@@ -12,7 +12,7 @@ public class Coordinate {
     private Integer nx = 55;
     private Integer ny = 127;
 
-    //TODO: nx, ny 유효성 검사
+    // TODO: nx, ny 유효성 검사
 //    public boolean isValidXY() {
 //
 //    }

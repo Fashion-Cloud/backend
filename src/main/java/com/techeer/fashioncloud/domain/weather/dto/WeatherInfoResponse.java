@@ -17,6 +17,7 @@ public class WeatherInfoResponse {
     private Integer rainfallType;
     private Double windSpeed;
 
+    // TODO: 코드 개선
     public WeatherInfoResponse getTotalWeather (
             UltraSrtFcstResponse ultraSrtFcstResponse,
             UltraSrtNcstResponse ultraSrtNcstResponse) {

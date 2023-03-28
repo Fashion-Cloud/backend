@@ -1,49 +1,48 @@
 package com.techeer.fashioncloud.domain.post.entity;
 
+import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 
-import java.time.LocalDateTime;
-
+import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id = UUID.randomUUID();
 
-    
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID user = UUID.randomUUID(); // 임시 유저
+
+    private String name;
+
+    private Double temperature;
+
+    private String image;
+
     @Enumerated(EnumType.STRING)
-    private PostCategory weather;
+    private WeatherCategory weather;
 
     @Enumerated(EnumType.STRING)
     private WearCategory wear;
 
-    private String img_url;
-
-    private Double temperature;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    //삭제 시점
-    private LocalDateTime deletedAt;
-
     @Builder
-    public Post(Long id, String img_url, PostCategory weather, WearCategory wear, Double temperature) {
+    public Post(UUID id, String name, String image, WeatherCategory weather, WearCategory wear, Double temperature) {
         this.id = id;
-        this.img_url = img_url;
+        this.name = name;
+        this.image = image;
         this.temperature = temperature;
         this.weather = weather;
         this.wear = wear;

@@ -21,9 +21,12 @@ public class PostService {
         // Save Request
         Post entity = postRepository.save(Post.builder()
                 .name(dto.getName())
-                .temperature((dto.getTemperature()))
                 .image(dto.getImage())
-                .weather(dto.getWeatherCategory())
+                .skyStatus((dto.getSkyStatus()))
+                .temperature((dto.getTemperature()))
+                .humidity((dto.getHumidity()))
+                .rainfallType((dto.getRainfallType()))
+                .windSpeed((dto.getWindSpeed()))
                 .wear(dto.getWearCategory())
                 .build());
 

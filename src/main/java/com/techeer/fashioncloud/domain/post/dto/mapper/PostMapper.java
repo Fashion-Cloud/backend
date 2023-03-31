@@ -14,16 +14,21 @@ public class PostMapper {
 
     public PostResponseDto toResponseDto(Post entity) {
         return PostResponseDto.builder()
-                .id(entity.getId()) // ReviewId
+                .id(entity.getId()) // PostId
                 .build();
     }
 
     public PostCreateServiceDto toServiceDto(PostCreateRequestDto dto){
         return PostCreateServiceDto.builder()
                 .name(dto.getName())
-                .weatherCategory(dto.getWeatherCategory())
-                .wearCategory(dto.getWearCategory())
                 .image(dto.getImage())
+                .skyStatus((dto.getSkyStatus()))
+                .temperature(dto.getTemperature())
+                .humidity(dto.getHumidity())
+                .rainfallType(dto.getRainfallType())
+                .windSpeed(dto.getWindSpeed())
+                .wearCategory(dto.getWearCategory())
+
                 .build();
     }
 }

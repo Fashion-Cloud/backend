@@ -19,11 +19,17 @@ public class PostCreateServiceDto {
 
     private String name;
 
-    private Double temperature;
-
     private String image;
 
-    private WeatherCategory weatherCategory;
+    private Integer skyStatus;
+
+    private Double temperature;
+
+    private Double humidity;
+
+    private Integer rainfallType;
+
+    private Double windSpeed;
 
     private WearCategory wearCategory;
 

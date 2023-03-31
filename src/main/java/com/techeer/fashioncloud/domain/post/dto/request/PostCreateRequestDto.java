@@ -18,11 +18,17 @@ public class PostCreateRequestDto {
 
     private String name;
 
-    private Double temperature;
-
     private String image;
 
-    private WeatherCategory weatherCategory;
+    private Integer skyStatus;
+
+    private Double temperature;
+
+    private Double humidity;
+
+    private Integer rainfallType;
+
+    private Double windSpeed;
 
     private WearCategory wearCategory;
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.

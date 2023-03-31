@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Internal;
 import org.hibernate.annotations.*;
 
 import java.util.UUID;
@@ -28,8 +29,6 @@ public class Post extends BaseEntity {
 
     private String name;
 
-    private Double temperature;
-
     private String image;
 
     @Enumerated(EnumType.STRING)
@@ -38,14 +37,28 @@ public class Post extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WearCategory wear;
 
+    private Integer skyStatus;
+
+    private Double temperature;
+
+    private Double humidity;
+
+    private Integer rainfallType;
+
+    private Double windSpeed;
+
     @Builder
-    public Post(UUID id, String name, String image, WeatherCategory weather, WearCategory wear, Double temperature) {
+    public Post(UUID id, String name, String image, WeatherCategory weather, WearCategory wear, Integer skyStatus, Double temperature, Double humidity, Integer rainfallType, Double windSpeed) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.temperature = temperature;
-        this.weather = weather;
+        this.skyStatus = skyStatus;
+        this.humidity = humidity;
+        this.rainfallType = rainfallType;
+        this.windSpeed = windSpeed;
         this.wear = wear;
+        this.weather = weather;
     }
 
 }

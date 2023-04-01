@@ -32,9 +32,6 @@ public class Post extends BaseEntity {
     private String image;
 
     @Enumerated(EnumType.STRING)
-    private WeatherCategory weather;
-
-    @Enumerated(EnumType.STRING)
     private WearCategory wear;
 
     private Integer skyStatus;
@@ -48,7 +45,7 @@ public class Post extends BaseEntity {
     private Double windSpeed;
 
     @Builder
-    public Post(UUID id, String name, String image, WeatherCategory weather, WearCategory wear, Integer skyStatus, Double temperature, Double humidity, Integer rainfallType, Double windSpeed) {
+    public Post(UUID id, String name, String image, WearCategory wear, Integer skyStatus, Double temperature, Double humidity, Integer rainfallType, Double windSpeed) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -58,7 +55,6 @@ public class Post extends BaseEntity {
         this.rainfallType = rainfallType;
         this.windSpeed = windSpeed;
         this.wear = wear;
-        this.weather = weather;
     }
 
 }

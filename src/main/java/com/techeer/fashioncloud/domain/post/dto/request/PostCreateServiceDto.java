@@ -1,6 +1,5 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 
-import com.techeer.fashioncloud.domain.post.entity.WeatherCategory;
 import com.techeer.fashioncloud.domain.post.entity.WearCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

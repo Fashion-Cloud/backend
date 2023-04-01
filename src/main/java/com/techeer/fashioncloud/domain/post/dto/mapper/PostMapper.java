@@ -28,7 +28,6 @@ public class PostMapper {
                 .rainfallType(dto.getRainfallType())
                 .windSpeed(dto.getWindSpeed())
                 .wearCategory(dto.getWearCategory())
-
                 .build();
     }
 }

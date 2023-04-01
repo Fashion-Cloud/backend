@@ -15,6 +15,7 @@ public class PostMapper {
     public PostResponseDto toResponseDto(Post entity) {
         return PostResponseDto.builder()
                 .id(entity.getId()) // PostId
+                .userId(entity.getUserId())
                 .build();
     }
 

@@ -27,7 +27,7 @@ public class PostMapper {
                 .humidity(dto.getHumidity())
                 .rainfallType(dto.getRainfallType())
                 .windSpeed(dto.getWindSpeed())
-                .wearCategory(dto.getWearCategory())
+                .review(dto.getReview())
                 .build();
     }
 }

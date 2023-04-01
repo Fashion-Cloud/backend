@@ -1,6 +1,5 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
-import com.techeer.fashioncloud.domain.post.entity.WeatherCategory;
-import com.techeer.fashioncloud.domain.post.entity.WearCategory;
+import com.techeer.fashioncloud.domain.post.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +29,6 @@ public class PostCreateRequestDto {
 
     private Double windSpeed;
 
-    private WearCategory wearCategory;
+    private Review review;
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.
 }

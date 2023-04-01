@@ -27,7 +27,6 @@ public class PostService {
                 .humidity((dto.getHumidity()))
                 .rainfallType((dto.getRainfallType()))
                 .windSpeed((dto.getWindSpeed()))
-                .wear(dto.getWearCategory())
                 .build());
 
         return entity;

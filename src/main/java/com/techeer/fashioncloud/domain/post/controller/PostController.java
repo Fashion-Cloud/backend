@@ -4,7 +4,6 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
-import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,17 +33,17 @@ public class PostController {
                 .body(response);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<PostResponseDto> findbyId(@PathVariable UUID id) {
-//        return ResponseEntity
-//                .ok(mapper.toResponseDto((Post) service.findById(id)));
-//    }
-
     @GetMapping
-    public ResponseEntity<PostResponseDto> findAll() {
+    public ResponseEntity<List<Post>> findAll(){
         return ResponseEntity
-                .ok(mapper.toResponseDto((Post) service.findAll()));
+                .ok(service.findAll());
     }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
+//        return ResponseEntity
+//                .ok(mapper.toResponseDto(service.findRequestById(id)));
+//    }
 
 
     @DeleteMapping("/{id}")

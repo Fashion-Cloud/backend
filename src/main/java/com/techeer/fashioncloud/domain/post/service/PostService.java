@@ -1,7 +1,6 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
-import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,10 +43,8 @@ public class PostService {
         return postRepository.findAll();
     }
 
-//    @Transactional
-//    public PostResponseDto findById (UUID id) {
-//        Post entity = postRepository.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다 id =" +id));
-//        return new PostResponseDto(entity);
+//    @Transactional(readOnly = true)
+//    public Post findRequestById(UUID id) { // PostID로 검색
+//        return postRepository.findById(id);
 //    }
 }

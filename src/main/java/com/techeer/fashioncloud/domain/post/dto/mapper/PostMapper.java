@@ -7,6 +7,9 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class PostMapper {

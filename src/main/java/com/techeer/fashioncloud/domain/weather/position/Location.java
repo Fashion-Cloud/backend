@@ -1,11 +1,13 @@
 package com.techeer.fashioncloud.domain.weather.position;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 //위경도
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Location {
     private Double latitude;
     private Double longitude;

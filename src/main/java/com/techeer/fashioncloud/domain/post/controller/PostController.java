@@ -39,11 +39,11 @@ public class PostController {
                 .ok(service.findAll());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
-//        return ResponseEntity
-//                .ok(mapper.toResponseDto(service.findRequestById(id)));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
+        return ResponseEntity
+                .ok(service.findRequestById(id));
+    }
 
 
     @DeleteMapping("/{id}")

@@ -7,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 
 //위경도
 @Slf4j
@@ -21,15 +18,6 @@ public class Location {
 
 
     public static Coordinate getCoordinate(Double v1, Double v2) {
-//    public static Map<String,Object> getCoordinate(Double v1, Double v2) {
-        Integer x = 200;
-        Integer y = 200;
-
-
-        /*
-        TODO: 위도 경도로 격자값 구하는 메소드 구현
-        여기에 격자값 변환 로직 작성!!
-        */
 
         double RE = 6371.00877; // 지구 반경(km)
         double GRID = 5.0; // 격자 간격(km)
@@ -71,8 +59,7 @@ public class Location {
         map.put("x", (int) Math.floor(ra * Math.sin(theta) + XO + 0.5));
         map.put("y", (int) Math.floor(ro - ra * Math.cos(theta) + YO + 0.5));
 
-        Coordinate coordinate=new Coordinate();
-
+        Coordinate coordinate = new Coordinate();
 
         coordinate.setNx((Integer) map.get("x"));
         coordinate.setNy((Integer) map.get("y"));

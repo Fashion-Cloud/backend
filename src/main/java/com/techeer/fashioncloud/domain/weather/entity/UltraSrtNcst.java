@@ -28,15 +28,16 @@ public class UltraSrtNcst extends Forecast{
 
         String nowHour = unformattedNow.format(hourFormatter);
         String nowMinute = unformattedNow.format(minuteFormatter);
-        String baseHour;
+        Integer baseHour;
 
         // api 호출 시간에 따라 base_time 다르게 설정
-        if (Integer.parseInt(nowMinute) >= UltraSrtNcst.API_AVALIABLE_TIME) {
-            baseHour = nowHour;
-            return baseHour + BASE_MINUTE;
+        if (Integer.parseInt(nowMinute) >= API_AVALIABLE_TIME) {
+            return nowHour + BASE_MINUTE;
         } else {
-            baseHour = Integer.toString(Integer.parseInt(nowHour) - 1);
-            return baseHour + BASE_MINUTE;
+            baseHour = Integer.parseInt(nowHour) - 1;
+            if(baseHour == 0) return "23" + BASE_MINUTE;
+            else if(baseHour < 10) return "0" + baseHour.toString() + BASE_MINUTE;
+            else return baseHour + BASE_MINUTE;
         }
     }
 

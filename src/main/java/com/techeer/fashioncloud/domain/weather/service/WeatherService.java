@@ -23,8 +23,10 @@ public class WeatherService {
     public WeatherInfoResponse getNowWeather (Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
         // TODO: coordinate.isValidXY(nx, ny) - 유효한 격자점인지 확인
-        Integer nx = coordinate.getNx();
-        Integer ny = coordinate.getNy();
+//        Integer nx = coordinate.getNx();
+//        Integer ny = coordinate.getNy();
+        Integer nx = 55;
+        Integer ny = 127;
 
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(nx, ny);
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(nx, ny);

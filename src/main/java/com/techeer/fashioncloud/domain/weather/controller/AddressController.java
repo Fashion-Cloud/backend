@@ -5,7 +5,7 @@ import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.domain.weather.service.AddressService;
 import com.techeer.fashioncloud.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,10 +24,8 @@ public class AddressController {
     public ApiResponse getWeatherHere(
             @RequestParam Double latitude,
             @RequestParam Double longitude
-    ) throws ParseException, org.json.simple.parser.ParseException {
-
+    ) throws ParseException {
         AddressResponse address = addressService.getAddress(new Location(latitude, longitude));
         return ok(address);
-
     }
 }

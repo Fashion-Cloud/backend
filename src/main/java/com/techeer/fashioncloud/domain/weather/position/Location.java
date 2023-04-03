@@ -2,6 +2,8 @@ package com.techeer.fashioncloud.domain.weather.position;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 
 
 //위경도
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
 public class Location {
@@ -19,8 +22,8 @@ public class Location {
 
     public static Coordinate getCoordinate(Double v1, Double v2) {
 //    public static Map<String,Object> getCoordinate(Double v1, Double v2) {
-        Integer x = 54;
-        Integer y = 123;
+        Integer x = 200;
+        Integer y = 200;
 
 
         /*
@@ -53,9 +56,9 @@ public class Location {
         sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
         double ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
         ro = re * sf / Math.pow(ro, sn);
-        Map<String, Double> map = new HashMap<String, Double>();
-        map.put("lat", v1);
-        map.put("lng", v1);
+        Map<String, Object> map = new HashMap<String, Object>();
+//        map.put("lat", v1);
+//        map.put("lng", v1);
         double ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
         ra = re * sf / Math.pow(ra, sn);
         double theta = v2 * DEGRAD - olon;
@@ -65,18 +68,18 @@ public class Location {
             theta += 2.0 * Math.PI;
         theta *= sn;
 
-        map.put("x", Math.floor(ra * Math.sin(theta) + XO + 0.5));
-        map.put("y", Math.floor(ro - ra * Math.cos(theta) + YO + 0.5));
+        map.put("x", (int) Math.floor(ra * Math.sin(theta) + XO + 0.5));
+        map.put("y", (int) Math.floor(ro - ra * Math.cos(theta) + YO + 0.5));
 
         Coordinate coordinate=new Coordinate();
 
-        coordinate.setNx(Integer.parseInt(String.valueOf(map.get("x"))));
-        coordinate.setNy(Integer.parseInt(String.valueOf(map.get("y"))));
 
+        coordinate.setNx((Integer) map.get("x"));
+        coordinate.setNy((Integer) map.get("y"));
 
-
-//        coordinate.setNx((Double) map.get("x"));
-//        coordinate.setNy((Double) map.get("y"));
+        log.info(String.valueOf(coordinate.getNx()));
+        log.info(String.valueOf(coordinate.getNy()));
+        log.info(String.valueOf(coordinate));
 
         return coordinate;
     }

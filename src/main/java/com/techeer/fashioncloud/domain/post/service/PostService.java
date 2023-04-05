@@ -54,15 +54,43 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
-    public List<WeatherPostResponse> findNowWeatherPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findByWeather(
-                nowWeatherRequest.getSky(),
-                nowWeatherRequest.getTemperatue(),
+    public List<WeatherPostResponse> findSunnyPosts(NowWeatherRequest nowWeatherRequest) {
+        List<Post> postEntityList = postRepository.findSunnyPosts(
+                nowWeatherRequest.getTemperature(),
                 nowWeatherRequest.getHumidity(),
-                nowWeatherRequest.getWindSpeed(),
-                nowWeatherRequest.getRainfallType()
+                nowWeatherRequest.getWindSpeed()
                 );
         List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
             return postDtoList;
-        }
+    }
+
+    public List<WeatherPostResponse> findCloudyPosts(NowWeatherRequest nowWeatherRequest) {
+        List<Post> postEntityList = postRepository.findCloudyPosts(
+                nowWeatherRequest.getTemperature(),
+                nowWeatherRequest.getHumidity(),
+                nowWeatherRequest.getWindSpeed()
+        );
+        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
+        return postDtoList;
+    }
+
+    public List<WeatherPostResponse> findSnowyPosts(NowWeatherRequest nowWeatherRequest) {
+        List<Post> postEntityList = postRepository.findSnowyPosts(
+                nowWeatherRequest.getTemperature(),
+                nowWeatherRequest.getHumidity(),
+                nowWeatherRequest.getWindSpeed()
+        );
+        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
+        return postDtoList;
+    }
+
+    public List<WeatherPostResponse> findRainyPosts(NowWeatherRequest nowWeatherRequest) {
+        List<Post> postEntityList = postRepository.findRainyPosts(
+                nowWeatherRequest.getTemperature(),
+                nowWeatherRequest.getHumidity(),
+                nowWeatherRequest.getWindSpeed()
+        );
+        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
+        return postDtoList;
+    }
 }

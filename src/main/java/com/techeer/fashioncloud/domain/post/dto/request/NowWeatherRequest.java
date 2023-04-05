@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class NowWeatherRequest {
     private Integer sky;
-    private Double temperatue;
+    private Double temperature;
     private Double humidity;
     private Integer rainfallType;
     private Double windSpeed;

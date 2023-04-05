@@ -55,7 +55,13 @@ public class PostService {
     }
 
     public List<WeatherPostResponse> findNowWeatherPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findByWeather(nowWeatherRequest).orElseThrow(NullPointerException::new);
+        List<Post> postEntityList = postRepository.findByWeather(
+                nowWeatherRequest.getSky(),
+                nowWeatherRequest.getTemperatue(),
+                nowWeatherRequest.getHumidity(),
+                nowWeatherRequest.getWindSpeed(),
+                nowWeatherRequest.getRainfallType()
+                );
         List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
             return postDtoList;
         }

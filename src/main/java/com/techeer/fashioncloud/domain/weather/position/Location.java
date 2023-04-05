@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.weather.position;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 @Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Location {
     private Double latitude;
     private Double longitude;

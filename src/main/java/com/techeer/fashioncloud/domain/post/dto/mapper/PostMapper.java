@@ -1,4 +1,5 @@
 package com.techeer.fashioncloud.domain.post.dto.mapper;
+import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,5 +34,19 @@ public class PostMapper {
                 .windSpeed(dto.getWindSpeed())
                 .review(dto.getReview())
                 .build();
+    }
+
+    public WeatherPostResponse toPostDto(Post post) {
+        return WeatherPostResponse.builder()
+                .id(post.getId())
+                .name(post.getName())
+                .imageUrl(post.getImage())
+                .build();
+    }
+
+    public List<WeatherPostResponse> toPostDtoList(List<Post> postEntityList) {
+        return postEntityList.stream()
+                .map(p -> toPostDto(p))
+                .collect(Collectors.toList());
     }
 }

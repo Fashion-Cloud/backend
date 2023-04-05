@@ -1,7 +1,10 @@
 package com.techeer.fashioncloud.domain.post.service;
 
+import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
+import com.techeer.fashioncloud.domain.post.dto.request.NowWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostMapper postMapper;
 
     public Post create(PostCreateServiceDto dto) {
 
@@ -49,4 +53,10 @@ public class PostService {
         Post entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
         return new PostResponseDto(entity);
     }
+
+    public List<WeatherPostResponse> findNowWeatherPosts(NowWeatherRequest nowWeatherRequest) {
+        List<Post> postEntityList = postRepository.findByWeather(nowWeatherRequest).orElseThrow(NullPointerException::new);
+        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
+            return postDtoList;
+        }
 }

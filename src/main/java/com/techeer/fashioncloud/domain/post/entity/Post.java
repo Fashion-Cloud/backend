@@ -1,52 +1,68 @@
 package com.techeer.fashioncloud.domain.post.entity;
 
+import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 
-import java.time.LocalDateTime;
-
+import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2") // postgresql strategy 표기가 mysql과 차이가 있음.
+    @Column(length = 36, nullable = false, updatable = false)
+    private UUID id = UUID.randomUUID();
 
-    
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private UUID userId = UUID.randomUUID(); // 임시 유저
+
+    @NotNull
+    private String name;
+
+    @NotNull
+    private String image;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
-    private PostCategory weather;
+    private Review review;
 
-    @Enumerated(EnumType.STRING)
-    private WearCategory wear;
+    @NotNull
+    private Integer skyStatus;
 
-    private String img_url;
-
+    @NotNull
     private Double temperature;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @NotNull
+    private Double humidity;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @NotNull
+    private Integer rainfallType;
 
-    //삭제 시점
-    private LocalDateTime deletedAt;
+    @NotNull
+    private Double windSpeed;
 
     @Builder
-    public Post(Long id, String img_url, PostCategory weather, WearCategory wear, Double temperature) {
+    public Post(UUID id, String name, String image, Review review, Integer skyStatus, Double temperature, Double humidity, Integer rainfallType, Double windSpeed) {
         this.id = id;
-        this.img_url = img_url;
+        this.name = name;
+        this.image = image;
         this.temperature = temperature;
-        this.weather = weather;
-        this.wear = wear;
+        this.skyStatus = skyStatus;
+        this.humidity = humidity;
+        this.rainfallType = rainfallType;
+        this.windSpeed = windSpeed;
+        this.review = review;
     }
 
 }

@@ -19,6 +19,8 @@ public class PostMapper {
         return PostResponseDto.builder()
                 .id(entity.getId()) // PostId
                 .userId(entity.getUserId())
+                .name(entity.getName())
+                .image(entity.getImage())
                 .build();
     }
 

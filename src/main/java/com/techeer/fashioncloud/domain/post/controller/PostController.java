@@ -39,8 +39,14 @@ public class PostController {
                 .ok(service.findAll());
     }
 
+//    @GetMapping("/{id}")
+//    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
+//        return ResponseEntity
+//                .ok(service.findRequestById(id));
+//    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
+    public ResponseEntity<Post> getOne(@PathVariable UUID id) {
         return ResponseEntity
                 .ok(service.findRequestById(id));
     }

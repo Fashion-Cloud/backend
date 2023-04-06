@@ -44,9 +44,13 @@ public class PostService {
         return postRepository.findAll(); // DTO를 거치지 않은 순수 데이터
     }
 
-    @Transactional(readOnly = true)
-    public PostResponseDto findRequestById(UUID id) { // PostID로 검색
-        Post entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
-        return new PostResponseDto(entity);
+//    @Transactional(readOnly = true)
+//    public PostResponseDto findRequestById(UUID id) { // PostID로 검색
+//        Post entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
+//        return new PostResponseDto(entity);
+//    }
+
+    public Post findRequestById(UUID id) { // PostID로 검색
+        return postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
     }
 }

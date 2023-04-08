@@ -24,13 +24,12 @@ public class PostResponseDto extends BaseEntity {
     private String image;
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.
 
-    public PostResponseDto(Post entity) {
-        this.id = entity.getId();
-        this.userId = entity.getUserId();
-        this.name = entity.getName();
-        this.image = entity.getImage();
+    public static PostResponseDto fromEntity(Post entity) {
+        return PostResponseDto.builder()
+                .id(entity.getId())
+                .userId(entity.getUserId())
+                .name(entity.getName())
+                .image(entity.getImage())
+                .build();
     }
-        public static PostResponseDto from(Post post) {
-            return new PostResponseDto(post.getId(), post.getUserId(), post.getName(), post.getImage());
-        }
 }

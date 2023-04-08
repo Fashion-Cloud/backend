@@ -42,7 +42,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostResponseDto> findAllPosts() {
         List<Post> posts = postRepository.findAll();
-        return posts.stream().map(PostResponseDto::from).collect(Collectors.toList());
+        return posts.stream().map(PostResponseDto::fromEntity).collect(Collectors.toList());
     }
 
     @Transactional

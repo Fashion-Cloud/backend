@@ -41,8 +41,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDto> findAllPosts() {
-        List<Post> posts = postRepository.findAll();
-        return posts.stream().map(PostResponseDto::fromEntity).collect(Collectors.toList());
+        List<Post> posts = postRepository.findAll(); // 리스트 형식으로 전체 불러오기
+        return posts.stream().map(PostResponseDto::fromEntity).collect(Collectors.toList()); // map함수를 통해 하나하나 담기
     }
 
     @Transactional

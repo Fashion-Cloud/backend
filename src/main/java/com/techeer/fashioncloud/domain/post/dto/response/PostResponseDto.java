@@ -1,6 +1,5 @@
 package com.techeer.fashioncloud.domain.post.dto.response;
 import com.techeer.fashioncloud.domain.post.entity.Post;
-import com.techeer.fashioncloud.domain.post.entity.Review;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -31,4 +30,7 @@ public class PostResponseDto extends BaseEntity {
         this.name = entity.getName();
         this.image = entity.getImage();
     }
+        public static PostResponseDto from(Post post) {
+            return new PostResponseDto(post.getId(), post.getUserId(), post.getName(), post.getImage());
+        }
 }

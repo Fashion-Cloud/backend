@@ -6,6 +6,10 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,23 +38,15 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> findAll(){
-        return ResponseEntity
-                .ok(service.findAll());
+    public List<PostResponseDto> getAllPosts() {
+        return service.findAllPosts();
     }
-
-//    @GetMapping("/{id}")
-//    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
-//        return ResponseEntity
-//                .ok(service.findRequestById(id));
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getOne(@PathVariable UUID id) {
         return ResponseEntity
                 .ok(service.findRequestById(id));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -59,4 +55,5 @@ public class PostController {
                 .noContent()
                 .build();
     }
+
 }

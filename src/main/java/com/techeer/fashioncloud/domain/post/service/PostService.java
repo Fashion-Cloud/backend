@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
@@ -48,5 +49,15 @@ public class PostService {
     public PostResponseDto findRequestById(UUID id) { // PostID로 검색
         Post entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
         return new PostResponseDto(entity);
+    }
+
+    @Transactional
+    public Post update(UUID id, PostUpdateRequestDto dto) {
+        Post entity= postRepository.findById(id).get();
+        entity.setName(dto.getName());
+        entity.setImage(dto.getImage());
+        entity.setReview(dto.getReview());
+
+        return entity;
     }
 }

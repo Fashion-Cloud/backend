@@ -1,7 +1,7 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.NowWeatherRequest;
+import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
@@ -52,14 +52,9 @@ public class PostController {
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
     public ApiResponse getNowWeatherPosts(
-            @RequestParam String weather,
-            @RequestBody NowWeatherRequest nowWeatherRequest
+            @RequestBody PostWeatherRequest postWeatherRequest
     ) {
-        if(weather.equals("맑음")) return ok(service.findSunnyPosts(nowWeatherRequest));
-        else if(weather.equals("흐림")) return ok(service.findCloudyPosts(nowWeatherRequest));
-        else if(weather.equals("눈")) return ok(service.findSnowyPosts(nowWeatherRequest));
-        return ok(service.findRainyPosts(nowWeatherRequest));
-
+        return ok(service.findPostsByWeather(postWeatherRequest));
     }
 
 

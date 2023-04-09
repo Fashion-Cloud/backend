@@ -1,16 +1,19 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.NowWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
+import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,43 +57,31 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
-    public List<WeatherPostResponse> findSunnyPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findSunnyPosts(
-                nowWeatherRequest.getTemperature(),
-                nowWeatherRequest.getHumidity(),
-                nowWeatherRequest.getWindSpeed()
-                );
-        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
-            return postDtoList;
-    }
+    public List<WeatherPostResponse> findPostsByWeather(PostWeatherRequest weather) {
 
-    public List<WeatherPostResponse> findCloudyPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findCloudyPosts(
-                nowWeatherRequest.getTemperature(),
-                nowWeatherRequest.getHumidity(),
-                nowWeatherRequest.getWindSpeed()
-        );
-        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
-        return postDtoList;
-    }
+        List<Post> postEntityList = new ArrayList<>();
+        //맑음
+        if (weather.getSkyCode() == SkyStatus.CLEAR
+                & weather.getRainfallCode() == RainfallType.CLEAR) {
+            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.clearCodeList, RainfallType.clearCodeList);
+        }
+        //흐림
+        else if (SkyStatus.cloudyCodeList.contains(weather.getSkyCode())
+                & weather.getRainfallCode() == RainfallType.CLEAR) {
+            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.cloudyCodeList, RainfallType.clearCodeList);
+        }
+        //비
+        else if (RainfallType.RainyCodeList.contains(weather.getRainfallCode())) {
+            postEntityList = postRepository.findRainfallPosts(weather.getWindChill(), RainfallType.RainyCodeList);
+        }
+        //눈
+        else if (RainfallType.SnowyCodeList.contains(weather.getRainfallCode())) {
+            postEntityList = postRepository.findRainfallPosts(weather.getWindChill(), RainfallType.SnowyCodeList);
+        }
+        else {
+            throw new RuntimeException("날씨 정보 오류");
+        }
 
-    public List<WeatherPostResponse> findSnowyPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findSnowyPosts(
-                nowWeatherRequest.getTemperature(),
-                nowWeatherRequest.getHumidity(),
-                nowWeatherRequest.getWindSpeed()
-        );
-        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
-        return postDtoList;
-    }
-
-    public List<WeatherPostResponse> findRainyPosts(NowWeatherRequest nowWeatherRequest) {
-        List<Post> postEntityList = postRepository.findRainyPosts(
-                nowWeatherRequest.getTemperature(),
-                nowWeatherRequest.getHumidity(),
-                nowWeatherRequest.getWindSpeed()
-        );
-        List<WeatherPostResponse> postDtoList = postMapper.toPostDtoList(postEntityList);
-        return postDtoList;
+        return postMapper.toPostDtoList(postEntityList);
     }
 }

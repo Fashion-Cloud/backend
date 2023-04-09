@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.weather.service;
 
-import com.techeer.fashioncloud.domain.weather.constant.WeatherConstant;
+import com.techeer.fashioncloud.domain.weather.constant.ForecastConstant;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
@@ -8,6 +8,7 @@ import com.techeer.fashioncloud.domain.weather.entity.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.entity.UltraSrtNcst;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.global.config.WeatherConfig;
+import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.stereotype.Service;
@@ -23,24 +24,33 @@ public class WeatherService {
     public WeatherInfoResponse getNowWeather (Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
         // TODO: coordinate.isValidXY(nx, ny) - 유효한 격자점인지 확인
-//        Integer nx = coordinate.getNx();
-//        Integer ny = coordinate.getNy();
+
         Integer nx = 55;
         Integer ny = 127;
 
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(nx, ny);
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(nx, ny);
 
-        WeatherInfoResponse weatherInfo = new WeatherInfoResponse();
+        WeatherInfoResponse weatherInfo = WeatherInfoResponse.builder()
+                .sky(ultraSrtFcstResponse.getSkyStatus())
+                .temperature(ultraSrtNcstResponse.getTemperature())
+                .hourRainfall(ultraSrtNcstResponse.getHourRainfall())
+                .humidity(ultraSrtNcstResponse.getHumidity())
+                .rainfallType(ultraSrtNcstResponse.getRainfallType())
+                .windSpeed(ultraSrtNcstResponse.getWindSpeed())
+                .windChill(WindChillCalculator.getWindChill(
+                        ultraSrtNcstResponse.getTemperature(),
+                        ultraSrtNcstResponse.getWindSpeed()))
+                .build();
 
-        return weatherInfo.getTotalWeather(ultraSrtFcstResponse, ultraSrtNcstResponse);
+        return weatherInfo;
     }
 
     // 격자 좌표로 기상청 초단기예보 api 호출
     public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
 
         UltraSrtFcst ultraSrtFcst = new UltraSrtFcst();
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(WeatherConstant.BASE_URL+WeatherConstant.ULTRA_SRT_FCST);
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(ForecastConstant.BASE_URL+ ForecastConstant.ULTRA_SRT_FCST);
 
         WebClient webclient = WebClient.builder()
                 .uriBuilderFactory(factory)
@@ -69,7 +79,7 @@ public class WeatherService {
     public UltraSrtNcstResponse getUltraSrtNcst (Integer nx, Integer ny) throws org.json.simple.parser.ParseException {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(WeatherConstant.BASE_URL+WeatherConstant.ULTRA_SRT_NCST);
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(ForecastConstant.BASE_URL+ ForecastConstant.ULTRA_SRT_NCST);
 
         WebClient webclient = WebClient.builder()
                 .uriBuilderFactory(factory)

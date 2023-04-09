@@ -16,17 +16,5 @@ public class WeatherInfoResponse {
     private Integer humidity;
     private Integer rainfallType;
     private Double windSpeed;
-
-    public WeatherInfoResponse getTotalWeather (
-            UltraSrtFcstResponse ultraSrtFcstResponse,
-            UltraSrtNcstResponse ultraSrtNcstResponse) {
-        this.sky = ultraSrtFcstResponse.getSkyStatus();
-        this.temperature = ultraSrtNcstResponse.getTemperature();
-        this.hourRainfall = ultraSrtNcstResponse.getHourRainfall();
-        this.humidity = ultraSrtNcstResponse.getHumidity();
-        this.rainfallType = ultraSrtNcstResponse.getRainfallType();
-        this.windSpeed = ultraSrtNcstResponse.getWindSpeed();
-
-        return this;
-    }
+    private Double windChill;
 }

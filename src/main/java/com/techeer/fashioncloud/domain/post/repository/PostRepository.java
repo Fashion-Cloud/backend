@@ -15,46 +15,21 @@ import java.util.UUID;
 public interface PostRepository extends JpaRepository<Post, UUID> {
     boolean existsById(UUID uuid);
 
-    // 날씨가 맑음, 강수형태 없음
+    // 맑거나 흐림 - 하늘상태, 강수형태, 체감온도 필터링
     @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND p.skyStatus = 0 " +
-            "AND ABS(p.temperature - :temperature) <= 3 " +
-            "AND ABS(p.humidity - :humidity) <= 5 " +
-            "AND ABS(p.windSpeed - :windSpeed) <= 5 " +
-            "AND p.rainfallType = 0 ")
-    List<Post> findSunnyPosts(
-                              @Param("temperature") double temperature,
-                              @Param("humidity") double humidity,
-                              @Param("windSpeed") double windSpeed);
+            "AND p.skyStatus IN :skyCodeList " +
+            "AND p.rainfallType IN :rainfallCodeList " +
+            "AND ABS(p.windChill - :windChill) <= 1 ")
+    List<Post> findNoRainfallPosts(
+            @Param("windChill") Double windChill,
+            @Param("skyCodeList") List<Integer> skyCodeList,
+            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
 
-    // 날씨가 구름 많음 or 흐림 + 강수 없음
+    //눈 혹은 비 - 강수형태와 체감온도로만 필터링
     @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND (p.skyStatus = 3 OR p.skyStatus = 4) " +
-            "AND ABS(p.temperature - :temperature) <= 3 " +
-            "AND ABS(p.humidity - :humidity) <= 5 " +
-            "AND ABS(p.windSpeed - :windSpeed) <= 5 " +
-            "AND p.rainfallType = 0 ")
-    List<Post> findCloudyPosts(@Param("temperature") double temperature,
-                               @Param("humidity") double humidity,
-                               @Param("windSpeed") double windSpeed);
-
-    // 강수형태 눈 + 비/눈 + 빗방울눈날림 + 눈날림
-    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND ABS(p.temperature - :temperature) <= 3 " +
-            "AND ABS(p.humidity - :humidity) <= 5 " +
-            "AND ABS(p.windSpeed - :windSpeed) <= 5 " +
-            "AND (p.rainfallType = 2 OR p.rainfallType = 3 OR p.rainfallType = 6 OR p.rainfallType = 7 )")
-    List<Post> findSnowyPosts(@Param("temperature") double temperature,
-                              @Param("humidity") double humidity,
-                              @Param("windSpeed") double windSpeed);
-
-    // 강수형태 비 + 비/눈 + 빗방울눈날림 + 빗방울
-    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND ABS(p.temperature - :temperature) <= 3 " +
-            "AND ABS(p.humidity - :humidity) <= 5 " +
-            "AND ABS(p.windSpeed - :windSpeed) <= 5 " +
-            "AND (p.rainfallType = 1 OR p.rainfallType = 2 OR p.rainfallType = 5 OR p.rainfallType = 6 )")
-    List<Post> findRainyPosts(@Param("temperature") double temperature,
-                              @Param("humidity") double humidity,
-                              @Param("windSpeed") double windSpeed);
+            "AND p.rainfallType IN :rainfallCodeList " +
+            "AND ABS(p.windChill - :windChill) <= 1 ")
+    List<Post> findRainfallPosts(
+            @Param("windChill") Double windChill,
+            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
 }

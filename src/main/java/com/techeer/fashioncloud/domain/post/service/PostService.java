@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 
@@ -39,13 +40,11 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
     }
 
-    @Transactional(readOnly = true)
     public List<PostResponseDto> findAllPosts() {
         List<Post> posts = postRepository.findAll(); // 리스트 형식으로 전체 불러오기
         return posts.stream().map(PostResponseDto::fromEntity).collect(Collectors.toList()); // map함수를 통해 하나하나 담기
     }
 
-    @Transactional
     public void deleteRequestById(UUID id) {
         postRepository.deleteById(id);
     }

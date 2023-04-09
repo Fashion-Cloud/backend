@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
+import com.amazonaws.Response;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
@@ -38,14 +39,17 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostResponseDto> getAllPosts() {
-        return service.findAllPosts();
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.findAllPosts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getOnePost(@PathVariable UUID id) {
         return ResponseEntity
-                .ok(service.findRequestById(id));
+                .status(HttpStatus.OK)
+                .body(service.findRequestById(id));
     }
 
     @DeleteMapping("/{id}")

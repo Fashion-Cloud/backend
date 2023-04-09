@@ -9,6 +9,7 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
+import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,7 @@ public class PostService {
                 .rainfallType((dto.getRainfallType()))
                 .windSpeed((dto.getWindSpeed()))
                 .review((dto.getReview()))
+                .windChill(WindChillCalculator.getWindChill(dto.getTemperature(), dto.getWindSpeed()))
                 .build());
 
         return entity;

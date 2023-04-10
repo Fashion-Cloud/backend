@@ -49,7 +49,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public Post findRequestById(UUID id) {
+    public Post findPostById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Post ID"));
     }

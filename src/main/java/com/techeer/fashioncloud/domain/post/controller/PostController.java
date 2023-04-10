@@ -44,7 +44,7 @@ public class PostController {
     public ResponseEntity<Post> getOnePost(@PathVariable UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findRequestById(id));
+                .body(service.findPostById(id));
     }
 
     @DeleteMapping("/{id}")

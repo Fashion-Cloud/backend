@@ -1,16 +1,11 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
-import com.amazonaws.Response;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -35,17 +35,18 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> findAll(){
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         return ResponseEntity
-                .ok(service.findAll());
+                .status(HttpStatus.OK)
+                .body(service.findAllPosts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponseDto> getOne(@PathVariable UUID id) {
+    public ResponseEntity<Post> getOnePost(@PathVariable UUID id) {
         return ResponseEntity
-                .ok(service.findRequestById(id));
+                .status(HttpStatus.OK)
+                .body(service.findPostById(id));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
@@ -54,6 +55,7 @@ public class PostController {
                 .noContent()
                 .build();
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDto> update

@@ -7,9 +7,6 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 @RequiredArgsConstructor
 public class PostMapper {
@@ -19,6 +16,8 @@ public class PostMapper {
         return PostResponseDto.builder()
                 .id(entity.getId()) // PostId
                 .userId(entity.getUserId())
+                .name(entity.getName())
+                .image(entity.getImage())
                 .build();
     }
 

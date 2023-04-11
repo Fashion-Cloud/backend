@@ -32,9 +32,6 @@ public class PostCreateServiceDto {
     private Double temperature;
 
     @NotBlank
-    private Double humidity;
-
-    @NotBlank
     private Integer rainfallType;
 
     @NotBlank
@@ -42,5 +39,4 @@ public class PostCreateServiceDto {
 
     @NotBlank
     private Review review;
-
 }

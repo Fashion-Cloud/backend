@@ -37,11 +37,9 @@ public class PostService {
                 .name(dto.getName())
                 .image(dto.getImage())
                 .skyStatus(dto.getSkyStatus())
-                .temperature(dto.getTemperature())
-                .humidity(dto.getHumidity())
                 .rainfallType(dto.getRainfallType())
-                .windSpeed(dto.getWindSpeed())
                 .review(dto.getReview())
+                .windChill(dto.getWindSpeed())
                 .build();
         Post savedPost = postRepository.save(post);
         entityManager.flush();

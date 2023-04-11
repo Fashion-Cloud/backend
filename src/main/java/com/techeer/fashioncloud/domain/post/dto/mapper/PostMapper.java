@@ -31,7 +31,6 @@ public class PostMapper {
                 .image(dto.getImage())
                 .skyStatus((dto.getSkyStatus()))
                 .temperature(dto.getTemperature())
-                .humidity(dto.getHumidity())
                 .rainfallType(dto.getRainfallType())
                 .windSpeed(dto.getWindSpeed())
                 .review(dto.getReview())

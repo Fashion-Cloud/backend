@@ -1,24 +1,20 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.dto.ApiResponse;
-import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
-import com.techeer.fashioncloud.domain.post.entity.Post;
-import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
-import com.techeer.fashioncloud.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
+
 import static com.techeer.fashioncloud.global.dto.ApiResponse.ok;
 
 @RestController
@@ -40,8 +36,6 @@ public class PostController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
-
-
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
@@ -74,15 +68,15 @@ public class PostController {
                 .build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDto> update
-            (
-                    @PathVariable UUID id, @RequestBody PostUpdateRequestDto dto)
-    {
-
-        Post entity = service.update( id,dto);
-        // PostUpdateRequestDto response = mapper.toUpdateServiceDto(entity);
-        return ResponseEntity
-                .ok(service.findRequestById(id));
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<PostResponseDto> update
+//            (
+//                    @PathVariable UUID id, @RequestBody PostUpdateRequestDto dto)
+//    {
+//
+//        Post entity = service.update( id,dto);
+//        // PostUpdateRequestDto response = mapper.toUpdateServiceDto(entity);
+//        return ResponseEntity
+//                .ok(service.findPostById(id));
+//    }
 }

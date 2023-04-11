@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
@@ -58,4 +59,13 @@ public class PostService {
         repository.deleteById(id);
     }
 
+    @Transactional
+    public Post update(UUID id, PostUpdateRequestDto dto) {
+        Post entity= postRepository.findById(id).get();
+        entity.setName(dto.getName());
+        entity.setImage(dto.getImage());
+        entity.setReview(dto.getReview());
+
+        return entity;
+    }
 }

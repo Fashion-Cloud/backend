@@ -1,4 +1,5 @@
 package com.techeer.fashioncloud.domain.post.dto.mapper;
+
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,7 +8,6 @@ import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +20,8 @@ public class PostMapper {
         return PostResponseDto.builder()
                 .id(entity.getId()) // PostId
                 .userId(entity.getUserId())
+                .name(entity.getName())
+                .image(entity.getImage())
                 .build();
     }
 

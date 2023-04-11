@@ -14,50 +14,54 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
+import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public Post create(PostCreateServiceDto dto) {
-
-        // Save Request
-        Post entity = postRepository.save(Post.builder()
+        Post post = Post.builder()
                 .name(dto.getName())
                 .image(dto.getImage())
-                .skyStatus((dto.getSkyStatus()))
-                .temperature((dto.getTemperature()))
-                .humidity((dto.getHumidity()))
-                .rainfallType((dto.getRainfallType()))
-                .windSpeed((dto.getWindSpeed()))
-                .review((dto.getReview()))
-                .windChill(WindChillCalculator.getWindChill(dto.getTemperature(), dto.getWindSpeed()))
-                .build());
-
-        return entity;
+                .skyStatus(dto.getSkyStatus())
+                .temperature(dto.getTemperature())
+                .humidity(dto.getHumidity())
+                .rainfallType(dto.getRainfallType())
+                .windSpeed(dto.getWindSpeed())
+                .review(dto.getReview())
+                .build();
+        Post savedPost = postRepository.save(post);
+        entityManager.flush();
+        return savedPost;
     }
 
-    @Transactional
-    public void deleteRequestById(UUID id) {
-        postRepository.deleteById(id);
-    }
 
-    @Transactional
-    public List<Post> findAll() { // ID로 검색
-        return postRepository.findAll(); // DTO를 거치지 않은 순수 데이터
-    }
-
-    @Transactional(readOnly = true)
-    public PostResponseDto findRequestById(UUID id) { // PostID로 검색
-        Post entity = postRepository.findById(id).orElseThrow(()->new IllegalArgumentException(("해당 게시글이 없습니다. id="+id))); // DTO를 거치고 나온 데이터
-        return new PostResponseDto(entity);
-    }
 
     public List<WeatherPostResponse> findPostsByWeather(PostWeatherRequest weather) {
 
@@ -86,4 +90,44 @@ public class PostService {
 
         return postMapper.toPostDtoList(postEntityList);
     }
+    
+    
+    public Post update(UUID id, PostUpdateRequestDto dto) {
+        Post entity= postRepository.findById(id).get();
+        entity.setName(dto.getName());
+        entity.setImage(dto.getImage());
+        entity.setReview(dto.getReview());
+
+        return entity;
+    }
+    
+     public List<PostResponseDto> findAllPosts() {
+     return repository.findAll().stream()
+              .map(PostResponseDto::fromEntity)
+              .collect(Collectors.toList());
+    }
+
+    public Post findPostById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Post ID"));
+    }
+
+    public void deleteRequestById(UUID id) {
+        repository.deleteById(id);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,10 +9,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import lombok.Setter;
+import org.hibernate.annotations.*;
+
 
 import java.util.UUID;
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
@@ -70,5 +74,4 @@ public class Post extends BaseEntity {
         this.review = review;
         this.windChill = windChill;
     }
-
 }

@@ -32,4 +32,5 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findRainfallPosts(
             @Param("windChill") Double windChill,
             @Param("rainfallCodeList") List<Integer> rainfallCodeList);
+
 }

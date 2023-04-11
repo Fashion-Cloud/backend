@@ -18,8 +18,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class S3Controller {
 
-    private final S3Service service;
-    private final S3Mapper mapper;
+    private final S3Service s3Service;
+    private final S3Mapper s3Mapper;
 
     @PostMapping
     public ResponseEntity<S3UploadResponseDto> uploadImage(
@@ -28,7 +28,7 @@ public class S3Controller {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.toUploadResponseDto(service.uploadImage(image)));
+                .body(s3Mapper.toUploadResponseDto(s3Service.uploadImage(image)));
     }
 
     @GetMapping
@@ -38,6 +38,6 @@ public class S3Controller {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(mapper.toDeleteResponseDto(service.deleteImage(filename)));
+                .body(s3Mapper.toDeleteResponseDto(s3Service.deleteImage(filename)));
     }
 }

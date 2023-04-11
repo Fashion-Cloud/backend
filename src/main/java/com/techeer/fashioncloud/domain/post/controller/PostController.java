@@ -22,15 +22,15 @@ import static com.techeer.fashioncloud.global.dto.ApiResponse.ok;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService service;
-    private final PostMapper mapper;
+    private final PostService postService;
+    private final PostMapper postMapper;
 
     @PostMapping
     public ResponseEntity<PostResponseDto> create(
             @RequestBody PostCreateRequestDto dto
     ){
-        Post entity = service.create(mapper.toServiceDto(dto));
-        PostResponseDto response = mapper.toResponseDto(entity);
+        Post entity = postService.create(postMapper.toServiceDto(dto));
+        PostResponseDto response = postMapper.toResponseDto(entity);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -42,7 +42,7 @@ public class PostController {
     public ApiResponse getNowWeatherPosts(
             @RequestBody PostWeatherRequest postWeatherRequest
     ) {
-        return ok(service.findPostsByWeather(postWeatherRequest));
+        return ok(postService.findPostsByWeather(postWeatherRequest));
     }
 
 
@@ -50,19 +50,19 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getAllPosts() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllPosts());
+                .body(postService.findAllPosts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> getOnePost(@PathVariable UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findPostById(id));
+                .body(postService.findPostById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        service.deleteRequestById(id); // Post ID로 삭제
+        postService.deleteRequestById(id); // Post ID로 삭제
         return ResponseEntity
                 .noContent()
                 .build();

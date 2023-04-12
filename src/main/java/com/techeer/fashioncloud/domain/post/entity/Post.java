@@ -6,12 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import lombok.Setter;
-import org.hibernate.annotations.*;
-
 
 import java.util.UUID;
 @Entity
@@ -47,30 +45,18 @@ public class Post extends BaseEntity {
     private Integer skyStatus;
 
     @NotNull
-    private Double temperature;
-
-    @NotNull
-    private Double humidity;
-
-    @NotNull
     private Integer rainfallType;
-
-    @NotNull
-    private Double windSpeed;
 
     @Column(nullable = true, columnDefinition = "DOUBLE PRECISION DEFAULT 11.5")
     private Double windChill;
 
     @Builder
-    public Post(UUID id, String name, String image, Review review, Integer skyStatus, Double temperature, Double humidity, Integer rainfallType, Double windSpeed, Double windChill) {
+    public Post(UUID id, String name, String image, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
         this.id = id;
         this.name = name;
         this.image = image;
-        this.temperature = temperature;
         this.skyStatus = skyStatus;
-        this.humidity = humidity;
         this.rainfallType = rainfallType;
-        this.windSpeed = windSpeed;
         this.review = review;
         this.windChill = windChill;
     }

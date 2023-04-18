@@ -26,15 +26,13 @@ public class PostController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> create(
+    public ApiResponse<PostResponseDto> postCreate(
             @RequestBody PostCreateRequestDto dto
     ){
         Post entity = postService.create(postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(entity);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ApiResponse.created(response);
     }
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴

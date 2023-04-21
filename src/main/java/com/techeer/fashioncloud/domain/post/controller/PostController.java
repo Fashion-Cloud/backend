@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
@@ -68,15 +69,12 @@ public class PostController {
                 .build();
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<PostResponseDto> update
-//            (
-//                    @PathVariable UUID id, @RequestBody PostUpdateRequestDto dto)
-//    {
-//
-//        Post entity = service.update( id,dto);
-//        // PostUpdateRequestDto response = mapper.toUpdateServiceDto(entity);
-//        return ResponseEntity
-//                .ok(service.findPostById(id));
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update (@PathVariable UUID id, @RequestBody PostUpdateRequestDto dto) {
+
+        Post entity = postService.update( id,dto);
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }

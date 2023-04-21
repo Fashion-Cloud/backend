@@ -7,6 +7,7 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
@@ -49,12 +50,14 @@ public class PostService {
 
 
     public List<WeatherPostResponse> findPostsByWeather(PostWeatherRequest weather) {
-
+        //TODO: 분기처리 개선
         List<Post> postEntityList = new ArrayList<>();
+
         //맑음
         if (weather.getSkyCode() == SkyStatus.CLEAR
                 & weather.getRainfallCode() == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.clearCodeList, RainfallType.clearCodeList);
+            throw new PostNotFoundException();
+//            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.clearCodeList, RainfallType.clearCodeList);
         }
         //흐림
         else if (SkyStatus.cloudyCodeList.contains(weather.getSkyCode())

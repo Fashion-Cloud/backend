@@ -4,9 +4,11 @@ import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
-import com.techeer.fashioncloud.global.dto.ApiResponse;
+import com.techeer.fashioncloud.global.response.ResultResponse;
+import com.techeer.fashioncloud.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import static com.techeer.fashioncloud.global.dto.ApiResponse.ok;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -39,10 +39,11 @@ public class PostController {
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
-    public ApiResponse getNowWeatherPosts(
+    public ResponseEntity<ResultResponse> getNowWeatherPosts(
             @RequestBody PostWeatherRequest postWeatherRequest
     ) {
-        return ok(postService.findPostsByWeather(postWeatherRequest));
+        List<WeatherPostResponse> responseData = postService.findPostsByWeather(postWeatherRequest);
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
 

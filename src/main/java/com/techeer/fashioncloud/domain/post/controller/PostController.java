@@ -7,8 +7,8 @@ import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
-import com.techeer.fashioncloud.global.response.ResultResponse;
 import com.techeer.fashioncloud.global.response.ResponseCode;
+import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +26,15 @@ public class PostController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public ApiResponse<PostResponseDto> postCreate(
+    public ResponseEntity<PostResponseDto> postCreate(
             @RequestBody PostCreateRequestDto dto
     ){
         Post entity = postService.create(postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(entity);
 
-        return ApiResponse.created(response);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴

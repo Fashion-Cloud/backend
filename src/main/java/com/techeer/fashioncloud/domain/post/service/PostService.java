@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -96,16 +95,13 @@ public class PostService {
     }
 
     public Post findPostById(UUID id) {
-        try{
-            return postRepository.findById(id).orElseThrow();
-        }
-        catch(NoSuchElementException e){
-            throw new PostNotFoundException();
-        }
+        return postRepository.findById(id).orElseThrow(()-> new PostNotFoundException());
     }
 
     public void deleteRequestById(UUID id) {
-        Post postId = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException());
+        if(!postRepository.existsById(id)){
+            throw new PostNotFoundException();
+        }
         postRepository.deleteById(id);
     }
 }

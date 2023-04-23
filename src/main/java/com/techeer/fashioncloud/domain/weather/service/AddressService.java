@@ -5,8 +5,11 @@ import com.techeer.fashioncloud.domain.weather.constant.GeoConstant;
 import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.global.config.GeoConfig;
-import com.techeer.fashioncloud.global.exception.ApiParseException;
+import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
+import com.techeer.fashioncloud.global.error.exception.ApiParseException;
+import com.techeer.fashioncloud.global.error.exception.ApiServerErrorException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AddressService {
 
 
@@ -39,15 +43,19 @@ public class AddressService {
                         .queryParam("x", longitude)
                         .queryParam("y",latitude)
                         .build())
-                .header("Authorization", "KakaoAK "+geoConfig.getKey())
+                .header("Authorization", "KakaoAK " + geoConfig.getKey())
                 .exchangeToMono(response -> {
                     Integer httpStatusCode = response.statusCode().value();
                     HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
                     if (httpStatus.is2xxSuccessful()) {
                         return response.bodyToMono(JsonNode.class);
+                    } else if (httpStatus.is4xxClientError()){
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiBadRequestException();
+
                     } else {
-                        // HTTP 에러 처리
-                        throw new RuntimeException("HTTP Error: " + httpStatus);
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiServerErrorException();
                     }
                 });
         return responseMono.map(jsonNode -> {
@@ -62,7 +70,7 @@ public class AddressService {
 
     public AddressResponse parseAddress(JsonNode jsonNode) throws ParseException {
 
-        JsonNode documentsNode = jsonNode.get("docments");
+        JsonNode documentsNode = jsonNode.get("documents");
         JsonNode regionNode = documentsNode.get(0);
         String fullAddress = regionNode.get("address_name").asText();
         String region1depth = regionNode.get("region_1depth_name").asText();

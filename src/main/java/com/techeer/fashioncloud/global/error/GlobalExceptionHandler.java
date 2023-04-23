@@ -1,5 +1,6 @@
-package com.techeer.fashioncloud.global.exception;
+package com.techeer.fashioncloud.global.error;
 
+import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;

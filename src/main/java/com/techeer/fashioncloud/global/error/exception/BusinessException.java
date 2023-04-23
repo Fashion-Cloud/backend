@@ -1,5 +1,6 @@
-package com.techeer.fashioncloud.global.exception;
+package com.techeer.fashioncloud.global.error.exception;
 
+import com.techeer.fashioncloud.global.error.ErrorCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

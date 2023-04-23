@@ -12,7 +12,9 @@ public enum ErrorCode {
 
     //위치 관련
     LOCATION_INVALID(400, "LOCATION IS INVALID"),
-    COORDINATE_INVALID(400, "COORDINATE IS INVALID");
+    COORDINATE_INVALID(400, "COORDINATE IS INVALID"),
+
+    API_PARSE_FAILED(500, "API PARSE FAILED");
 
     private Integer status;
     private String message;

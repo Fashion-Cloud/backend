@@ -1,17 +1,18 @@
 package com.techeer.fashioncloud.domain.weather.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.constant.GeoConstant;
 import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.global.config.GeoConfig;
+import com.techeer.fashioncloud.global.exception.ApiParseException;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Mono;
 
 
 @Service
@@ -33,32 +34,40 @@ public class AddressService {
                 .uriBuilderFactory(factory)
                 .build();
 
-        String response = webclient.get()
+        Mono<JsonNode> responseMono = webclient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("x", longitude)
                         .queryParam("y",latitude)
                         .build())
-
                 .header("Authorization", "KakaoAK "+geoConfig.getKey())
-                .retrieve()
-                .bodyToMono(String.class)
-                .log()
-                .block();
+                .exchangeToMono(response -> {
+                    Integer httpStatusCode = response.statusCode().value();
+                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
+                    if (httpStatus.is2xxSuccessful()) {
+                        return response.bodyToMono(JsonNode.class);
+                    } else {
+                        // HTTP 에러 처리
+                        throw new RuntimeException("HTTP Error: " + httpStatus);
+                    }
+                });
+        return responseMono.map(jsonNode -> {
+            try {
+                return parseAddress(jsonNode);
+            } catch (Exception e) {
+                throw new ApiParseException();
+            }
+        }).block();
 
-        return parseAddress(response);
     }
 
-    public AddressResponse parseAddress(String apiResponse) throws ParseException {
+    public AddressResponse parseAddress(JsonNode jsonNode) throws ParseException {
 
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(apiResponse);
-        JSONArray documents = (JSONArray) jsonObject.get("documents");
-        JSONObject document = (JSONObject) documents.get(0);
-
-        String fullAddress = (String) document.get("address_name");
-        String region1depth = (String) document.get("region_1depth_name");
-        String region2depth = (String) document.get("region_2depth_name");
-        String region3depth = (String) document.get("region_3depth_name");
+        JsonNode documentsNode = jsonNode.get("docments");
+        JsonNode regionNode = documentsNode.get(0);
+        String fullAddress = regionNode.get("address_name").asText();
+        String region1depth = regionNode.get("region_1depth_name").asText();
+        String region2depth = regionNode.get("region_2depth_name").asText();
+        String region3depth = regionNode.get("region_3depth_name").asText();
 
         return AddressResponse.builder()
                 .fullAddress(fullAddress)
@@ -67,5 +76,4 @@ public class AddressService {
                 .region3depth(region3depth)
                 .build();
     }
-
 }

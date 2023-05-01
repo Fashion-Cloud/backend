@@ -11,11 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Coordinate {
-    private Integer nx = 55;
-    private Integer ny = 127;
-
-//    private double nx = 55;
-//    private double ny = 127;
+    private Integer nx;
+    private Integer ny;
 
     //TODO: nx, ny 유효성 검사
 //    public boolean isValidXY() {

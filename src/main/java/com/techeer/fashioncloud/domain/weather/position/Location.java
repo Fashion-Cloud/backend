@@ -19,6 +19,14 @@ public class Location {
     private Double longitude;
 
 
+    // TODO: 이 location이 유효한지 검사
+    public boolean isValid() {
+
+        // this.latitude와 this.longitude를 가지고 유효한 위경도인지 조사, boolean리턴함
+
+        return true;
+    }
+
     public static Coordinate getCoordinate(Double v1, Double v2) {
 
         double RE = 6371.00877; // 지구 반경(km)

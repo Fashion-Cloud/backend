@@ -3,7 +3,7 @@ package com.techeer.fashioncloud.domain.weather.controller;
 import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.domain.weather.service.AddressService;
-import com.techeer.fashioncloud.global.dto.ApiResponse;
+import com.techeer.fashioncloud.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.techeer.fashioncloud.global.dto.ApiResponse.ok;
+import static com.techeer.fashioncloud.global.response.ApiResponse.ok;
 
 @RequiredArgsConstructor
 @RestController

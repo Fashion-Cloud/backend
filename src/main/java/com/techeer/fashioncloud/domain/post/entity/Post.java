@@ -47,6 +47,8 @@ public class Post extends BaseEntity {
     @NotNull
     private Integer rainfallType;
 
+
+    // TODO: 디폴트값은 개발용으로 넣어둔것. 이후 제거
     @Column(nullable = true, columnDefinition = "DOUBLE PRECISION DEFAULT 11.5")
     private Double windChill;
 

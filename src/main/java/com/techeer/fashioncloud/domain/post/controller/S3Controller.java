@@ -24,31 +24,27 @@ public class S3Controller {
     private final S3Mapper s3Mapper;
 
 
-
     @PostMapping
     public ResponseEntity<ResultResponse> uploadImage(
             @RequestBody MultipartFile image
     ) throws IOException {
 
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.IMAGE_POST_SUCCESS, s3Mapper.toUploadResponseDto(s3Service.uploadImage(image))));
-
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(s3Mapper.toUploadResponseDto(s3Service.uploadImage(image)));
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ResultResponse.of(
+                        ResponseCode.IMAGE_POST_SUCCESS, s3Mapper
+                                .toUploadResponseDto(s3Service.uploadImage(image))));
     }
 
     @GetMapping
     public ResponseEntity<ResultResponse> deleteImages(
-            @RequestParam String filename
-    ){
-        return ResponseEntity.ok(ResultResponse.of(
-                ResponseCode.IMAGE_GET_SUCCESS,
-                s3Mapper.toDeleteResponseDto(s3Service.deleteImage(filename))));
+            @RequestParam String filename) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ResultResponse.of(
+                        ResponseCode.IMAGE_GET_SUCCESS,
+                        s3Mapper.toDeleteResponseDto(s3Service.deleteImage(filename))));
 
-//        return ResponseEntity
-//                .ok()
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(s3Mapper.toDeleteResponseDto(s3Service.deleteImage(filename)));
     }
 }

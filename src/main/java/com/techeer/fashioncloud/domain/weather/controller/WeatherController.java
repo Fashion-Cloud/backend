@@ -3,15 +3,13 @@ package com.techeer.fashioncloud.domain.weather.controller;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.domain.weather.service.WeatherService;
+import com.techeer.fashioncloud.global.dto.LocationDto;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,11 +24,10 @@ public class WeatherController {
 
     @GetMapping()
     public ResponseEntity<ResultResponse> getWeatherHere(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude
-    ) throws ParseException, org.json.simple.parser.ParseException {
+            @RequestBody LocationDto location
+            ) throws ParseException, org.json.simple.parser.ParseException {
 
-        WeatherInfoResponse weather = weatherService.getNowWeather(Location.getCoordinate(latitude, longitude));
+        WeatherInfoResponse weather = weatherService.getNowWeather(Location.getCoordinate(location.getLatitude(), location.getLongitude()));
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.WEATHER_GET_SUCCESS, weather));
 
     }

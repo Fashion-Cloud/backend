@@ -34,7 +34,7 @@ public class PostController {
         PostResponseDto response = postMapper.toResponseDto(entity);
 
 
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.CREATE_POST_SUCCESS, response));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
 
     }
 
@@ -69,6 +69,6 @@ public class PostController {
     public ResponseEntity<ResultResponse> update (@PathVariable UUID id, @RequestBody PostUpdateRequestDto dto) {
 
         Post post=postService.update(id,dto);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_PUT_SUCCESS));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
     }
 }

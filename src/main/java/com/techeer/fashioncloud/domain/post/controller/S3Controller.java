@@ -33,7 +33,7 @@ public class S3Controller {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResultResponse.of(
-                        ResponseCode.IMAGE_POST_SUCCESS, s3Mapper
+                        ResponseCode.IMAGE_UPLOAD_SUCCESS, s3Mapper
                                 .toUploadResponseDto(s3Service.uploadImage(image))));
     }
 
@@ -43,7 +43,7 @@ public class S3Controller {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResultResponse.of(
-                        ResponseCode.IMAGE_GET_SUCCESS,
+                        ResponseCode.IMAGE_DELETE_SUCCESS,
                         s3Mapper.toDeleteResponseDto(s3Service.deleteImage(filename))));
 
     }

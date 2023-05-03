@@ -27,15 +27,15 @@ public class PostController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> create(
+    public ResponseEntity<ResultResponse> create(
             @RequestBody PostCreateRequestDto dto
     ){
         Post entity = postService.create(postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(entity);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
+
     }
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
@@ -49,33 +49,26 @@ public class PostController {
 
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(postService.findAllPosts());
+    public ResponseEntity<ResultResponse> getAllPosts() {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findAllPosts()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getOnePost(@PathVariable UUID id) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(postService.findPostById(id));
+    public ResponseEntity<ResultResponse> getOnePost(@PathVariable UUID id) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+    public ResponseEntity<ResultResponse> delete(@PathVariable UUID id) {
         postService.deleteRequestById(id); // Post ID로 삭제
-        return ResponseEntity
-                .noContent()
-                .build();
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update (@PathVariable UUID id, @RequestBody PostUpdateRequestDto dto) {
+    public ResponseEntity<ResultResponse> update (@PathVariable UUID id, @RequestBody PostUpdateRequestDto dto) {
 
-        Post entity = postService.update( id,dto);
-        return ResponseEntity
-                .noContent()
-                .build();
+        Post post=postService.update(id,dto);
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
     }
 }

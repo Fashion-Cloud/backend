@@ -22,6 +22,7 @@ import static com.techeer.fashioncloud.fixture.PostFixtures.POST_FIXTURES;
 import static com.techeer.fashioncloud.fixture.PostFixtures.UPLOAD_POST_FIXTURES;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +48,7 @@ public class PostServiceTest extends BaseEntity {
                 .windChill(3.0)
                 .build();
 
-        when(postRepository.findById(any())).thenReturn(Optional.of(givenPost));
+        lenient().when(postRepository.findById(any())).thenReturn(Optional.of(givenPost));
     }
 
     @Nested

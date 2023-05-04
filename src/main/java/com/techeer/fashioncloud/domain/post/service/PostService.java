@@ -43,7 +43,7 @@ public class PostService {
                 .windChill(dto.getWindSpeed())
                 .build();
         Post savedPost = postRepository.save(post);
-        entityManager.flush();
+//        entityManager.flush();
         return savedPost;
     }
 

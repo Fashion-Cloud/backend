@@ -34,6 +34,7 @@ public class PostService {
 
     public Post create(PostCreateServiceDto dto) {
         Post post = Post.builder()
+                .userId(dto.getUserId())
                 .name(dto.getName())
                 .image(dto.getImage())
                 .skyStatus(dto.getSkyStatus())

@@ -11,6 +11,7 @@ import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
+import com.techeer.fashioncloud.domain.weather.exception.InvalidSkyCodeException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +74,7 @@ public class PostService {
             postEntityList = postRepository.findRainfallPosts(weather.getWindChill(), RainfallType.SnowyCodeList);
         }
         else {
-            throw new RuntimeException("날씨 정보 오류");
+            throw new InvalidSkyCodeException();
         }
 
         return postMapper.toPostDtoList(postEntityList);

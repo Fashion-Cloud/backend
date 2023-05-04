@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.weather.position;
 
+import com.techeer.fashioncloud.domain.weather.exception.InvalidLocationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,7 +76,7 @@ public class Location {
             return coordinate;
         }
         else {
-            throw new IllegalArgumentException("입력값 범위가 잘못되었습니다.");
+            throw new InvalidLocationException();
 
         }
     }

@@ -1,11 +1,11 @@
 package com.techeer.fashioncloud.domain.weather.entity;
 
-import com.techeer.fashioncloud.domain.weather.dto.VilageFcstResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.simple.parser.ParseException;
 
 // 단기예보
 @Getter
@@ -21,9 +21,11 @@ public class VilageFcst extends Forecast{
         return null;
     }
 
-    //TODO: 단기예보 파싱
     @Override
-    public VilageFcstResponse parseWeatherInfo(String apiResponse) throws ParseException {
+    public ForecastResponse parseWeatherInfo(JsonNode jsonNode) {
         return null;
     }
+
+    //TODO: 단기예보 파싱
+
 }

@@ -33,7 +33,6 @@ public class AddressService {
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(GeoConstant.GEO_BASE_URL);
 
-
         WebClient webclient = WebClient.builder()
                 .uriBuilderFactory(factory)
                 .build();

@@ -1,11 +1,10 @@
 package com.techeer.fashioncloud.domain.weather.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.time.LocalDateTime;
@@ -41,40 +40,30 @@ public class UltraSrtNcst extends Forecast{
         }
     }
 
-    // TODO: 파싱 코드 개선
     @Override
-    public UltraSrtNcstResponse parseWeatherInfo(String apiResponse) throws ParseException {
-
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(apiResponse);
-
-
-        JSONObject jsonResponse = (JSONObject) jsonObject.get("response");
-        JSONObject jsonBody = (JSONObject) jsonResponse.get("body");
-        JSONObject jsonItems = (JSONObject) jsonBody.get("items");
-        JSONArray jsonItem = (JSONArray) jsonItems.get("item");
+    public UltraSrtNcstResponse parseWeatherInfo(JsonNode itemNode) {
 
         // 강수형태 파싱 (코드값)
-        JSONObject pty = (JSONObject) jsonItem.get(0);
-        Integer ptyValue = Integer.parseInt((String) pty.get("obsrValue"));
+        JsonNode pty = itemNode.get(0);
+        Integer ptyValue = Integer.parseInt(pty.get("obsrValue").asText());
 
         // 습도 파싱
-        JSONObject reh = (JSONObject) jsonItem.get(1);
-        Integer rehValue = Integer.parseInt((String) reh.get("obsrValue"));
+        JsonNode reh = itemNode.get(1);
+        Integer rehValue = Integer.parseInt(reh.get("obsrValue").asText());
 
         // 1시간 강수량 파싱
-        JSONObject rn1 = (JSONObject) jsonItem.get(2);
-        Integer rn1Value = Integer.parseInt((String) rn1.get("obsrValue"));
+        JsonNode rn1 = itemNode.get(2);
+        Integer rn1Value = Integer.parseInt(rn1.get("obsrValue").asText());
 
         // 기온 파싱
-        JSONObject t1h = (JSONObject) jsonItem.get(3);
-        Double t1hValue = Double.parseDouble((String) t1h.get("obsrValue"));
+        JsonNode t1h = itemNode.get(3);
+        Double t1hValue = Double.parseDouble(t1h.get("obsrValue").asText());
 
         // 풍속 파싱
-        JSONObject wsd = (JSONObject) jsonItem.get(7);
-        Double wsdValue = Double.parseDouble((String) wsd.get("obsrValue"));
+        JsonNode wsd = itemNode.get(7);
+        Double wsdValue = Double.parseDouble(t1h.get("obsrValue").asText());
 
-         // 초단기실황 Response Dto 리턴
+        // 초단기실황 Response Dto 리턴
         return UltraSrtNcstResponse.builder()
                 .temperature(t1hValue)
                 .hourRainfall(rn1Value)

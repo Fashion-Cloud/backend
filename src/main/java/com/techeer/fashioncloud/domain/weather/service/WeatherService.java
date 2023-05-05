@@ -1,22 +1,31 @@
 package com.techeer.fashioncloud.domain.weather.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.constant.ForecastConstant;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
+import com.techeer.fashioncloud.domain.weather.entity.Forecast;
 import com.techeer.fashioncloud.domain.weather.entity.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.entity.UltraSrtNcst;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.global.config.WeatherConfig;
+import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
+import com.techeer.fashioncloud.global.error.exception.ApiParseException;
+import com.techeer.fashioncloud.global.error.exception.ApiServerErrorException;
 import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WeatherService {
 
     private final WeatherConfig weatherConfig;
@@ -25,6 +34,7 @@ public class WeatherService {
 
         // TODO: coordinate.isValidXY(nx, ny) - 유효한 격자점인지 확인
 
+        // TODO: 전략 패턴 적용해서 넘겨주는 예보 객체에 따라 다르게 동작하도록 변경
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(coordinate.getNx(), coordinate.getNy());
 
@@ -53,22 +63,42 @@ public class WeatherService {
                 .uriBuilderFactory(factory)
                 .build();
 
-        String response = webclient.get()
+        Mono<JsonNode> responseMono = webclient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("serviceKey", weatherConfig.getDecodingKey())
                         .queryParam("numOfRows",3 * UltraSrtFcst.TIME_INTERVAL + 1)
                         .queryParam("pageNo",1)
                         .queryParam("dataType","JSON")
-                        .queryParam("base_date", ultraSrtFcst.setBaseDate())
-                        .queryParam("base_time", ultraSrtFcst.setBaseTime())
+                        .queryParam("base_date",ultraSrtFcst.setBaseDate())
+                        .queryParam("base_time",ultraSrtFcst.setBaseTime())
                         .queryParam("nx",nx)
                         .queryParam("ny",ny)
                         .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .exchangeToMono(response -> {
+                    Integer httpStatusCode = response.statusCode().value();
+                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
+                    if (httpStatus.is2xxSuccessful()) {
+                        return response.bodyToMono(JsonNode.class);
+                    } else if (httpStatus.is4xxClientError()){
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiBadRequestException();
 
-        return ultraSrtFcst.parseWeatherInfo(response);
+                    } else {
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiServerErrorException();
+                    }
+                });
+
+        return responseMono.map(jsonNode -> {
+            try {
+                JsonNode itemNode = Forecast.filterErrorResponse(jsonNode); //정상 응답 필터링
+                return ultraSrtFcst.parseWeatherInfo(itemNode);
+
+            } catch (org.json.simple.parser.ParseException e) {
+                throw new ApiParseException();
+            }
+        }).block();
+
     }
 
 
@@ -82,22 +112,40 @@ public class WeatherService {
                 .uriBuilderFactory(factory)
                 .build();
 
-        String response = webclient.get()
+        Mono<JsonNode> responseMono = webclient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("serviceKey", weatherConfig.getDecodingKey())
                         .queryParam("numOfRows",UltraSrtNcst.TOTAL_COUNT)
                         .queryParam("pageNo",1)
                         .queryParam("dataType","JSON")
-                        .queryParam("base_date", ultraSrtNcst.setBaseDate())
-                        .queryParam("base_time", ultraSrtNcst.setBaseTime())
+                        .queryParam("base_date",ultraSrtNcst.setBaseDate())
+                        .queryParam("base_time",ultraSrtNcst.setBaseTime())
                         .queryParam("nx",nx)
                         .queryParam("ny",ny)
                         .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .exchangeToMono(response -> {
+                    Integer httpStatusCode = response.statusCode().value();
+                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
 
-        return ultraSrtNcst.parseWeatherInfo(response);
+                    if (httpStatus.is2xxSuccessful()) {
+                        return response.bodyToMono(JsonNode.class);
+                    } else if (httpStatus.is4xxClientError()){
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiBadRequestException();
+                    } else {
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiServerErrorException();
+                    }
+                });
+
+        return responseMono.map(jsonNode -> {
+            try {
+                JsonNode itemNode = Forecast.filterErrorResponse(jsonNode); //정상 응답 필터링
+                return ultraSrtNcst.parseWeatherInfo(itemNode);
+
+            } catch (org.json.simple.parser.ParseException e) {
+                throw new ApiParseException();
+            }
+        }).block();
     }
-
 }

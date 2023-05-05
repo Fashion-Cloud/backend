@@ -1,11 +1,9 @@
 package com.techeer.fashioncloud.domain.weather.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.simple.parser.ParseException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,7 +51,7 @@ public class UltraSrtNcst extends Forecast{
 
         // 1시간 강수량 파싱
         JsonNode rn1 = itemNode.get(2);
-        Integer rn1Value = Integer.parseInt(rn1.get("obsrValue").asText());
+        Double rn1Value = Double.parseDouble(rn1.get("obsrValue").asText());
 
         // 기온 파싱
         JsonNode t1h = itemNode.get(3);

@@ -40,14 +40,11 @@ public class UltraSrtFcst extends Forecast{
         }
     }
 
-
-
-    // TODO: 파싱 코드 개선, category값 확인하고 value 받아오는 방식으로 변경
     // 초단기예보 응답 파싱하여 sky상태만 반환
     @Override
     public UltraSrtFcstResponse parseWeatherInfo(JsonNode itemNode) {
 
-        JsonNode skyData = (JsonNode) itemNode.get(18);
+        JsonNode skyData = (JsonNode) itemNode.get(18); //TODO: 하드코딩 개선
 
         // 초단기예보조회 Response Dto 리턴
         return UltraSrtFcstResponse.builder()

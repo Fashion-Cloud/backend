@@ -32,9 +32,7 @@ public class WeatherService {
 
     public WeatherInfoResponse getNowWeather (Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
-        // TODO: coordinate.isValidXY(nx, ny) - 유효한 격자점인지 확인
 
-        // TODO: 전략 패턴 적용해서 넘겨주는 예보 객체에 따라 다르게 동작하도록 변경
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(coordinate.getNx(), coordinate.getNy());
 
@@ -98,7 +96,6 @@ public class WeatherService {
                 throw new ApiParseException();
             }
         }).block();
-
     }
 
 

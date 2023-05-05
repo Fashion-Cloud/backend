@@ -14,8 +14,14 @@ public abstract class Forecast {
     public abstract String setBaseTime();
     public abstract ForecastResponse parseWeatherInfo(JsonNode jsonNode);
 
+    //현재 날짜를 포매팅하여 설정
+    public String setBaseDate () {
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return now.format(formatter);
+    }
 
-    // 기상청 api 정상응답 필터링
+    // 기상청 api 정상응답 필터링 후 body 추출
     public static JsonNode filterErrorResponse(JsonNode jsonNode) throws ParseException {
 
         JsonNode responseNode = jsonNode.get("response");
@@ -30,12 +36,4 @@ public abstract class Forecast {
             throw new ExternalApiException(Integer.parseInt(resultCode), headerNode.get("resultMsg").asText());
         }
     }
-
-    //현재 날짜를 포매팅하여 설정
-    public String setBaseDate () {
-        LocalDate now = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        return now.format(formatter);
-    }
-
 }

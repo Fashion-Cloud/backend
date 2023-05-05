@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class UltraSrtNcstResponse implements ForecastResponse {
 
     private Double temperature;
-    private Integer hourRainfall;
+    private Double hourRainfall;
     private Integer humidity;
     private Integer rainfallType;
     private Double windSpeed;

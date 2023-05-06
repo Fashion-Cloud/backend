@@ -29,9 +29,5 @@ public class WeatherController {
 
         WeatherInfoResponse weather = weatherService.getNowWeather(Location.getCoordinate(location.getLatitude(), location.getLongitude()));
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.WEATHER_GET_SUCCESS, weather));
-
     }
-
-
-
 }

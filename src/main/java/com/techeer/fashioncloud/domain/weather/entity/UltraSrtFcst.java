@@ -1,12 +1,9 @@
 package com.techeer.fashioncloud.domain.weather.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,25 +40,15 @@ public class UltraSrtFcst extends Forecast{
         }
     }
 
-
-
-    // TODO: 파싱 코드 개선, category값 확인하고 value 받아오는 방식으로 변경
     // 초단기예보 응답 파싱하여 sky상태만 반환
     @Override
-    public UltraSrtFcstResponse parseWeatherInfo(String apiResponse) throws ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(apiResponse);
+    public UltraSrtFcstResponse parseWeatherInfo(JsonNode itemNode) {
 
-        // 데이터 파싱
-        JSONObject jsonResponse = (JSONObject) jsonObject.get("response");
-        JSONObject jsonBody = (JSONObject) jsonResponse.get("body");
-        JSONObject jsonItems = (JSONObject) jsonBody.get("items");
-        JSONArray jsonItem = (JSONArray) jsonItems.get("item");
-        JSONObject skyData = (JSONObject) jsonItem.get(18);
+        JsonNode skyData = (JsonNode) itemNode.get(18); //TODO: 하드코딩 개선
 
         // 초단기예보조회 Response Dto 리턴
         return UltraSrtFcstResponse.builder()
-                .skyStatus(Integer.parseInt((String) skyData.get("fcstValue")))
+                .skyStatus(Integer.parseInt(skyData.get("fcstValue").asText()))
                 .build();
     }
 }

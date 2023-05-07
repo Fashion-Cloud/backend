@@ -23,6 +23,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -103,6 +105,8 @@ public class WeatherService {
     public UltraSrtNcstResponse getUltraSrtNcst (Integer nx, Integer ny) throws org.json.simple.parser.ParseException {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
+
+
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(ForecastConstant.BASE_URL+ ForecastConstant.ULTRA_SRT_NCST);
 
         WebClient webclient = WebClient.builder()
@@ -144,5 +148,38 @@ public class WeatherService {
                 throw new ApiParseException();
             }
         }).block();
+    }
+
+    public Mono<JsonNode> getResponseMono(String path, HashMap<String, String> params) {
+
+        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(path);
+
+        WebClient webclient = WebClient.builder()
+                .uriBuilderFactory(factory)
+                .build();
+
+        Mono<JsonNode> responseMono = webclient.get()
+                .uri(uriBuilder -> {
+                    uriBuilder.queryParam("serviceKey", weatherConfig.getDecodingKey());
+                    uriBuilder.queryParam("dataType","JSON");
+                    params.forEach(uriBuilder::queryParam);
+                    return uriBuilder.build();
+                })
+                .exchangeToMono(response -> {
+                    Integer httpStatusCode = response.statusCode().value();
+                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
+
+                    if (httpStatus.is2xxSuccessful()) {
+                        return response.bodyToMono(JsonNode.class);
+                    } else if (httpStatus.is4xxClientError()){
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiBadRequestException();
+                    } else {
+                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
+                        throw new ApiServerErrorException();
+                    }
+                });
+
+        return responseMono;
     }
 }

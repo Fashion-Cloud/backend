@@ -4,6 +4,6 @@ import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
 
 public class KakaoApiException extends ExternalApiException{
     public KakaoApiException(Integer status, String message) {
-            super(status, message);
+            super(500, status, message); //TODO: 임시로 500삽입해둠 이후 변경
     }
 }

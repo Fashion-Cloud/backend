@@ -30,17 +30,18 @@ public class GlobalExceptionHandler {
 
     // 외부 서버 에러
     @ExceptionHandler(ExternalApiException.class)
-    public ResponseEntity<ErrorResponse> handleException(ExternalApiException e) {
-        Integer status = e.getStatus();
+    public ResponseEntity<ExternalErrorResponse> handleException(ExternalApiException e) {
+        Integer status = (HttpStatus.INTERNAL_SERVER_ERROR.value());
+        Integer kmaStatus = e.getKmaStatus();
         String message = e.getMessage();
-        log.error("Exception occurred - status: {}, message: {}", status, message);
-        return new ResponseEntity<>((ErrorResponse.builder()
+        log.error("Exception occurred - kmaStatus: {}, message: {}", kmaStatus, message);
+        return new ResponseEntity<>((ExternalErrorResponse.builder()
                 .status(status)
+                .kmaStatus(kmaStatus)
                 .message(message)
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));
     }
-
 
     @ExceptionHandler(ParseException.class)
     public ResponseEntity<ErrorResponse> handleException(ParseException e) {

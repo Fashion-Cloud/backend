@@ -29,7 +29,7 @@ public class Post extends BaseEntity {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
-    private UUID userId = UUID.randomUUID(); // 임시 유저
+    private UUID userId;
 
     @NotNull
     private String name;
@@ -53,8 +53,9 @@ public class Post extends BaseEntity {
     private Double windChill;
 
     @Builder
-    public Post(UUID id, String name, String image, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
+    public Post(UUID id, UUID userId, String name, String image, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
         this.image = image;
         this.skyStatus = skyStatus;

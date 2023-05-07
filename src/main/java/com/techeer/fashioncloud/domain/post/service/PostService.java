@@ -35,6 +35,7 @@ public class PostService {
 
     public Post create(PostCreateServiceDto dto) {
         Post post = Post.builder()
+                .userId(dto.getUserId())
                 .name(dto.getName())
                 .image(dto.getImage())
                 .skyStatus(dto.getSkyStatus())
@@ -43,7 +44,7 @@ public class PostService {
                 .windChill(dto.getWindSpeed())
                 .build();
         Post savedPost = postRepository.save(post);
-        entityManager.flush();
+//        entityManager.flush();
         return savedPost;
     }
 

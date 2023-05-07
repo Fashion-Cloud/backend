@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 import com.techeer.fashioncloud.domain.post.entity.Review;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,28 +14,28 @@ import java.util.UUID;
 @NoArgsConstructor
 public class PostCreateRequestDto {
 
-    @NotBlank
+    @NotNull
     private UUID userId; // user 정보를 조회하여 PostRequest에 넣기 위함.
 
-    @NotBlank
+    @NotNull
     private String name;
 
-    @NotBlank
+    @NotNull
     private String image;
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.
 
-    @NotBlank
+    @NotNull
     private Integer skyStatus;
 
-    @NotBlank
+    @NotNull
     private Double temperature;
 
-    @NotBlank
+    @NotNull
     private Integer rainfallType;
 
-    @NotBlank
+    @NotNull
     private Double windSpeed;
 
-    @NotBlank
+    @NotNull
     private Review review;
 }

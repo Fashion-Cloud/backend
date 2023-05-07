@@ -3,6 +3,7 @@ package com.techeer.fashioncloud.domain.weather.entity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
+import org.apache.http.HttpStatus;
 import org.json.simple.parser.ParseException;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public abstract class Forecast {
             return responseNode.get("body").get("items").get("item");
         }
         else {
-            throw new ExternalApiException(Integer.parseInt(resultCode), headerNode.get("resultMsg").asText());
+            throw new ExternalApiException(HttpStatus.SC_INTERNAL_SERVER_ERROR, Integer.parseInt(resultCode), headerNode.get("resultMsg").asText()); //TODO: statuscode 삽입부분 변경
         }
     }
 }

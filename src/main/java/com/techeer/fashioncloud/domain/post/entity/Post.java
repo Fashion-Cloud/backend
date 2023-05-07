@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.Where;
 import java.util.UUID;
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")

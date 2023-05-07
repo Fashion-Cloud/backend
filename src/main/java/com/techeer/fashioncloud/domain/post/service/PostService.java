@@ -35,14 +35,13 @@ public class PostService {
 
     public Post create(PostCreateServiceDto dto) {
         Post post = Post.builder()
-                .userId(dto.getUserId())
-                .name(dto.getName())
-                .image(dto.getImage())
-                .skyStatus(dto.getSkyStatus())
-                .rainfallType(dto.getRainfallType())
-                .review(dto.getReview())
-                .windChill(dto.getWindSpeed())
-                .build();
+            .name(dto.getName())
+            .image(dto.getImage())
+            .skyStatus(dto.getSkyStatus())
+            .rainfallType(dto.getRainfallType())
+            .review(dto.getReview())
+            .windChill(dto.getWindSpeed())
+            .build();
         Post savedPost = postRepository.save(post);
 //        entityManager.flush();
         return savedPost;
@@ -86,7 +85,6 @@ public class PostService {
         entity.setName(dto.getName());
         entity.setImage(dto.getImage());
         entity.setReview(dto.getReview());
-
         return entity;
     }
     
@@ -97,11 +95,13 @@ public class PostService {
     }
 
     public Post findPostById(UUID id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Post ID"));
+        return postRepository.findById(id).orElseThrow(()-> new PostNotFoundException());
     }
 
     public void deleteRequestById(UUID id) {
+        if(!postRepository.existsById(id)){
+            throw new PostNotFoundException();
+        }
         postRepository.deleteById(id);
     }
 }

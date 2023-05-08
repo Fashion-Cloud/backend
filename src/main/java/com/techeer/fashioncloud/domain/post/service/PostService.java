@@ -47,8 +47,6 @@ public class PostService {
         return savedPost;
     }
 
-
-
     public List<WeatherPostResponse> findPostsByWeather(PostWeatherRequest weather) {
         //TODO: 분기처리 개선
         List<Post> postEntityList = new ArrayList<>();
@@ -78,8 +76,7 @@ public class PostService {
 
         return postMapper.toPostDtoList(postEntityList);
     }
-    
-    
+
     public Post update(UUID id, PostUpdateRequestDto dto) {
         Post entity= postRepository.findById(id).get();
         entity.setName(dto.getName());

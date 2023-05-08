@@ -86,7 +86,6 @@ public class WeatherService {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
 
-
         HashMap<String, Object> params = new HashMap<>() {
             {
                 put("numOfRows", UltraSrtNcst.TOTAL_COUNT);
@@ -126,6 +125,7 @@ public class WeatherService {
                     params.forEach(uriBuilder::queryParam);
                     return uriBuilder.build();
                 })
+
                 .exchangeToMono(response -> {
                     Integer httpStatusCode = response.statusCode().value();
                     HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);

@@ -36,8 +36,8 @@ public class GlobalExceptionHandler {
         Integer kmaStatus = e.getKmaStatus();
         String message = e.getMessage();
         log.error("Exception occurred - kmaStatus: {}, message: {}", kmaStatus, message);
-        return new ResponseEntity<>((ExternalErrorResponse.builder()
         log.error(String.valueOf(e.getClass()));
+        return new ResponseEntity<>((ExternalErrorResponse.builder()
                 .status(status)
                 .kmaStatus(kmaStatus)
                 .message(message)

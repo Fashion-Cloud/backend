@@ -32,7 +32,7 @@ public class WeatherService {
 
     private final WeatherConfig weatherConfig;
 
-    public WeatherInfoResponse getNowWeather (Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
+    public WeatherInfoResponse getNowWeather(Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
 
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
@@ -57,37 +57,18 @@ public class WeatherService {
     public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
 
         UltraSrtFcst ultraSrtFcst = new UltraSrtFcst();
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(ForecastConstant.BASE_URL+ ForecastConstant.ULTRA_SRT_FCST);
+        HashMap<String, Object> params = new HashMap<>() {
+            {
+                put("numOfRows", 3 * UltraSrtFcst.TIME_INTERVAL + 1);
+                put("pageNo", 1);
+                put("base_date", ultraSrtFcst.setBaseDate());
+                put("base_time", ultraSrtFcst.setBaseTime());
+                put("nx", nx);
+                put("ny", ny);
+            }
+        };
 
-        WebClient webclient = WebClient.builder()
-                .uriBuilderFactory(factory)
-                .build();
-
-        Mono<JsonNode> responseMono = webclient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("serviceKey", weatherConfig.getDecodingKey())
-                        .queryParam("numOfRows",3 * UltraSrtFcst.TIME_INTERVAL + 1)
-                        .queryParam("pageNo",1)
-                        .queryParam("dataType","JSON")
-                        .queryParam("base_date",ultraSrtFcst.setBaseDate())
-                        .queryParam("base_time",ultraSrtFcst.setBaseTime())
-                        .queryParam("nx",nx)
-                        .queryParam("ny",ny)
-                        .build())
-                .exchangeToMono(response -> {
-                    Integer httpStatusCode = response.statusCode().value();
-                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
-                    if (httpStatus.is2xxSuccessful()) {
-                        return response.bodyToMono(JsonNode.class);
-                    } else if (httpStatus.is4xxClientError()){
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiBadRequestException();
-
-                    } else {
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiServerErrorException();
-                    }
-                });
+        Mono<JsonNode> responseMono = getResponseMono(ForecastConstant.BASE_URL + ForecastConstant.ULTRA_SRT_FCST, params);
 
         return responseMono.map(jsonNode -> {
             try {
@@ -100,44 +81,24 @@ public class WeatherService {
         }).block();
     }
 
-
     // 초단기실황예보로 나머지 날씨 정보 조회
-    public UltraSrtNcstResponse getUltraSrtNcst (Integer nx, Integer ny) throws org.json.simple.parser.ParseException {
+    public UltraSrtNcstResponse getUltraSrtNcst(Integer nx, Integer ny) throws org.json.simple.parser.ParseException {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
 
 
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(ForecastConstant.BASE_URL+ ForecastConstant.ULTRA_SRT_NCST);
+        HashMap<String, Object> params = new HashMap<>() {
+            {
+                put("numOfRows", UltraSrtNcst.TOTAL_COUNT);
+                put("pageNo", 1);
+                put("base_date", ultraSrtNcst.setBaseDate());
+                put("base_time", ultraSrtNcst.setBaseTime());
+                put("nx", nx);
+                put("ny", ny);
+            }
+        };
 
-        WebClient webclient = WebClient.builder()
-                .uriBuilderFactory(factory)
-                .build();
-
-        Mono<JsonNode> responseMono = webclient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("serviceKey", weatherConfig.getDecodingKey())
-                        .queryParam("numOfRows",UltraSrtNcst.TOTAL_COUNT)
-                        .queryParam("pageNo",1)
-                        .queryParam("dataType","JSON")
-                        .queryParam("base_date",ultraSrtNcst.setBaseDate())
-                        .queryParam("base_time",ultraSrtNcst.setBaseTime())
-                        .queryParam("nx",nx)
-                        .queryParam("ny",ny)
-                        .build())
-                .exchangeToMono(response -> {
-                    Integer httpStatusCode = response.statusCode().value();
-                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
-
-                    if (httpStatus.is2xxSuccessful()) {
-                        return response.bodyToMono(JsonNode.class);
-                    } else if (httpStatus.is4xxClientError()){
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiBadRequestException();
-                    } else {
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiServerErrorException();
-                    }
-                });
+        Mono<JsonNode> responseMono = getResponseMono(ForecastConstant.BASE_URL + ForecastConstant.ULTRA_SRT_NCST, params);
 
         return responseMono.map(jsonNode -> {
             try {
@@ -150,7 +111,7 @@ public class WeatherService {
         }).block();
     }
 
-    public Mono<JsonNode> getResponseMono(String path, HashMap<String, String> params) {
+    public Mono<JsonNode> getResponseMono(String path, HashMap<String, Object> params) {
 
         DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(path);
 
@@ -158,10 +119,10 @@ public class WeatherService {
                 .uriBuilderFactory(factory)
                 .build();
 
-        Mono<JsonNode> responseMono = webclient.get()
+        return webclient.get()
                 .uri(uriBuilder -> {
                     uriBuilder.queryParam("serviceKey", weatherConfig.getDecodingKey());
-                    uriBuilder.queryParam("dataType","JSON");
+                    uriBuilder.queryParam("dataType", "JSON");
                     params.forEach(uriBuilder::queryParam);
                     return uriBuilder.build();
                 })
@@ -171,7 +132,7 @@ public class WeatherService {
 
                     if (httpStatus.is2xxSuccessful()) {
                         return response.bodyToMono(JsonNode.class);
-                    } else if (httpStatus.is4xxClientError()){
+                    } else if (httpStatus.is4xxClientError()) {
                         log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
                         throw new ApiBadRequestException();
                     } else {
@@ -179,7 +140,6 @@ public class WeatherService {
                         throw new ApiServerErrorException();
                     }
                 });
-
-        return responseMono;
     }
 }
+

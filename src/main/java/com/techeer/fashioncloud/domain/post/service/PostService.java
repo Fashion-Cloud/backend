@@ -11,9 +11,9 @@ import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,23 +27,24 @@ import java.util.stream.Collectors;
 @Transactional
 public class PostService {
 
+    @Autowired
+    private final WindChillCalculator calculator;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
-    
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
     public Post create(PostCreateServiceDto dto) {
+        Double windChill = calculator.getWindChill(dto.getTemperature(),dto.getWindSpeed());
         Post post = Post.builder()
-            .name(dto.getName())
-            .image(dto.getImage())
-            .skyStatus(dto.getSkyStatus())
-            .rainfallType(dto.getRainfallType())
-            .review(dto.getReview())
-            .windChill(dto.getWindSpeed())
-            .build();
+                .userId(dto.getUserId())
+                .name(dto.getName())
+                .image(dto.getImage())
+                .skyStatus(dto.getSkyStatus())
+                .rainfallType(dto.getRainfallType())
+                .review(dto.getReview())
+                .windChill(windChill)
+                .build();
         Post savedPost = postRepository.save(post);
-//        entityManager.flush();
         return savedPost;
     }
 

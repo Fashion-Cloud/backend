@@ -35,13 +35,14 @@ public class PostService {
 
     public Post create(PostCreateServiceDto dto) {
         Post post = Post.builder()
-            .name(dto.getName())
-            .image(dto.getImage())
-            .skyStatus(dto.getSkyStatus())
-            .rainfallType(dto.getRainfallType())
-            .review(dto.getReview())
-            .windChill(dto.getWindSpeed())
-            .build();
+                .userId(dto.getUserId())
+                .name(dto.getName())
+                .image(dto.getImage())
+                .skyStatus(dto.getSkyStatus())
+                .rainfallType(dto.getRainfallType())
+                .review(dto.getReview())
+                .windChill(dto.getWindSpeed())
+                .build();
         Post savedPost = postRepository.save(post);
 //        entityManager.flush();
         return savedPost;

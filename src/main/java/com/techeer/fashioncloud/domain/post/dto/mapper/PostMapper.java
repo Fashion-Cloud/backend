@@ -27,6 +27,7 @@ public class PostMapper {
 
     public PostCreateServiceDto toServiceDto(PostCreateRequestDto dto){
         return PostCreateServiceDto.builder()
+                .userId(dto.getUserId())
                 .name(dto.getName())
                 .image(dto.getImage())
                 .skyStatus((dto.getSkyStatus()))

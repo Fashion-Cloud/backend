@@ -3,7 +3,6 @@ package com.techeer.fashioncloud.domain.post.service;
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.request.PostWeatherRequest;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
@@ -48,28 +47,28 @@ public class PostService {
         return savedPost;
     }
 
-    public List<WeatherPostResponse> findPostsByWeather(PostWeatherRequest weather) {
+    public List<WeatherPostResponse> findPostsByWeather(Integer skyCode, Integer rainfallCode, Double windChill) {
         //TODO: 분기처리 개선
         List<Post> postEntityList = new ArrayList<>();
 
         //맑음
-        if (weather.getSkyCode() == SkyStatus.CLEAR
-                & weather.getRainfallCode() == RainfallType.CLEAR) {
+        if (skyCode == SkyStatus.CLEAR
+                & rainfallCode == RainfallType.CLEAR) {
             throw new PostNotFoundException();
 //            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.clearCodeList, RainfallType.clearCodeList);
         }
         //흐림
-        else if (SkyStatus.cloudyCodeList.contains(weather.getSkyCode())
-                & weather.getRainfallCode() == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.cloudyCodeList, RainfallType.clearCodeList);
+        else if (SkyStatus.cloudyCodeList.contains(skyCode)
+                & rainfallCode == RainfallType.CLEAR) {
+            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.cloudyCodeList, RainfallType.clearCodeList);
         }
         //비
-        else if (RainfallType.RainyCodeList.contains(weather.getRainfallCode())) {
-            postEntityList = postRepository.findRainfallPosts(weather.getWindChill(), RainfallType.RainyCodeList);
+        else if (RainfallType.RainyCodeList.contains(rainfallCode)) {
+            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.RainyCodeList);
         }
         //눈
-        else if (RainfallType.SnowyCodeList.contains(weather.getRainfallCode())) {
-            postEntityList = postRepository.findRainfallPosts(weather.getWindChill(), RainfallType.SnowyCodeList);
+        else if (RainfallType.SnowyCodeList.contains(rainfallCode)) {
+            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.SnowyCodeList);
         }
         else {
             throw new RuntimeException("날씨 정보 오류");

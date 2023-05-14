@@ -59,7 +59,7 @@ public class UltraSrtNcst extends Forecast{
 
         // 풍속 파싱
         JsonNode wsd = itemNode.get(7);
-        Double wsdValue = Double.parseDouble(t1h.get("obsrValue").asText());
+        Double wsdValue = Double.parseDouble(wsd.get("obsrValue").asText());
 
         // 초단기실황 Response Dto 리턴
         return UltraSrtNcstResponse.builder()

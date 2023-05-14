@@ -16,8 +16,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     boolean existsById(UUID uuid);
 
     // 맑거나 흐림 - 하늘상태, 강수형태, 체감온도 필터링
-    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND p.skyStatus IN :skyCodeList " +
+    @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyCodeList " +
             "AND p.rainfallType IN :rainfallCodeList " +
             "AND ABS(p.windChill - :windChill) <= 1 ")
     List<Post> findNoRainfallPosts(
@@ -26,8 +25,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             @Param("rainfallCodeList") List<Integer> rainfallCodeList);
 
     //눈 혹은 비 - 강수형태와 체감온도로만 필터링
-    @Query("SELECT p FROM Post p WHERE p.deletedAt IS NULL " +
-            "AND p.rainfallType IN :rainfallCodeList " +
+    @Query("SELECT p FROM Post p WHERE p.rainfallType IN :rainfallCodeList " +
             "AND ABS(p.windChill - :windChill) <= 1 ")
     List<Post> findRainfallPosts(
             @Param("windChill") Double windChill,

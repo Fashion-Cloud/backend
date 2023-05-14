@@ -54,8 +54,7 @@ public class PostService {
         //맑음
         if (skyCode == SkyStatus.CLEAR
                 & rainfallCode == RainfallType.CLEAR) {
-            throw new PostNotFoundException();
-//            postEntityList = postRepository.findNoRainfallPosts(weather.getWindChill(), SkyStatus.clearCodeList, RainfallType.clearCodeList);
+            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.clearCodeList, RainfallType.clearCodeList);
         }
         //흐림
         else if (SkyStatus.cloudyCodeList.contains(skyCode)

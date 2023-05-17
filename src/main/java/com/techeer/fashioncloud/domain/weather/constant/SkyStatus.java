@@ -3,12 +3,26 @@ package com.techeer.fashioncloud.domain.weather.constant;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkyStatus {
-    public static final Integer CLEAR = 1;
-    public static final Integer CLOUDY = 3;
-    public static final Integer OVERCAST = 4;
+public enum SkyStatus {
+    CLEAR(1),
+    CLOUDY(3),
+    OVERCAST(4);
 
-    public static List<Integer> clearCodeList = Arrays.asList(CLEAR);
+    private final int code;
 
-    public static List<Integer> cloudyCodeList = Arrays.asList(CLOUDY, OVERCAST);
+    SkyStatus(int code) {
+        this.code = code;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public static List<SkyStatus> getClearCodeList() {
+        return Arrays.asList(CLEAR);
+    }
+
+    public static List<SkyStatus> getCloudyCodeList() {
+        return Arrays.asList(CLOUDY, OVERCAST);
+    }
 }

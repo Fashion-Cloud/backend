@@ -21,7 +21,7 @@ spring:
     generate-ddl: false
     defer-datasource-initialization: true
 
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 

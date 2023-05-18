@@ -1,6 +1,8 @@
 package com.techeer.fashioncloud.domain.post.repository;
 
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,14 +23,14 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             "AND ABS(p.windChill - :windChill) <= 1 ")
     List<Post> findNoRainfallPosts(
             @Param("windChill") Double windChill,
-            @Param("skyCodeList") List<Integer> skyCodeList,
-            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
+            @Param("skyCodeList") List<SkyStatus> skyCodeList,
+            @Param("rainfallCodeList") List<RainfallType> rainfallCodeList);
 
     //눈 혹은 비 - 강수형태와 체감온도로만 필터링
     @Query("SELECT p FROM Post p WHERE p.rainfallType IN :rainfallCodeList " +
             "AND ABS(p.windChill - :windChill) <= 1 ")
     List<Post> findRainfallPosts(
             @Param("windChill") Double windChill,
-            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
+            @Param("rainfallCodeList") List<RainfallType> rainfallCodeList);
 
 }

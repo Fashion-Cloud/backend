@@ -3,19 +3,34 @@ package com.techeer.fashioncloud.domain.weather.constant;
 import java.util.Arrays;
 import java.util.List;
 
-//PTY: 초단기실황 강수형태
-public class RainfallType {
+public enum RainfallType {
+    CLEAR(0),
+    RAIN(1),
+    RAIN_SNOW(2),
+    SNOW(3),
+    RAINDROP(5),
+    RAINDROP_SNOWFALL(6),
+    SNOWFALL(7);
 
-    public static final Integer CLEAR = 0;
-    public static final Integer RAIN = 1;
-    public static final Integer RAIN_SNOW = 2;
-    public static final Integer SNOW = 3;
-    public static final Integer RAINDROP = 5;
-    public static final Integer RAINDROP_SNOWFALL = 6;
-    public static final Integer SNOWFALL = 7;
+    private final int code;
 
-    public static List<Integer> clearCodeList = Arrays.asList(CLEAR);
-    public static List<Integer> RainyCodeList = Arrays.asList(RAIN, RAIN_SNOW, RAINDROP, RAINDROP_SNOWFALL);
-    public static List<Integer> SnowyCodeList = Arrays.asList(SNOW, RAIN_SNOW, RAINDROP_SNOWFALL, SNOWFALL);
+    RainfallType(int code) {
+        this.code = code;
+    }
 
+    public int getCode() {
+        return code;
+    }
+
+    public static List<RainfallType> getClearCodeList() {
+        return Arrays.asList(CLEAR);
+    }
+
+    public static List<RainfallType> getRainyCodeList() {
+        return Arrays.asList(RAIN, RAIN_SNOW, RAINDROP, RAINDROP_SNOWFALL);
+    }
+
+    public static List<RainfallType> getSnowyCodeList() {
+        return Arrays.asList(SNOW, RAIN_SNOW, RAINDROP_SNOWFALL, SNOWFALL);
+    }
 }

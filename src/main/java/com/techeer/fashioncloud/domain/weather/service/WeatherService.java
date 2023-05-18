@@ -17,6 +17,7 @@ import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 public class WeatherService {
 
     private final WeatherConfig weatherConfig;
-
+    @Cacheable(value = "member",key = "{#coordinate.nx, #coordinate.ny}",cacheManager = "cacheManager")
     public WeatherInfoResponse getNowWeather(Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
 
@@ -93,6 +94,7 @@ public class WeatherService {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
 
+
         log.info("초단기실황예보 UltraSrtNcst - BaseDate: {}, BaseTime: {}",ultraSrtNcst.setBaseDate(), ultraSrtNcst.setBaseTime());
 
         HashMap<String, Object> params = new HashMap<>() {
@@ -135,6 +137,7 @@ public class WeatherService {
                     params.forEach(uriBuilder::queryParam);
                     return uriBuilder.build();
                 })
+
                 .exchangeToMono(response -> {
                     Integer httpStatusCode = response.statusCode().value();
                     HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);

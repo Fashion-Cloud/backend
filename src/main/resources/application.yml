@@ -21,6 +21,12 @@ spring:
     generate-ddl: false
     defer-datasource-initialization: true
 
+
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
   sql:
     init:
       mode: always

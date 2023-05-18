@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 // 초단기예보
 @Getter
 @NoArgsConstructor
-public class UltraSrtFcst extends Forecast{
+public class UltraSrtFcst extends Forecast {
 
     public static final Integer TIME_INTERVAL = 6; //초단기예보조회 데이터 시간 간격
 

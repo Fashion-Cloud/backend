@@ -5,12 +5,12 @@ import com.techeer.fashioncloud.domain.weather.constant.GeoConstant;
 import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.global.config.GeoConfig;
+import com.techeer.fashioncloud.global.domain.ExternalApiCallable;
 import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
 import com.techeer.fashioncloud.global.error.exception.ApiParseException;
 import com.techeer.fashioncloud.global.error.exception.ApiServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,12 +21,12 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AddressService {
+public class AddressService implements ExternalApiCallable<AddressResponse> {
 
 
     private final GeoConfig geoConfig;
 
-    public AddressResponse getAddress (Location location) throws ParseException {
+    public AddressResponse getAddress (Location location) {
 
         String latitude = location.getLatitude().toString();
         String longitude = location.getLongitude().toString();
@@ -59,7 +59,7 @@ public class AddressService {
                 });
         return responseMono.map(jsonNode -> {
             try {
-                return parseAddress(jsonNode);
+                return parseApiResponse(jsonNode);
             } catch (Exception e) {
                 throw new ApiParseException();
             }
@@ -67,7 +67,7 @@ public class AddressService {
 
     }
 
-    public AddressResponse parseAddress(JsonNode jsonNode) throws ParseException {
+    public AddressResponse parseApiResponse(JsonNode jsonNode) {
 
         JsonNode documentsNode = jsonNode.get("documents");
         JsonNode regionNode = documentsNode.get(0);

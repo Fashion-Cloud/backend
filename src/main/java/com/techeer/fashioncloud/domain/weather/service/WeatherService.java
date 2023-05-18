@@ -58,6 +58,10 @@ public class WeatherService {
     public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
 
         UltraSrtFcst ultraSrtFcst = new UltraSrtFcst();
+
+        log.info("초단기예보 UltraSrtFcst - BaseDate: {}, BaseTime: {}",ultraSrtFcst.setBaseDate(), ultraSrtFcst.setBaseTime());
+
+
         HashMap<String, Object> params = new HashMap<>() {
             {
                 put("numOfRows", 3 * UltraSrtFcst.TIME_INTERVAL + 1);
@@ -66,7 +70,10 @@ public class WeatherService {
                 put("base_time", ultraSrtFcst.setBaseTime());
                 put("nx", nx);
                 put("ny", ny);
+
+
             }
+
         };
 
         Mono<JsonNode> responseMono = getResponseMono(ForecastConstant.BASE_URL + ForecastConstant.ULTRA_SRT_FCST, params);
@@ -87,6 +94,9 @@ public class WeatherService {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
 
+
+        log.info("초단기실황예보 UltraSrtNcst - BaseDate: {}, BaseTime: {}",ultraSrtNcst.setBaseDate(), ultraSrtNcst.setBaseTime());
+
         HashMap<String, Object> params = new HashMap<>() {
             {
                 put("numOfRows", UltraSrtNcst.TOTAL_COUNT);
@@ -95,6 +105,7 @@ public class WeatherService {
                 put("base_time", ultraSrtNcst.setBaseTime());
                 put("nx", nx);
                 put("ny", ny);
+
             }
         };
 

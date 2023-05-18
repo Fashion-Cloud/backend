@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
         log.error(String.valueOf(e.getClass()));
         return new ResponseEntity<>((ExternalErrorResponse.builder()
                 .status(status)
-                .kmaStatus(kmaStatus)
+                .kmaStatus(kmaStatus) //기상청 응답코드
                 .message(message)
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));

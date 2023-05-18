@@ -1,6 +1,8 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 
 import com.techeer.fashioncloud.domain.post.entity.Review;
+import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,13 +28,13 @@ public class PostCreateServiceDto {
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.
 
     @NotNull
-    private Integer skyStatus;
+    private SkyStatus skyStatus;
 
     @NotNull
     private Double temperature;
 
     @NotNull
-    private Integer rainfallType;
+    private RainfallType rainfallType;
 
     @NotNull
     private Double windSpeed;

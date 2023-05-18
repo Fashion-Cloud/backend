@@ -3,6 +3,8 @@ package com.techeer.fashioncloud.domain.post.service;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
+import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,8 +44,8 @@ public class PostServiceTest extends BaseEntity {
                 .userId(UUID.fromString("eea26f3f-2457-49e7-9f69-3376ccdd72ee"))
                 .name("AA")
                 .image("aaa")
-                .skyStatus(0)
-                .rainfallType(3)
+                .skyStatus(SkyStatus.CLEAR)
+                .rainfallType(RainfallType.CLEAR)
                 .review(추웠다)
                 .windChill(3.0)
                 .build();

@@ -2,6 +2,8 @@ package com.techeer.fashioncloud.fixture;
 
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 
 import java.util.UUID;
 
@@ -13,8 +15,8 @@ public class PostFixtures {
                     .userId(UUID.randomUUID())
                     .name("AA")
                     .image("aaa")
-                    .skyStatus(0)
-                    .rainfallType(3)
+                    .skyStatus(SkyStatus.CLEAR)
+                    .rainfallType(RainfallType.CLEAR)
                     .review(추웠다)
                     .windChill(3.0)
                     .build();
@@ -23,9 +25,9 @@ public class PostFixtures {
             .userId(UUID.randomUUID())
             .name("AA")
             .image("aaa")
-            .skyStatus(0)
+            .skyStatus(SkyStatus.CLEAR)
             .temperature(3.0)
-            .rainfallType(3)
+            .rainfallType(RainfallType.CLEAR)
             .windSpeed(7.0)
             .review(추웠다)
             .build();

@@ -5,13 +5,8 @@ import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.*;
+import org.hibernate.annotations.*;
 
 import java.util.UUID;
 @Entity

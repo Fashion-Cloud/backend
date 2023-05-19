@@ -6,7 +6,9 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.entity.PostImage;
 import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
+import com.techeer.fashioncloud.domain.post.repository.PostImageRepository;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
@@ -30,11 +32,12 @@ public class PostService {
     private final WindChillCalculator calculator;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final PostImageRepository postImageRepository;
 
 
     public Post create(PostCreateServiceDto dto) {
         Double windChill = calculator.getWindChill(dto.getTemperature(),dto.getWindSpeed());
-        Post post = Post.builder()
+        Post entity = postRepository.save(Post.builder()
                 .userId(dto.getUserId())
                 .name(dto.getName())
                 .image(dto.getImage())
@@ -42,9 +45,17 @@ public class PostService {
                 .rainfallType(dto.getRainfallType())
                 .review(dto.getReview())
                 .windChill(windChill)
+                .build());
+
+        // Save Images
+        String postImage = dto.getImage();
+        PostImage imageEntity = PostImage.builder()
+                .post(entity)
+                .url(postImage)
                 .build();
-        Post savedPost = postRepository.save(post);
-        return savedPost;
+        postImageRepository.save(imageEntity);
+        
+        return entity;
     }
 
     public List<WeatherPostResponse> findPostsByWeather(SkyStatus skyCode, RainfallType rainfallCode, Double windChill) {

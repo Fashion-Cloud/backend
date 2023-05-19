@@ -29,7 +29,7 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class WeatherService implements {
+public class WeatherService {
 
     private final WeatherConfig weatherConfig;
     @Cacheable(value = "member",key = "{#coordinate.nx, #coordinate.ny}",cacheManager = "cacheManager")

@@ -32,7 +32,7 @@ import java.util.HashMap;
 public class WeatherService {
 
     private final WeatherConfig weatherConfig;
-    @Cacheable(value = "member",key = "{#coordinate.nx, #coordinate.ny}",cacheManager = "cacheManager")
+    @Cacheable(value = "weatherCache",key = "{#coordinate.nx, #coordinate.ny}",cacheManager = "cacheManager")
     public WeatherInfoResponse getNowWeather(Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
 

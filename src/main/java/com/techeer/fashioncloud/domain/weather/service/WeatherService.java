@@ -17,7 +17,7 @@ import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.json.ParseException;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,14 +32,15 @@ import java.util.HashMap;
 public class WeatherService {
 
     private final WeatherConfig weatherConfig;
-    @Cacheable(value = "weatherCache",key = "{#coordinate.nx, #coordinate.ny}",cacheManager = "cacheManager")
+    private final RedisTemplate<String, WeatherInfoResponse> redisTemplate;
+
     public WeatherInfoResponse getNowWeather(Coordinate coordinate) throws ParseException, org.json.simple.parser.ParseException {
 
 
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(coordinate.getNx(), coordinate.getNy());
 
-        WeatherInfoResponse weatherInfo = WeatherInfoResponse.builder()
+        WeatherInfoResponse weatherInfoResponse = WeatherInfoResponse.builder()
                 .sky(ultraSrtFcstResponse.getSkyStatus())
                 .temperature(ultraSrtNcstResponse.getTemperature())
                 .hourRainfall(ultraSrtNcstResponse.getHourRainfall())
@@ -51,7 +52,10 @@ public class WeatherService {
                         ultraSrtNcstResponse.getWindSpeed()))
                 .build();
 
-        return weatherInfo;
+        // 캐시에 데이터 저장
+        redisTemplate.opsForValue().set("weatherCache::"+coordinate.getNx()+","+coordinate.getNy(), weatherInfoResponse);
+
+        return weatherInfoResponse;
     }
 
     // 격자 좌표로 기상청 초단기예보 api 호출

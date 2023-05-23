@@ -37,6 +37,7 @@ public class Post extends BaseEntity {
     private String name;
 
     @NotNull
+    @Column(length = 500)
     private String image;
 
     @NotNull

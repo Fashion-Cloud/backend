@@ -22,7 +22,7 @@ public class WeatherCacheService {
     public void weatherCacheUpdate() {
         Set<String> keys = getAllKeys("weatherCache"); //여기 왜 오래 걸림...?;;
 
-
+        //TODO: 현재는 모든 key를 받아 전체 업데이트 하는 방식 - 이후 수정 필요함
         keys.stream().forEach(key -> {
             WeatherInfoResponse newWeatherData = null;
             try {

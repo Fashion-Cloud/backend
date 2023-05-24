@@ -32,5 +32,4 @@ public class LookBookPost extends BaseEntity {
     @NotNull
     @ToString.Exclude
     private LookBook lookBook;
-
 }

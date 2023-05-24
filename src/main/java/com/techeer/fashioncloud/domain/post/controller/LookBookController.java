@@ -47,7 +47,7 @@ public class LookBookController {
 
     @GetMapping("posts")
     public ResponseEntity<ResultResponse> getOneBook(@PathVariable UUID id) {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, bookService.findBookById(id)));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.BOOK_GET_SUCCESS, bookService.findBookById(id)));
     }
 
 }

@@ -33,10 +33,4 @@ public class LookBookPost extends BaseEntity {
     @ToString.Exclude
     private LookBook lookBook;
 
-    @Builder
-    public LookBookPost(UUID id, Post post, LookBook lookBook) {
-        this.id = id;
-        this.post = post;
-        this.lookBook = lookBook;
-    }
 }

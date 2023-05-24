@@ -13,6 +13,9 @@ public enum ResponseCode {
     POST_DELETE_SUCCESS(204, "게시글 삭제 성공"),
     POST_UPDATE_SUCCESS(200, "게시글 업데이트 성공"),
 
+    //LOOK_BOOK
+    BOOK_CREATE_SUCCESS(201, "룩북 생성 성공"),
+
     ADDRESS_GET_SUCCESS(200, "주소 조회 성공"),
 
     IMAGE_UPLOAD_SUCCESS(201, "이미지 업로드 성공"),

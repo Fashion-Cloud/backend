@@ -7,8 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
-    //POST도메인
+    //도메인
     POST_NOT_FOUND(404, "POST NOT FOUND"),
+    BOOK_NOT_FOUND(404, "BOOK NOT FOUND"),
 
     //위치 관련
     LOCATION_INVALID(400, "LOCATION IS INVALID"),

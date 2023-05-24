@@ -26,7 +26,9 @@ public class LookBook extends BaseEntity {
     @NotNull
     private String title;
 
-    public void update(String title) {
+    @Builder
+    public LookBook(UUID id, String title) {
+        this.id = id;
         this.title = title;
     }
 }

@@ -1,12 +1,12 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 
-import com.techeer.fashioncloud.domain.post.entity.LookBook;
-import com.techeer.fashioncloud.domain.post.entity.Post;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class LookBookPostCreateRequestDto {
 
     @NotNull
-    private LookBook lookBook;
+    private UUID lookBookId;
 
     @NotNull
-    private Post post;
+    private UUID postId;
 }

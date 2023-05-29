@@ -7,7 +7,9 @@ import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostResponseDto
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
+import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.LookBookService;
+import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LookBookController {
     private final LookBookService bookService;
+    private final PostService postService;
     private final LookBookMapper bookMapper;
 
     @PostMapping
@@ -38,7 +41,10 @@ public class LookBookController {
     public ResponseEntity<ResultResponse> bookPostCreate(
             @RequestBody LookBookPostCreateRequestDto dto
     ){
-        LookBookPost entity = bookService.bookPostCreate(dto);
+        LookBook lookBook = bookService.findLookBookById(dto.getLookBookId());
+        Post post = postService.findPostById(dto.getPostId());
+
+        LookBookPost entity = bookService.bookPostCreate(lookBook, post);
         LookBookPostResponseDto response = bookMapper.toBookPostResponseDto(entity);
 
 

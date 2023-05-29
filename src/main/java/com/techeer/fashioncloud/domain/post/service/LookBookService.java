@@ -1,10 +1,11 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.request.LookBookPostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
+import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.exception.BookNotFoundException;
+import com.techeer.fashioncloud.domain.post.exception.LookBookNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.LookBookPostRepository;
 import com.techeer.fashioncloud.domain.post.repository.LookBookRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +21,22 @@ public class LookBookService {
 
     private final LookBookRepository bookRepository;
     private final LookBookPostRepository bookPostRepository;
+
     public LookBook bookCreate(LookBookCreateRequestDto dto) {
         LookBook entity = bookRepository.save(LookBook.builder()
                 .title(dto.getTitle()).build());
         return entity;
     }
 
-    public LookBookPost bookPostCreate(LookBookPostCreateRequestDto dto) {
+    public LookBookPost bookPostCreate(LookBook lookbook,Post post) {
         LookBookPost entity = bookPostRepository.save(LookBookPost.builder()
-                .lookBook(dto.getLookBook())
-                .post(dto.getPost()).build());
+                .lookBook(lookbook)
+                .post(post).build());
         return entity;
+    }
+
+    public LookBook findLookBookById(UUID id) {
+        return bookRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
     }
 
     public LookBookPost findBookById(UUID id) {

@@ -34,26 +34,31 @@ public class LookBookController {
         LookBookResponseDto response = bookMapper.toBookResponseDto(entity);
 
 
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.BOOK_CREATE_SUCCESS, response));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_CREATE_SUCCESS, response));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultResponse> getOneBook(@PathVariable UUID id) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookById(id)));
     }
 
     @PostMapping("posts")
-    public ResponseEntity<ResultResponse> bookPostCreate(
+    public ResponseEntity<ResultResponse> lookBookCreate(
             @RequestBody LookBookPostCreateRequestDto dto
     ){
-        LookBook lookBook = bookService.findLookBookById(dto.getLookBookId());
+        LookBook lookBook = bookService.findBookById(dto.getLookBookId());
         Post post = postService.findPostById(dto.getPostId());
 
-        LookBookPost entity = bookService.bookPostCreate(lookBook, post);
+        LookBookPost entity = bookService.lookBookCreate(lookBook, post);
         LookBookPostResponseDto response = bookMapper.toBookPostResponseDto(entity);
 
 
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.BOOK_CREATE_SUCCESS, response));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_CREATE_SUCCESS, response));
     }
 
-    @GetMapping("posts")
-    public ResponseEntity<ResultResponse> getOneBook(@PathVariable UUID id) {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.BOOK_GET_SUCCESS, bookService.findBookById(id)));
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<ResultResponse> getOneLookBook(@PathVariable UUID id) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findLookBookById(id)));
     }
 
 }

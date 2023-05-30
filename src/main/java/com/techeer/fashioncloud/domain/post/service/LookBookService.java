@@ -28,18 +28,18 @@ public class LookBookService {
         return entity;
     }
 
-    public LookBookPost bookPostCreate(LookBook lookbook,Post post) {
+    public LookBookPost lookBookCreate(LookBook lookbook,Post post) {
         LookBookPost entity = bookPostRepository.save(LookBookPost.builder()
                 .lookBook(lookbook)
                 .post(post).build());
         return entity;
     }
 
-    public LookBook findLookBookById(UUID id) {
-        return bookRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
+    public LookBook findBookById(UUID id) {
+        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
     }
 
-    public LookBookPost findBookById(UUID id) {
-        return bookPostRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
+    public LookBookPost findLookBookById(UUID id) {
+        return bookPostRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
     }
 }

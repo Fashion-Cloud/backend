@@ -54,7 +54,7 @@ public class PostController {
 
 
     @GetMapping
-    public ResponseEntity<ResultResponse> getAllPosts(@PageableDefault(size = 2, sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+    public ResponseEntity<ResultResponse> getAllPosts(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
     }
 

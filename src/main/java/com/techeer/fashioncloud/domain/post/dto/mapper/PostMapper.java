@@ -6,6 +6,7 @@ import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,6 +37,11 @@ public class PostMapper {
                 .windSpeed(dto.getWindSpeed())
                 .review(dto.getReview())
                 .build();
+    }
+
+
+    public Page<PostResponseDto> toDtoPageList(Page<Post> postList) {
+        return postList.map(this::toResponseDto);
     }
 
     public WeatherPostResponse toPostDto(Post post) {

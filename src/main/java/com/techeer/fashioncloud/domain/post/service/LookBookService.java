@@ -40,6 +40,8 @@ public class LookBookService {
     }
 
     public LookBookPost findLookBookById(UUID id) {
-        return bookPostRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
+        LookBookPost lookBookPost =  bookPostRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
+
+        return lookBookPost;
     }
 }

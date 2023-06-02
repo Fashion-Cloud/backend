@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostDataDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
 import com.techeer.fashioncloud.domain.post.entity.Post;
@@ -39,9 +40,11 @@ public class LookBookService {
         return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
     }
 
-    public LookBookPost findLookBookById(UUID id) {
-        LookBookPost lookBookPost =  bookPostRepository.findById(id).orElseThrow(()-> new LookBookNotFoundException());
+    public LookBookPostDataDto findLookBookById(UUID id) {
+        LookBookPost lookBookPost = bookPostRepository.findById(id).orElseThrow(LookBookNotFoundException::new);
+        UUID postId = lookBookPost.getPost().getId();
+        UUID lookBookId = lookBookPost.getLookBook().getId();
 
-        return lookBookPost;
+        return new LookBookPostDataDto(id, postId, lookBookId);
     }
 }

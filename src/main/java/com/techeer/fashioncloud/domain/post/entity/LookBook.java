@@ -23,7 +23,14 @@ public class LookBook extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    private String title;
+    @ToString.Exclude
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ToString.Exclude
+    private Book book;
 
 }

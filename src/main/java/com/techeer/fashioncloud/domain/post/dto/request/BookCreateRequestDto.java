@@ -6,17 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LookBookPostCreateRequestDto {
+public class BookCreateRequestDto {
 
     @NotNull
-    private UUID lookBookId;
-
-    @NotNull
-    private UUID postId;
+    private String title;
 }

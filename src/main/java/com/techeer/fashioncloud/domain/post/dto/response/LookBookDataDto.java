@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class LookBookPostDataDto {
+public class LookBookDataDto {
     private UUID id;
     private UUID postId;
     private UUID lookBookId;

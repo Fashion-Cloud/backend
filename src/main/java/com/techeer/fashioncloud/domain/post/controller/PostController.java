@@ -35,7 +35,6 @@ public class PostController {
 
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
-
     }
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴

@@ -12,6 +12,9 @@ import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,8 +53,8 @@ public class PostController {
 
 
     @GetMapping
-    public ResponseEntity<ResultResponse> getAllPosts() {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findAllPosts()));
+    public ResponseEntity<ResultResponse> getAllPosts(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
     }
 
     @GetMapping("/{id}")

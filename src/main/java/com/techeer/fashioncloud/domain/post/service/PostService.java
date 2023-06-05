@@ -15,6 +15,8 @@ import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import com.techeer.fashioncloud.global.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,12 +96,19 @@ public class PostService {
         entity.setReview(dto.getReview());
         return entity;
     }
-    
-     public List<PostResponseDto> findAllPosts() {
-     return postRepository.findAll().stream()
-              .map(PostResponseDto::fromEntity)
-              .collect(Collectors.toList());
+
+
+    public List<PostResponseDto> pageList(Pageable pageable) {
+        Page<Post> postList = postRepository.findAll(pageable);
+        return postMapper.toDtoPageList(postList).getContent();
     }
+
+
+//     public List<PostResponseDto> findAllPosts() {
+//     return postRepository.findAll().stream()
+//              .map(PostResponseDto::fromEntity)
+//              .collect(Collectors.toList());
+//    }
 
     public Post findPostById(UUID id) {
         return postRepository.findById(id).orElseThrow(()-> new PostNotFoundException());

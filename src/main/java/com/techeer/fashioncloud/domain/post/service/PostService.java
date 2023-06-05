@@ -60,27 +60,27 @@ public class PostService {
         return entity;
     }
 
-    public List<WeatherPostResponse> findPostsByWeather(SkyStatus skyCode, RainfallType rainfallCode, Double windChill) {
+    public List<WeatherPostResponse> findPostsByWeather(Integer skyCode, Integer rainfallCode, Double windChill) {
         //TODO: 분기처리 개선
         List<Post> postEntityList = new ArrayList<>();
 
         //맑음
         if (skyCode == SkyStatus.CLEAR
                 & rainfallCode == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.getClearCodeList(), RainfallType.getClearCodeList());
+            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.clearCodeList, RainfallType.clearCodeList);
         }
         //흐림
-        else if (SkyStatus.getCloudyCodeList().contains(skyCode)
+        else if (SkyStatus.cloudyCodeList.contains(skyCode)
                 & rainfallCode == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.getCloudyCodeList(), RainfallType.getClearCodeList());
+            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.cloudyCodeList, RainfallType.clearCodeList);
         }
         //비
-        else if (RainfallType.getRainyCodeList().contains(rainfallCode)) {
-            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.getRainyCodeList());
+        else if (RainfallType.RainyCodeList.contains(rainfallCode)) {
+            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.RainyCodeList);
         }
         //눈
-        else if (RainfallType.getSnowyCodeList().contains(rainfallCode)) {
-            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.getSnowyCodeList());
+        else if (RainfallType.SnowyCodeList.contains(rainfallCode)) {
+            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.SnowyCodeList);
         }
         else {
             throw new RuntimeException("날씨 정보 오류");

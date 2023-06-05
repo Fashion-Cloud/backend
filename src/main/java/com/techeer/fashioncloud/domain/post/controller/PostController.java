@@ -7,8 +7,6 @@ import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
-import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
-import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +41,14 @@ public class PostController {
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            @RequestParam SkyStatus skyStatus,
-            @RequestParam RainfallType rainfallType,
+            @RequestParam Integer skyCode,
+            @RequestParam Integer rainfallCode,
             @RequestParam Double windChill
-            ) {
-        List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyStatus, rainfallType, windChill);
+    ) {
+        List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyCode, rainfallCode, windChill);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
+
 
 
     @GetMapping

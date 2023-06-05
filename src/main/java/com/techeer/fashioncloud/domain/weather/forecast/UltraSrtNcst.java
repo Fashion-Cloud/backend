@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.weather.entity;
+package com.techeer.fashioncloud.domain.weather.forecast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;

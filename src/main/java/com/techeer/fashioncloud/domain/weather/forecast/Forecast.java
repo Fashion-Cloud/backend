@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.weather.entity;
+package com.techeer.fashioncloud.domain.weather.forecast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
@@ -21,6 +21,14 @@ public abstract class Forecast {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         return now.format(formatter);
     }
+
+    //하루 전 날짜 지정
+    public String getPreviousDate(String baseDate) {
+        LocalDate localDateBaseDate = LocalDate.parse(baseDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
+        LocalDate previousDate = localDateBaseDate.minusDays(1);
+        return previousDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    }
+
 
     // 기상청 api 정상응답 필터링 후 body 추출
     public static JsonNode filterErrorResponse(JsonNode jsonNode) throws ParseException {

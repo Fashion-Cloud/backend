@@ -5,9 +5,9 @@ import com.techeer.fashioncloud.domain.weather.constant.ForecastConstant;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
-import com.techeer.fashioncloud.domain.weather.entity.Forecast;
-import com.techeer.fashioncloud.domain.weather.entity.UltraSrtFcst;
-import com.techeer.fashioncloud.domain.weather.entity.UltraSrtNcst;
+import com.techeer.fashioncloud.domain.weather.forecast.Forecast;
+import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtFcst;
+import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.global.config.WeatherConfig;
 import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
@@ -59,25 +59,27 @@ public class WeatherService {
     }
 
     // 격자 좌표로 기상청 초단기예보 api 호출
-    public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) throws ParseException, org.json.simple.parser.ParseException {
+    public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) {
 
         UltraSrtFcst ultraSrtFcst = new UltraSrtFcst();
+        String baseDate = ultraSrtFcst.setBaseDate();
+        String baseTime = ultraSrtFcst.setBaseTime();
+        if (baseTime.equals("2330")) {
+            final String newBaseDate = ultraSrtFcst.getPreviousDate(baseDate); //11시 반 데이터를 사용하는 경우 baseDate 조정
+        }
+        String finalBaseDate = baseDate;
 
-        log.info("초단기예보 UltraSrtFcst - BaseDate: {}, BaseTime: {}",ultraSrtFcst.setBaseDate(), ultraSrtFcst.setBaseTime());
-
+        log.info("초단기예보 UltraSrtFcst - BaseDate: {}, BaseTime: {}", baseDate, baseTime);
 
         HashMap<String, Object> params = new HashMap<>() {
             {
                 put("numOfRows", 3 * UltraSrtFcst.TIME_INTERVAL + 1);
                 put("pageNo", 1);
-                put("base_date", ultraSrtFcst.setBaseDate());
-                put("base_time", ultraSrtFcst.setBaseTime());
+                put("base_date", finalBaseDate);
+                put("base_time", baseTime);
                 put("nx", nx);
                 put("ny", ny);
-
-
             }
-
         };
 
         Mono<JsonNode> responseMono = getResponseMono(ForecastConstant.BASE_URL + ForecastConstant.ULTRA_SRT_FCST, params);
@@ -97,19 +99,23 @@ public class WeatherService {
     public UltraSrtNcstResponse getUltraSrtNcst(Integer nx, Integer ny) throws org.json.simple.parser.ParseException {
 
         UltraSrtNcst ultraSrtNcst = new UltraSrtNcst();
+        String baseDate = ultraSrtNcst.setBaseDate();
+        String baseTime = ultraSrtNcst.setBaseTime();
+        if (baseTime.equals("2330")) {
+            baseDate = ultraSrtNcst.getPreviousDate(baseDate); //11시 반 데이터를 사용하는 경우 baseDate 조정
+        }
 
+        log.info("초단기실황예보 UltraSrtNcst - BaseDate: {}, BaseTime: {}", baseDate, baseTime);
 
-        log.info("초단기실황예보 UltraSrtNcst - BaseDate: {}, BaseTime: {}",ultraSrtNcst.setBaseDate(), ultraSrtNcst.setBaseTime());
-
+        String finalBaseDate = baseDate;
         HashMap<String, Object> params = new HashMap<>() {
             {
                 put("numOfRows", UltraSrtNcst.TOTAL_COUNT);
                 put("pageNo", 1);
-                put("base_date", ultraSrtNcst.setBaseDate());
-                put("base_time", ultraSrtNcst.setBaseTime());
+                put("base_date", finalBaseDate);
+                put("base_time", baseTime);
                 put("nx", nx);
                 put("ny", ny);
-
             }
         };
 

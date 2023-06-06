@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.post.service;
 
-import com.techeer.fashioncloud.domain.post.dto.request.BookCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostDataDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
@@ -23,7 +23,7 @@ public class LookBookService {
     private final BookRepository bookRepository;
     private final LookBookRepository lookBookRepository;
 
-    public LookBook bookCreate(BookCreateRequestDto dto) {
+    public LookBook bookCreate(LookBookCreateRequestDto dto) {
         LookBook entity = bookRepository.save(LookBook.builder()
                 .title(dto.getTitle()).build());
         return entity;

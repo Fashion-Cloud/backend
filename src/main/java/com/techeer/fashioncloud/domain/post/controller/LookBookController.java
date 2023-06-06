@@ -1,8 +1,8 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.LookBookMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.BookCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.LookBookPostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
@@ -28,7 +28,7 @@ public class LookBookController {
 
     @PostMapping
     public ResponseEntity<ResultResponse> lookBookCreate(
-            @RequestBody BookCreateRequestDto dto
+            @RequestBody LookBookCreateRequestDto dto
     ){
         LookBook entity = bookService.bookCreate(dto);
         LookBookResponseDto response = bookMapper.toBookResponseDto(entity);
@@ -44,7 +44,7 @@ public class LookBookController {
 
     @PostMapping("posts")
     public ResponseEntity<ResultResponse> lookBookPostCreate(
-            @RequestBody LookBookCreateRequestDto dto
+            @RequestBody LookBookPostCreateRequestDto dto
     ){
         LookBook lookBook = bookService.findBookById(dto.getLookBookId());
         Post post = postService.findPostById(dto.getPostId());

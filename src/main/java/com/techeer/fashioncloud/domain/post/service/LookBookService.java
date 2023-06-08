@@ -1,12 +1,12 @@
 package com.techeer.fashioncloud.domain.post.service;
 
-import com.techeer.fashioncloud.domain.post.dto.request.BookCreateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.response.LookBookDataDto;
-import com.techeer.fashioncloud.domain.post.entity.Book;
+import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostDataDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
+import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.exception.BookNotFoundException;
-import com.techeer.fashioncloud.domain.post.exception.LookBookNotFoundException;
+import com.techeer.fashioncloud.domain.post.exception.LookBookPostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.LookBookRepository;
 import com.techeer.fashioncloud.domain.post.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,28 +23,28 @@ public class LookBookService {
     private final BookRepository bookRepository;
     private final LookBookRepository lookBookRepository;
 
-    public Book bookCreate(BookCreateRequestDto dto) {
-        Book entity = bookRepository.save(Book.builder()
+    public LookBook bookCreate(LookBookCreateRequestDto dto) {
+        LookBook entity = bookRepository.save(LookBook.builder()
                 .title(dto.getTitle()).build());
         return entity;
     }
 
-    public LookBook lookBookCreate(Book book, Post post) {
-        LookBook entity = lookBookRepository.save(LookBook.builder()
-                .book(book)
+    public LookBookPost lookBookCreate(LookBook lookBook, Post post) {
+        LookBookPost entity = lookBookRepository.save(LookBookPost.builder()
+                .lookBook(lookBook)
                 .post(post).build());
         return entity;
     }
 
-    public Book findBookById(UUID id) {
+    public LookBook findBookById(UUID id) {
         return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
     }
 
-    public LookBookDataDto findLookBookById(UUID id) {
-        LookBook lookBook = lookBookRepository.findById(id).orElseThrow(LookBookNotFoundException::new);
-        UUID postId = lookBook.getPost().getId();
-        UUID lookBookId = lookBook.getBook().getId();
+    public LookBookPostDataDto findLookBookById(UUID id) {
+        LookBookPost lookBookPost = lookBookRepository.findById(id).orElseThrow(LookBookPostNotFoundException::new);
+        UUID postId = lookBookPost.getPost().getId();
+        UUID lookBookId = lookBookPost.getLookBook().getId();
 
-        return new LookBookDataDto(id, postId, lookBookId);
+        return new LookBookPostDataDto(id, postId, lookBookId);
     }
 }

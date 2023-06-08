@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Book extends BaseEntity {
+public class LookBookPost extends BaseEntity {
 
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -23,7 +23,14 @@ public class Book extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
-    private String title;
+    @ToString.Exclude
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @ToString.Exclude
+    private LookBook lookBook;
 
 }

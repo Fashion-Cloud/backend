@@ -34,7 +34,7 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           script_stop: true
           script: |
-            cd ~/fashion_cloud/backend #프로젝트 폴더로 이동
+            cd ~/Fashion-Cloud/backend #프로젝트 폴더로 이동
             git pull
 
       - name: Remove Github Actions IP From Security Group

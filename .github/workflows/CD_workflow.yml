@@ -35,7 +35,7 @@ jobs:
           script_stop: true
           script: |
             cd ~/Fashion-Cloud/backend #프로젝트 폴더로 이동
-            git pull
+            echo "test" > test
 
       - name: Remove Github Actions IP From Security Group
         run: |

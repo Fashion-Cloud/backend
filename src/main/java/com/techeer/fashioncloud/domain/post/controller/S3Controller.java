@@ -1,8 +1,6 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.post.dto.mapper.S3Mapper;
-import com.techeer.fashioncloud.domain.post.dto.response.S3UploadResponseDto;
-import com.techeer.fashioncloud.domain.post.dto.response.S3DeleteResponseDto;
 import com.techeer.fashioncloud.domain.post.service.S3Service;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
@@ -18,6 +16,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class S3Controller {
 
     private final S3Service s3Service;

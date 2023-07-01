@@ -1,9 +1,11 @@
 package com.techeer.fashioncloud.domain.post.dto.mapper;
 
+import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostDataResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
+import com.techeer.fashioncloud.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,15 @@ public class LookBookMapper {
                 .id(entity.getId())
                 .lookBook(entity.getLookBook())
                 .post(entity.getPost())
+                .build();
+    }
+
+    public LookBookPostDataResponseDto toDataDto(Post entity){
+        return LookBookPostDataResponseDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .image(entity.getImage())
+                .userId(entity.getUserId())
                 .build();
     }
 }

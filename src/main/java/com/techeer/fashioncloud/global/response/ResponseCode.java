@@ -18,7 +18,6 @@ public enum ResponseCode {
     LOOK_BOOK_CREATE_SUCCESS(201, "룩북 생성 성공"),
 
     //LOOK_BOOK_POST
-    LOOK_BOOK_POST_GET_SUCCESS(200, "룩북게시글 조회 성공"),
     LOOK_BOOK_POST_CREATE_SUCCESS(201, "룩북게시글 생성 성공"),
 
 

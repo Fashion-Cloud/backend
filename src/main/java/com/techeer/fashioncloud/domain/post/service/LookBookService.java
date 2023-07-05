@@ -8,8 +8,10 @@ import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.exception.BookNotFoundException;
+import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.BookRepository;
 import com.techeer.fashioncloud.domain.post.repository.LookBookRepository;
+import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +28,7 @@ public class LookBookService {
     private final BookRepository bookRepository;
     private final LookBookRepository lookBookRepository;
     private final LookBookMapper lookBookMapper;
-    private final LookBookService bookService;
-    private final PostService postService;
+    private final PostRepository postRepository;
 
     public LookBook lookBookCreate(LookBookCreateRequestDto dto) {
         LookBook entity = bookRepository.save(LookBook.builder()
@@ -35,13 +36,13 @@ public class LookBookService {
         return entity;
     }
 
-    public LookBook findBookById(UUID id){
-        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
-    }
+//    public LookBook findBookById(UUID id){
+//        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
+//    }
 
     public LookBookPost lookBookPostCreate(LookBookPostCreateRequestDto dto) {
-        LookBook lookBook = bookService.findBookById(dto.getLookBookId());
-        Post post = postService.findPostById(dto.getPostId());
+        LookBook lookBook = bookRepository.findById(dto.getLookBookId()).orElseThrow(()-> new BookNotFoundException());
+        Post post = postRepository.findById(dto.getPostId()).orElseThrow(()-> new PostNotFoundException());
         LookBookPost entity = lookBookRepository.save(LookBookPost.builder()
                 .lookBook(lookBook)
                 .post(post).build());
@@ -49,7 +50,7 @@ public class LookBookService {
     }
 
     public List<LookBookPostDataResponseDto> findLookBookById(UUID id) {
-        LookBook lookBook = bookService.findBookById(id);
+        LookBook lookBook = bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
         List<LookBookPost> lookbooklist = lookBookRepository.findByLookBook(lookBook);
         List<Post> postList = lookbooklist.stream().map(LookBookPost::getPost).collect(Collectors.toList());
 

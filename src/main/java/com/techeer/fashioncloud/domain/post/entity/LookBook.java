@@ -26,4 +26,7 @@ public class LookBook extends BaseEntity {
     @NotNull
     private String title;
 
+    @NotNull
+    private String image;
+
 }

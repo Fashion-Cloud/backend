@@ -16,6 +16,7 @@ public class LookBookMapper {
         return LookBookResponseDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
+                .image(entity.getImage())
                 .build();
     }
 

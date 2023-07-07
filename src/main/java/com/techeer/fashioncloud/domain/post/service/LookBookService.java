@@ -32,6 +32,7 @@ public class LookBookService {
 
     public LookBook lookBookCreate(LookBookCreateRequestDto dto) {
         LookBook entity = bookRepository.save(LookBook.builder()
+                .userId(dto.getUserId())
                 .title(dto.getTitle())
                 .image(dto.getImage())
                 .build());

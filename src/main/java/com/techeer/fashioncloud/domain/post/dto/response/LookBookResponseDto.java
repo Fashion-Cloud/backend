@@ -17,6 +17,9 @@ public class LookBookResponseDto extends BaseEntity {
     private UUID id; // post id
 
     @NotNull
+    private UUID userId;
+
+    @NotNull
     private String title;
 
     @NotNull

@@ -23,6 +23,11 @@ public class LookBook extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
+    @Column(length = 36, nullable = false, updatable = false)
+    private UUID userId;
+
     @NotNull
     private String title;
 

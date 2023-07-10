@@ -32,13 +32,17 @@ public class LookBookService {
 
     public LookBook lookBookCreate(LookBookCreateRequestDto dto) {
         LookBook entity = bookRepository.save(LookBook.builder()
-                .title(dto.getTitle()).build());
+                .userId(dto.getUserId())
+                .title(dto.getTitle())
+                .image(dto.getImage())
+                .build());
         return entity;
     }
 
-//    public LookBook findBookById(UUID id){
-//        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException());
-//    }
+    public List<LookBook> findBookByUserId(UUID userId) {
+        List<LookBook> lookbooklist = bookRepository.findByUserId(userId);
+        return lookbooklist;
+    }
 
     public LookBookPost lookBookPostCreate(LookBookPostCreateRequestDto dto) {
         LookBook lookBook = bookRepository.findById(dto.getLookBookId()).orElseThrow(()-> new BookNotFoundException());

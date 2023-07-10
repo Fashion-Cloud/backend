@@ -15,6 +15,8 @@ import java.util.UUID;
 public interface PostRepository extends JpaRepository<Post, UUID> {
     boolean existsById(UUID uuid);
 
+    List<Post> findByUserId(UUID userId);
+
     // 맑거나 흐림 - 하늘상태, 강수형태, 체감온도 필터링
     @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyCodeList " +
             "AND p.rainfallType IN :rainfallCodeList " +

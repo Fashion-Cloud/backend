@@ -33,6 +33,12 @@ public class LookBookController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_CREATE_SUCCESS, response));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultResponse> getLookBookByUser(@PathVariable UUID id) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookByUserId(id)));
+    }
+
+
     @PostMapping("posts")
     public ResponseEntity<ResultResponse> lookBookPostCreate(
             @RequestBody LookBookPostCreateRequestDto dto

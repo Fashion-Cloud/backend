@@ -61,6 +61,11 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ResultResponse> getPostByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultResponse> delete(@PathVariable UUID id) {
         postService.deleteRequestById(id); // Post ID로 삭제

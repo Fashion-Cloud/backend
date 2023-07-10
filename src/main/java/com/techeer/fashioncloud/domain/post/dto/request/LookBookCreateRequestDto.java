@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -13,5 +15,11 @@ import lombok.NoArgsConstructor;
 public class LookBookCreateRequestDto {
 
     @NotNull
+    private UUID userId;
+
+    @NotNull
     private String title;
+
+    @NotNull
+    private String image;
 }

@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -112,6 +111,10 @@ public class PostService {
 
     public Post findPostById(UUID id) {
         return postRepository.findById(id).orElseThrow(()-> new PostNotFoundException());
+    }
+
+    public List<Post> findPostByUserId(UUID id){
+        return postRepository.findByUserId(id);
     }
 
     public void deleteRequestById(UUID id) {

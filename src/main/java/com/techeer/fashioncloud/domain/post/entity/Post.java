@@ -43,6 +43,9 @@ public class Post extends BaseEntity {
     private Review review;
 
     @NotNull
+    private Double temperature;
+
+    @NotNull
     private Integer skyStatus;
 
     @NotNull
@@ -54,11 +57,12 @@ public class Post extends BaseEntity {
     private Double windChill;
 
     @Builder
-    public Post(UUID id, UUID userId, String name, String image, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
+    public Post(UUID id, UUID userId, String name, String image, Double temperature, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.image = image;
+        this.temperature = temperature;
         this.skyStatus = skyStatus;
         this.rainfallType = rainfallType;
         this.review = review;

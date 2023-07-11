@@ -3,11 +3,11 @@ package com.techeer.fashioncloud.domain.post.dto.response;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Getter
@@ -15,12 +15,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LookBookPostResponseDto extends BaseEntity {
 
-    @NotBlank
+    @NotNull
     private UUID id; // post id
 
-    @NotBlank
+    @NotNull
     private LookBook lookBook;
 
-    @NotBlank
+    @NotNull
     private Post post;
 }

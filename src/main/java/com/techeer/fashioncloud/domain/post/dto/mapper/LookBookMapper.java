@@ -35,6 +35,7 @@ public class LookBookMapper {
                 .name(entity.getName())
                 .image(entity.getImage())
                 .userId(entity.getUserId())
+                .temperature(entity.getTemperature())
                 .build();
     }
 }

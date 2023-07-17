@@ -42,6 +42,7 @@ public class PostService {
                 .userId(dto.getUserId())
                 .name(dto.getName())
                 .image(dto.getImage())
+                .temperature(dto.getTemperature())
                 .skyStatus(dto.getSkyStatus())
                 .rainfallType(dto.getRainfallType())
                 .review(dto.getReview())

@@ -34,8 +34,8 @@ public class LookBookController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ResultResponse> getLookBookByUser(@PathVariable UUID id) {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookByUserId(id)));
+    public ResponseEntity<ResultResponse> getLookBookByUser(@PathVariable UUID userId) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookByUserId(userId)));
     }
 
 

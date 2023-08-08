@@ -5,7 +5,11 @@ import lombok.Data;
 @Data
 public class SignupDTO {
 
-    private String name;
+    private String profileUrl;
+
+    private String address;
+
+    private String nickname;
 
     private String email;
 

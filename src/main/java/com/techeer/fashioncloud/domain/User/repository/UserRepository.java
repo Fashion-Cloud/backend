@@ -1,13 +1,14 @@
 package com.techeer.fashioncloud.domain.User.repository;
 
+import com.techeer.fashioncloud.domain.User.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import com.techeer.fashioncloud.domain.User.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface UserRepository extends JpaRepository<User, Integer> {
+@Repository
+public interface UserRepository extends JpaRepository<User,Long> {
+    User findFirstByEmail(String email);
 
     Optional<User> findByEmail(String email);
-
 }

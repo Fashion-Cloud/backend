@@ -1,47 +1,46 @@
 package com.techeer.fashioncloud.domain.User.controller;
 
-import com.techeer.fashioncloud.domain.User.dto.request.AuthenticationRequest;
-import com.techeer.fashioncloud.domain.User.dto.request.RegisterRequest;
-import com.techeer.fashioncloud.domain.User.dto.response.AuthenticationResponse;
-import com.techeer.fashioncloud.domain.User.security.services.AuthenticationService;
-import jakarta.servlet.http.HttpServletRequest;
+
+import com.techeer.fashioncloud.domain.User.dto.requestDto.AuthenticationDTO;
+import com.techeer.fashioncloud.domain.User.dto.responseDto.AuthenticationResponseDTO;
+import com.techeer.fashioncloud.domain.User.exception.UserIsDisabledException;
+import com.techeer.fashioncloud.domain.User.exception.WrongCredintialsException;
+import com.techeer.fashioncloud.domain.User.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
+import java.util.UUID;
+@RequestMapping("/api")
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
+    @Autowired
+    AuthenticationService authenticationService;
 
-    private final AuthenticationService service;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ) {
-        return ResponseEntity.ok(service.register(request));
-    }
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-        return ResponseEntity.ok(service.authenticate(request));
+    public ResponseEntity createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO, HttpServletResponse response) throws IOException {
+        try {
+            AuthenticationResponseDTO authenticationResponseDTO = authenticationService.createJWTToken(authenticationDTO);
+            return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
+        } catch (WrongCredintialsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (UserIsDisabledException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (UsernameNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-    @PostMapping("/refresh-token")
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        service.refreshToken(request, response);
-    }
-
 
 }

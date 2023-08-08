@@ -1,5 +1,14 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
+import com.techeer.fashioncloud.domain.User.dto.requestDto.AuthenticationDTO;
+import com.techeer.fashioncloud.domain.User.dto.requestDto.SignupDTO;
+import com.techeer.fashioncloud.domain.User.dto.responseDto.AuthenticationResponseDTO;
+import com.techeer.fashioncloud.domain.User.dto.responseDto.UserDTO;
+import com.techeer.fashioncloud.domain.User.exception.UserAlreadyPresentException;
+import com.techeer.fashioncloud.domain.User.exception.UserIsDisabledException;
+import com.techeer.fashioncloud.domain.User.exception.WrongCredintialsException;
+import com.techeer.fashioncloud.domain.User.service.AuthService;
+import com.techeer.fashioncloud.domain.User.service.AuthenticationService;
 import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
@@ -9,13 +18,18 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +52,8 @@ public class PostController {
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
     }
+
+
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
@@ -79,4 +95,8 @@ public class PostController {
         Post post=postService.update(id,dto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
     }
+
+
+
+
 }

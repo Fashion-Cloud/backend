@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.User.dto.request;
+package com.techeer.fashioncloud.domain.User.dto.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+@AllArgsConstructor
+public class UserDTO {
+
+    private Long id;
+
+    private String name;
 
     private String email;
-    String password;
+
 }

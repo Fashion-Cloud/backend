@@ -9,6 +9,10 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,12 +26,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
+@Tag(name = "post", description = "게시물 API")
 public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
 
     @PostMapping
+    @Operation(summary = "게시물 생성", description ="오늘 날씨에 맞는 게시물을 생성한다.")
     public ResponseEntity<ResultResponse> create(
             @RequestBody PostCreateRequestDto dto
     ){
@@ -40,10 +46,11 @@ public class PostController {
 
     //현재 날씨 기반으로 비슷한 날씨의 post 리턴
     @GetMapping("/weather")
+    @Operation(summary = "날씨 반환", description ="실시간 날씨를 반환한다.")
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            @RequestParam Integer skyCode,
-            @RequestParam Integer rainfallCode,
-            @RequestParam Double windChill
+            @Parameter(name="skyCode") @RequestParam Integer skyCode,
+            @Parameter(name="rainfallCode")  @RequestParam Integer rainfallCode,
+            @Parameter(name="windChill")  @RequestParam Double windChill
     ) {
         List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyCode, rainfallCode, windChill);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
@@ -51,29 +58,34 @@ public class PostController {
 
 
     @GetMapping
-    public ResponseEntity<ResultResponse> getAllPosts(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+    @Operation(summary = "게시물 전체 조회", description ="페이지네이션을 통해 10개씩 게시물을 반환한다.")
+    public ResponseEntity<ResultResponse> getAllPosts( @Parameter(name="pageable",description = "UUID")@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResultResponse> getOnePost(@PathVariable UUID id) {
+    @Operation(summary = "id로 게시물 조회", description ="postId를 통해 게시물을 조회한다.")
+    public ResponseEntity<ResultResponse> getOnePost(@Parameter(name="PostId",description = "UUID")@PathVariable("id") UUID id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<ResultResponse> getPostByUserId(@PathVariable UUID id) {
+    @Operation(summary = "userId로 게시물 조회", description ="userId를 통해 게시물을 조회한다.")
+    public ResponseEntity<ResultResponse> getPostByUserId( @Parameter(name="userId")@PathVariable("id") UUID id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResultResponse> delete(@PathVariable UUID id) {
+    @Operation(summary = "게시물 삭제", description ="postId를 통해 게시물을 삭제한다.")
+    public ResponseEntity<ResultResponse> delete(@Parameter(name="postId")@PathVariable("id") UUID id) {
         postService.deleteRequestById(id); // Post ID로 삭제
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResultResponse> update (@PathVariable UUID id, @RequestBody PostUpdateRequestDto dto) {
+    @Operation(summary = "게시물 수정", description ="postId를 통해 게시물을 수정한다.")
+    public ResponseEntity<ResultResponse> update (@Parameter(name="postId")@PathVariable("id") UUID id, @RequestBody PostUpdateRequestDto dto) {
 
         Post post=postService.update(id,dto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));

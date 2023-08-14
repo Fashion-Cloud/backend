@@ -22,7 +22,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostController {
 
     private final PostService postService;

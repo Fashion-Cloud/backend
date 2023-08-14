@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/weather")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WeatherController {
     private final WeatherService weatherService;
 

@@ -58,7 +58,7 @@ public class LookBookController {
 
     @GetMapping("/posts/{id}")
     @Operation(summary = "해당 룩북 불러오기", description = "id에 해당하는 룩북 불러오기")
-    public ResponseEntity<ResultResponse> getOneLookBook(@Parameter(name="LookBook Id")@PathVariable UUID id) {
+    public ResponseEntity<ResultResponse> getOneLookBook(@Parameter(name="id",description = "LookBookId")@PathVariable UUID id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findLookBookById(id)));
     }
 

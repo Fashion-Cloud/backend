@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class UltraSrtNcstResponse implements ForecastResponse {
+public class UltraSrtNcstResponse {
 
     private Double temperature;
     private Double hourRainfall;

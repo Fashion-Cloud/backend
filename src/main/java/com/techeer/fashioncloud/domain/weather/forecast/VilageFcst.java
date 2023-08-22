@@ -1,7 +1,7 @@
 package com.techeer.fashioncloud.domain.weather.forecast;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
+import com.techeer.fashioncloud.domain.weather.dto.VilageFcstResponse;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VilageFcst extends Forecast{
+public class VilageFcst extends Forecast implements ApiParsable<VilageFcstResponse>{
 
     private Coordinate coordinate;
 
@@ -22,7 +22,7 @@ public class VilageFcst extends Forecast{
     }
 
     @Override
-    public ForecastResponse parseWeatherInfo(JsonNode jsonNode) {
+    public VilageFcstResponse parseWeatherInfo(JsonNode jsonNode) {
         return null;
     }
 

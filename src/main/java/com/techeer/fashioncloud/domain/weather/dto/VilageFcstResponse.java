@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class VilageFcstResponse implements ForecastResponse  {
+public class VilageFcstResponse {
     private Integer lowestTemp;
-    private Integer HighestTemp;
+    private Integer highestTemp;
 }

@@ -11,10 +11,9 @@ import java.time.format.DateTimeFormatter;
 // 초단기예보
 @Getter
 @NoArgsConstructor
-public class UltraSrtFcst extends Forecast {
+public class UltraSrtFcst extends Forecast implements ApiParsable<UltraSrtFcstResponse> {
 
     public static final Integer TIME_INTERVAL = 6; //초단기예보조회 데이터 시간 간격
-
     public static final String BASE_MINUTE = "30";
     public static final Integer API_AVALIABLE_TIME = 45; // 매시각 45분 이후 호출 가능
 
@@ -44,7 +43,7 @@ public class UltraSrtFcst extends Forecast {
     @Override
     public UltraSrtFcstResponse parseWeatherInfo(JsonNode itemNode) {
 
-        JsonNode skyData = (JsonNode) itemNode.get(18); //TODO: 하드코딩 개선
+        JsonNode skyData = (JsonNode) itemNode.get(1); //TODO: 하드코딩 개선
 
         // 초단기예보조회 Response Dto 리턴
         return UltraSrtFcstResponse.builder()

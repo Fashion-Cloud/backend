@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 // 초단기실황예보
 @Getter
 @NoArgsConstructor
-public class UltraSrtNcst extends Forecast{
+public class UltraSrtNcst extends Forecast implements ApiParsable<UltraSrtNcstResponse> {
     public static final Integer TOTAL_COUNT = 8;
     public static final String BASE_MINUTE = "00";
     public static final Integer API_AVALIABLE_TIME = 40; // 매시각 45분 이후 호출 가능

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class UltraSrtFcstResponse implements ForecastResponse {
+public class UltraSrtFcstResponse {
     private Integer skyStatus;
 }

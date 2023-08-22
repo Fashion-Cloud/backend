@@ -1,7 +1,6 @@
 package com.techeer.fashioncloud.domain.weather.forecast;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.dto.ForecastResponse;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
 import org.apache.http.HttpStatus;
 import org.json.simple.parser.ParseException;
@@ -13,7 +12,6 @@ public abstract class Forecast {
 
     //api사용시간에 맞게 현재 시간을 조정하고 포매팅
     public abstract String setBaseTime();
-    public abstract ForecastResponse parseWeatherInfo(JsonNode jsonNode);
 
     //현재 날짜를 포매팅하여 설정
     public String setBaseDate () {

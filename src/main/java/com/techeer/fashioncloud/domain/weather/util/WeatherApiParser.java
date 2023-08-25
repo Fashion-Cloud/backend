@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.weather.forecast;
+package com.techeer.fashioncloud.domain.weather.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherApiResponse;

@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.global.util;
+package com.techeer.fashioncloud.domain.weather.util;
 
 import org.springframework.stereotype.Component;
 

@@ -6,7 +6,7 @@ import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
-import com.techeer.fashioncloud.domain.weather.forecast.WeatherApiParser;
+import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.global.config.WeatherConfig;

@@ -1,8 +1,8 @@
-package com.techeer.fashioncloud.domain.weather.controller;
+package com.techeer.fashioncloud.domain.geo.controller;
 
-import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
+import com.techeer.fashioncloud.domain.geo.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
-import com.techeer.fashioncloud.domain.weather.service.AddressService;
+import com.techeer.fashioncloud.domain.geo.service.AddressService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,6 @@ import java.util.List;
 
 //PTY: 초단기실황 강수형태
 public class RainfallType {
-
     public static final Integer CLEAR = 0;
     public static final Integer RAIN = 1;
     public static final Integer RAIN_SNOW = 2;

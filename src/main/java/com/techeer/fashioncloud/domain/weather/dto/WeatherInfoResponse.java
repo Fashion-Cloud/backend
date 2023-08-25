@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.weather.dto;
 
-import com.techeer.fashioncloud.global.util.WindChillCalculator;
+import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

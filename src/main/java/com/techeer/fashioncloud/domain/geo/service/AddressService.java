@@ -1,8 +1,8 @@
-package com.techeer.fashioncloud.domain.weather.service;
+package com.techeer.fashioncloud.domain.geo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.constant.GeoConstant;
-import com.techeer.fashioncloud.domain.weather.dto.AddressResponse;
+import com.techeer.fashioncloud.domain.geo.constant.GeoConstant;
+import com.techeer.fashioncloud.domain.geo.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.global.config.GeoConfig;
 import com.techeer.fashioncloud.global.domain.ExternalApiCallable;

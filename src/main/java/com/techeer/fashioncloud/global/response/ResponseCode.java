@@ -25,7 +25,10 @@ public enum ResponseCode {
 
     IMAGE_UPLOAD_SUCCESS(201, "이미지 업로드 성공"),
     IMAGE_DELETE_SUCCESS(204,"이미지 삭제 성공"),
-    WEATHER_GET_SUCCESS(200, "날씨 조회 성공");
+    WEATHER_GET_SUCCESS(200, "날씨 조회 성공"),
+
+    USER_CREATE_SUCCESS(201, "사용자 생성 성공"),
+    USER_LOGIN_SUCCESS(200, "사용자 로그인 성공");
 
     private final Integer status;
     private final String message;

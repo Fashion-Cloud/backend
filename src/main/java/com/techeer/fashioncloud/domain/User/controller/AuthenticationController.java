@@ -26,7 +26,7 @@ import java.io.IOException;
 
 ;
 
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/users")
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -38,7 +38,7 @@ public class AuthenticationController {
     public ResponseEntity createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO, HttpServletResponse response) throws IOException {
         try {
             AuthenticationResponseDTO authenticationResponseDTO = authenticationService.createJWTToken(authenticationDTO);
-            return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, authenticationResponseDTO));
+            return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_CREATE_SUCCESS, authenticationResponseDTO));
 
         } catch (WrongCredintialsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -52,10 +52,12 @@ public class AuthenticationController {
     private AuthService authService;
 
     @PostMapping("/sign-up")
+    
     public ResponseEntity<?> signupUser(@RequestBody SignupDTO signupDTO) {
         try {
+
             UserDTO createdUser = authService.createUser(signupDTO);
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+            return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_LOGIN_SUCCESS, createdUser));
         } catch (UserAlreadyPresentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

@@ -1,11 +1,11 @@
 package com.techeer.fashioncloud.domain.User.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -38,10 +38,10 @@ public class User {
     @NotNull
     private String password;
 
-    @Column
-    @ColumnDefault("USER")
-    @NotNull
-    private ERole role;
+//    @Column
+//    @ColumnDefault("USER")
+//    @NotNull
+//    private ERole role;
 
 
 }

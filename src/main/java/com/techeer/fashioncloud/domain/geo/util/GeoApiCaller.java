@@ -17,7 +17,7 @@ public class GeoApiCaller implements ExternalApiCallable<GeoApiRequest> {
     private String geoKey;
 
     private String headerName = "Authorization";
-    
+
     private String headerValue;
 
     @PostConstruct

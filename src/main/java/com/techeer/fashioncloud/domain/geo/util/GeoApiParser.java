@@ -2,13 +2,15 @@ package com.techeer.fashioncloud.domain.geo.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.geo.dto.AddressResponse;
+import com.techeer.fashioncloud.global.error.ErrorCode;
+import com.techeer.fashioncloud.global.error.exception.BusinessException;
 
 public class GeoApiParser {
 
     public static AddressResponse parse(JsonNode apiResponse) {
         Integer totalCount = apiResponse.get("meta").get("total_count").intValue();
 
-        if(totalCount < 1) throw new RuntimeException(); //TODO: 익셉션핸들링, kakao api 상태코드별 핸들링
+        if(totalCount < 1) throw new BusinessException(ErrorCode.ADRRESS_NOT_FOUND);
 
         JsonNode data = apiResponse.get("documents").get(0);
         return AddressResponse.builder()

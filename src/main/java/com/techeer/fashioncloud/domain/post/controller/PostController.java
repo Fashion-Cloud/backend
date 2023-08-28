@@ -9,19 +9,13 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,7 +81,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    //@Operation(summary = "게시물 삭제", description ="postId를 통해 게시물을 삭제한다.")
+    @Operation(summary = "게시물 삭제", description ="postId를 통해 게시물을 삭제한다.")
     public ResponseEntity<ResultResponse> delete(@Parameter(name="id",description = "PostId")@PathVariable("id") UUID id) {
         postService.deleteRequestById(id); // Post ID로 삭제
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));

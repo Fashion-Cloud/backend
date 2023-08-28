@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-//위경도
+// 위도, 경도
 @Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,9 +32,7 @@ public class Location {
             double XO = 43; // 기준점 X좌표(GRID)
             double YO = 136; // 기1준점 Y좌표(GRID)
 
-
             double DEGRAD = Math.PI / 180.0;
-            // double RADDEG = 180.0 / Math.PI;
 
             double re = RE / GRID;
             double slat1 = SLAT1 * DEGRAD;
@@ -49,8 +47,7 @@ public class Location {
             double ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
             ro = re * sf / Math.pow(ro, sn);
             Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("lat", v1);
-//        map.put("lng", v1);
+
             double ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
             ra = re * sf / Math.pow(ra, sn);
             double theta = v2 * DEGRAD - olon;
@@ -68,7 +65,7 @@ public class Location {
             coordinate.setNx((Integer) map.get("x"));
             coordinate.setNy((Integer) map.get("y"));
 
-            log.info("Location converted - nx: {}, ny: {}", String.valueOf(coordinate.getNx()), String.valueOf(coordinate.getNy()));
+            log.debug("Location converted to Coordinate - nx: {}, ny: {}", coordinate.getNx(), coordinate.getNx());
 
             return coordinate;
         }

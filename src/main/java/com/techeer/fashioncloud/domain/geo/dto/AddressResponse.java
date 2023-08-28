@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.weather.dto;
+package com.techeer.fashioncloud.domain.geo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

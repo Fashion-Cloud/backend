@@ -1,53 +1,62 @@
 package com.techeer.fashioncloud.domain.weather.forecast;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
+import com.techeer.fashioncloud.domain.weather.constant.ForecastConstant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 // 초단기예보
 @Getter
 @NoArgsConstructor
-public class UltraSrtFcst extends Forecast implements ApiParsable<UltraSrtFcstResponse> {
+public class UltraSrtFcst extends Forecast implements WeatherApiCallable {
 
-    public static final Integer TIME_INTERVAL = 6; //초단기예보조회 데이터 시간 간격
+    public static final String REQ_URL = ForecastConstant.BASE_URL + ForecastConstant.ULTRA_SRT_FCST;
+    public static final Integer TIME_INTERVAL = 6;
+    public static final Integer SKY_DATA_INDEX = 4;
+    public static final Integer API_AVALIABLE_MINUTE = 45;
     public static final String BASE_MINUTE = "30";
-    public static final Integer API_AVALIABLE_TIME = 45; // 매시각 45분 이후 호출 가능
+    public static final String DATE_CHANGE_TIME = "2330";
 
-    @Override
-    // 현재 시간을 설정하고 포매팅하여 base_time 지정
-    public String setBaseTime () {
+    private Integer nx;
+    private Integer ny;
+
+    public UltraSrtFcst (Integer nx, Integer ny) {
+
+        this.nx = nx;
+        this.ny = ny;
+
         LocalDateTime unformattedNow = LocalDateTime.now();
         DateTimeFormatter hourFormatter = DateTimeFormatter.ofPattern("HH");
         DateTimeFormatter minuteFormatter = DateTimeFormatter.ofPattern("mm");
 
         String nowHour = unformattedNow.format(hourFormatter);
         String nowMinute = unformattedNow.format(minuteFormatter);
-        Integer baseHour;
+        int nowIntHour = Integer.parseInt(nowHour);
 
-        // api 호출 시간에 따라 base_time 다르게 설정
-        if (Integer.parseInt(nowMinute) >= API_AVALIABLE_TIME) {
-            return nowHour + BASE_MINUTE;
+        if (Integer.parseInt(nowMinute) >= API_AVALIABLE_MINUTE) {
+            this.baseTime = nowHour + BASE_MINUTE;
         } else {
-            baseHour = Integer.parseInt(nowHour) - 1;
-            if(baseHour == 0) return "23" + BASE_MINUTE;
-            else if(baseHour < 10) return "0" + baseHour.toString() + BASE_MINUTE;
-            else return baseHour + BASE_MINUTE;
+            if(nowIntHour == 0) this.baseTime = "23" + BASE_MINUTE;
+            else if(nowIntHour < 10) this.baseTime = "0" + (nowIntHour-1) + BASE_MINUTE;
+            else this.baseTime =  (nowIntHour-1) + BASE_MINUTE;
         }
+
+        if(baseTime.equals(DATE_CHANGE_TIME)) setPreviousDate();
     }
 
-    // 초단기예보 응답 파싱하여 sky상태만 반환
-    @Override
-    public UltraSrtFcstResponse parseWeatherInfo(JsonNode itemNode) {
+    public HashMap<String, Object> getReqQueryParams () {
 
-        JsonNode skyData = (JsonNode) itemNode.get(1); //TODO: 하드코딩 개선
+        HashMap<String, Object> reqQueryParams = new HashMap<>();
+        reqQueryParams.put("numOfRows", TIME_INTERVAL);
+        reqQueryParams.put("pageNo", SKY_DATA_INDEX);
+        reqQueryParams.put("base_date", baseDate);
+        reqQueryParams.put("base_time", baseTime);
+        reqQueryParams.put("nx", nx);
+        reqQueryParams.put("ny", ny);
 
-        // 초단기예보조회 Response Dto 리턴
-        return UltraSrtFcstResponse.builder()
-                .skyStatus(Integer.parseInt(skyData.get("fcstValue").asText()))
-                .build();
+        return reqQueryParams;
     }
 }

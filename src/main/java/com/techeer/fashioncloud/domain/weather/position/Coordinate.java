@@ -14,8 +14,4 @@ public class Coordinate {
     private Integer nx;
     private Integer ny;
 
-    //TODO: nx, ny 유효성 검사
-//    public boolean isValidXY() {
-//
-//    }
 }

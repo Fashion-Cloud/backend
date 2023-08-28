@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.LocalDateTime;
 
@@ -33,13 +34,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExternalApiException.class)
     public ResponseEntity<ExternalErrorResponse> handleException(ExternalApiException e) {
         Integer status = (HttpStatus.INTERNAL_SERVER_ERROR.value());
-        Integer kmaStatus = e.getKmaStatus();
+//        Integer kmaStatus = e.getKmaStatus();
         String message = e.getMessage();
-        log.error("Exception occurred - kmaStatus: {}, message: {}", kmaStatus, message);
+//        log.error("Exception occurred - kmaStatus: {}, message: {}", kmaStatus, message);
         log.error(String.valueOf(e.getClass()));
         return new ResponseEntity<>((ExternalErrorResponse.builder()
                 .status(status)
-                .kmaStatus(kmaStatus) //기상청 응답코드
+//                .kmaStatus(kmaStatus) //기상청 응답코드
                 .message(message)
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));
@@ -48,8 +49,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ParseException.class)
     public ResponseEntity<ErrorResponse> handleException(ParseException e) {
         Integer status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        String message = "데이터 파싱 실패";
+        String message = "exception occurred while parsing json data";
         log.error("Exception occurred - status: {}, message: {}", status, message);
+        return new ResponseEntity<>((ErrorResponse.builder()
+                .status(status)
+                .message(message)
+                .time(LocalDateTime.now())
+                .build()), HttpStatus.valueOf(status));
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ErrorResponse> handleException(WebClientResponseException e) {
+        Integer status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+        String message = "openAPI 호출 에러";
+        log.error("WebClientResponseException occurred (WebClient) - status: {}, message: {}", status, message);
         return new ResponseEntity<>((ErrorResponse.builder()
                 .status(status)
                 .message(message)

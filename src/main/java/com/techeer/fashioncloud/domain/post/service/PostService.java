@@ -12,7 +12,7 @@ import com.techeer.fashioncloud.domain.post.repository.PostImageRepository;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
 import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
-import com.techeer.fashioncloud.global.util.WindChillCalculator;
+import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

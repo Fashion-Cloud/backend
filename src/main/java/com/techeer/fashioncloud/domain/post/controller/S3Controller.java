@@ -4,6 +4,10 @@ import com.techeer.fashioncloud.domain.post.dto.mapper.S3Mapper;
 import com.techeer.fashioncloud.domain.post.service.S3Service;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +20,21 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/images")
 @RequiredArgsConstructor
+@Tag(name = "s3", description = "이미지 API")
 public class S3Controller {
 
     private final S3Service s3Service;
     private final S3Mapper s3Mapper;
 
 
-    @PostMapping
-    public ResponseEntity<ResultResponse> uploadImage(
-            @RequestBody MultipartFile image
+    @PostMapping(consumes = "multipart/form-data")
+    @Operation(summary = "이미지 업로드", description = "이미지를 업로드하면 url을 반환합니다.")
+    public ResponseEntity<ResultResponse> uploadImage
+            (  @Parameter(
+                    name="image",
+                    description = "Files to be uploaded",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
+            )  @RequestParam("image")  @RequestBody MultipartFile image
     ) throws IOException {
 
         return ResponseEntity
@@ -36,8 +46,12 @@ public class S3Controller {
     }
 
     @GetMapping
+    @Operation(summary = "이미지 삭제", description = "업로드한 이미지를 삭제합니다.")
     public ResponseEntity<ResultResponse> deleteImages(
-            @RequestParam String filename) {
+            @Parameter(
+                    name="filename",
+                    description = "filename to be deleted"
+            )@RequestParam String filename) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResultResponse.of(

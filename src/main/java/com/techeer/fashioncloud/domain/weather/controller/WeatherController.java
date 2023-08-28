@@ -4,6 +4,8 @@ import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
 import com.techeer.fashioncloud.domain.weather.service.WeatherService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,10 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping()
+    @Operation(summary = "날씨 반환", description ="위경도를 이용해 날씨를 반환한다.")
     public ResponseEntity<ResultResponse> getWeatherHere(
-            @RequestParam Double latitude,
-            @RequestParam Double longitude
+            @Parameter(name="latitude") @RequestParam Double latitude,
+            @Parameter(name="longitude") @RequestParam Double longitude
         ) {
 
         WeatherInfoResponse weather = weatherService.getNowWeather(latitude, longitude);

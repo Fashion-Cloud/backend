@@ -10,6 +10,9 @@ import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
 import com.techeer.fashioncloud.domain.post.service.LookBookService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
+@Tag(name = "lookBook", description = "룩북 API")
 public class LookBookController {
     private final LookBookService bookService;
     private final LookBookMapper bookMapper;
 
     @PostMapping
+    @Operation(summary = "룩북 표지 생성", description = "제목과 사진이 들어간 룩북표지를 생성합니다.")
     public ResponseEntity<ResultResponse> lookBookCreate(
             @RequestBody LookBookCreateRequestDto dto
     ){
@@ -34,12 +39,14 @@ public class LookBookController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ResultResponse> getLookBookByUser(@PathVariable UUID id) {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookByUserId(id)));
+    @Operation(summary = "유저 아이디 이용해 룩북 불러오기", description = "유저 아이디를 이용해 해당 룩북 불러온다.")
+    public ResponseEntity<ResultResponse> getLookBookByUser(@Parameter(name="userId")@PathVariable UUID userId) {
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findBookByUserId(userId)));
     }
 
 
     @PostMapping("posts")
+    @Operation(summary = "룩북 포스트 업로드", description = "포스트와 룩북과 연결을 연결합니다.")
     public ResponseEntity<ResultResponse> lookBookPostCreate(
             @RequestBody LookBookPostCreateRequestDto dto
     ){
@@ -50,7 +57,8 @@ public class LookBookController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<ResultResponse> getOneLookBook(@PathVariable UUID id) {
+    @Operation(summary = "해당 룩북 불러오기", description = "id에 해당하는 룩북 불러오기")
+    public ResponseEntity<ResultResponse> getOneLookBook(@Parameter(name="id",description = "LookBookId")@PathVariable UUID id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, bookService.findLookBookById(id)));
     }
 

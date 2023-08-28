@@ -26,7 +26,7 @@ public class UltraSrtNcstResponse {
     public static UltraSrtNcstResponse of (WeatherApiResponse weatherApiResponse) {
 
         JsonNode weatherJsonData = weatherApiResponse.getItem();
-        Map<String, String> weatherData = new HashMap<String, String>();
+        Map<String, String> weatherData = new HashMap<>();
 
         if (weatherJsonData.isArray()) {
             for (JsonNode data : weatherJsonData) {

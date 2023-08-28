@@ -4,27 +4,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.geo.constant.GeoConstant;
 import com.techeer.fashioncloud.domain.geo.dto.AddressResponse;
 import com.techeer.fashioncloud.domain.weather.position.Location;
-import com.techeer.fashioncloud.global.config.GeoConfig;
 import com.techeer.fashioncloud.global.domain.ExternalApiCallable;
 import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
 import com.techeer.fashioncloud.global.error.exception.ApiParseException;
 import com.techeer.fashioncloud.global.error.exception.ApiServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
-
+//TODO: 레거시 코드 리팩토링
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AddressService implements ExternalApiCallable<AddressResponse> {
 
-
-    private final GeoConfig geoConfig;
+    @Value("${openapi.geocoding.key}")
+    private String geoKey;
 
     public AddressResponse getAddress (Location location) {
 
@@ -42,7 +42,7 @@ public class AddressService implements ExternalApiCallable<AddressResponse> {
                         .queryParam("x", longitude)
                         .queryParam("y",latitude)
                         .build())
-                .header("Authorization", "KakaoAK " + geoConfig.getKey())
+                .header("Authorization", "KakaoAK " + geoKey)
                 .exchangeToMono(response -> {
                     Integer httpStatusCode = response.statusCode().value();
                     HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);

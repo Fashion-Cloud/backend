@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherApiResponse;
 import com.techeer.fashioncloud.domain.weather.exception.WeatherApiException;
 
-//TODO: 파싱 예외 체크
-public class WeatherApiParser { //TODO: ExternalApiParser 인터페이스
+public class WeatherApiParser {
 
     private static final String NORMAL_SERVICE_CODE = "00";
 

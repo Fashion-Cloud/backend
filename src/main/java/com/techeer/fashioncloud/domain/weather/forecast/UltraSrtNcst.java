@@ -50,6 +50,7 @@ public class UltraSrtNcst extends Forecast implements WeatherApiCallable {
     public HashMap<String, Object> getReqQueryParams () {
 
         HashMap<String, Object> reqQueryParams = new HashMap<>();
+
         reqQueryParams.put("numOfRows", TOTAL_COUNT);
         reqQueryParams.put("pageNo", 1);
         reqQueryParams.put("base_date", baseDate);
@@ -59,6 +60,4 @@ public class UltraSrtNcst extends Forecast implements WeatherApiCallable {
 
         return reqQueryParams;
     }
-
-
 }

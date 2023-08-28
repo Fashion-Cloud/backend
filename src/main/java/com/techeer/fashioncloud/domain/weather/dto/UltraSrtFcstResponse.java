@@ -15,7 +15,7 @@ public class UltraSrtFcstResponse {
 
     public static UltraSrtFcstResponse of(WeatherApiResponse weatherApiResponse) {
 
-        JsonNode skyData = (JsonNode) weatherApiResponse.getItem().get(0);
+        JsonNode skyData = weatherApiResponse.getItem().get(0);
 
         return UltraSrtFcstResponse.builder()
                 .skyStatus(Integer.parseInt(skyData.get("fcstValue").asText()))

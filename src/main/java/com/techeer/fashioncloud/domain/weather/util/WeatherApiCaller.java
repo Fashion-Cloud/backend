@@ -1,7 +1,8 @@
-package com.techeer.fashioncloud.global.util.api;
+package com.techeer.fashioncloud.domain.weather.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.global.util.api.dto.WeatherApiRequest;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
+import com.techeer.fashioncloud.global.util.api.ExternalApiCallable;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

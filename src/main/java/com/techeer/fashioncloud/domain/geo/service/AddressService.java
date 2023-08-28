@@ -3,68 +3,32 @@ package com.techeer.fashioncloud.domain.geo.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.geo.constant.GeoConstant;
 import com.techeer.fashioncloud.domain.geo.dto.AddressResponse;
-import com.techeer.fashioncloud.domain.weather.position.Location;
+import com.techeer.fashioncloud.domain.geo.dto.GeoApiRequest;
+import com.techeer.fashioncloud.domain.geo.util.GeoApiCaller;
+import com.techeer.fashioncloud.domain.geo.util.GeoApiParser;
 import com.techeer.fashioncloud.global.domain.ExternalApiCallable;
-import com.techeer.fashioncloud.global.error.exception.ApiBadRequestException;
-import com.techeer.fashioncloud.global.error.exception.ApiParseException;
-import com.techeer.fashioncloud.global.error.exception.ApiServerErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.DefaultUriBuilderFactory;
-import reactor.core.publisher.Mono;
 
-//TODO: 레거시 코드 리팩토링
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AddressService implements ExternalApiCallable<AddressResponse> {
 
-    @Value("${openapi.geocoding.key}")
-    private String geoKey;
+    private final GeoApiCaller geoApiCaller;
 
-    public AddressResponse getAddress (Location location) {
+    public AddressResponse getAddress (Double latitude, Double longitude) {
 
-        String latitude = location.getLatitude().toString();
-        String longitude = location.getLongitude().toString();
-
-        DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory(GeoConstant.GEO_BASE_URL);
-
-        WebClient webclient = WebClient.builder()
-                .uriBuilderFactory(factory)
+        GeoApiRequest geoApiRequest = GeoApiRequest.builder()
+                .path(GeoConstant.GEO_BASE_URL)
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
 
-        Mono<JsonNode> responseMono = webclient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("x", longitude)
-                        .queryParam("y",latitude)
-                        .build())
-                .header("Authorization", "KakaoAK " + geoKey)
-                .exchangeToMono(response -> {
-                    Integer httpStatusCode = response.statusCode().value();
-                    HttpStatus httpStatus = HttpStatus.valueOf(httpStatusCode);
-                    if (httpStatus.is2xxSuccessful()) {
-                        return response.bodyToMono(JsonNode.class);
-                    } else if (httpStatus.is4xxClientError()){
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiBadRequestException();
-
-                    } else {
-                        log.error("Exception occurred - status: {}, message: {}", httpStatus, httpStatus.getReasonPhrase());
-                        throw new ApiServerErrorException();
-                    }
-                });
-        return responseMono.map(jsonNode -> {
-            try {
-                return parseApiResponse(jsonNode);
-            } catch (Exception e) {
-                throw new ApiParseException();
-            }
-        }).block();
-
+        return  geoApiCaller.get(geoApiRequest)
+                .map(GeoApiParser::parse)
+                .block();
     }
 
     public AddressResponse parseApiResponse(JsonNode jsonNode) {

@@ -9,8 +9,8 @@ import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
 import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.domain.weather.position.Location;
 import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
-import com.techeer.fashioncloud.global.util.api.WeatherApiCaller;
-import com.techeer.fashioncloud.global.util.api.dto.WeatherApiRequest;
+import com.techeer.fashioncloud.domain.weather.util.WeatherApiCaller;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -65,8 +65,7 @@ public class WeatherService {
                 .queryParams(ultraSrtNcst.getReqQueryParams())
                 .build();
 
-        Mono<JsonNode> apiResponse = weatherApiCaller.get(weatherApiRequest);
-        return  apiResponse
+        return  weatherApiCaller.get(weatherApiRequest)
                 .map(WeatherApiParser::parse)
                 .map(UltraSrtNcstResponse::of)
                 .block();

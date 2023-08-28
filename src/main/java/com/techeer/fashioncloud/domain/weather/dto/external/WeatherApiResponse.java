@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.domain.weather.dto;
+package com.techeer.fashioncloud.domain.weather.dto.external;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

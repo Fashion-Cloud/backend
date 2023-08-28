@@ -1,5 +1,6 @@
-package com.techeer.fashioncloud.global.util.api.dto;
+package com.techeer.fashioncloud.domain.weather.dto.external;
 
+import com.techeer.fashioncloud.global.util.api.dto.ExternalApiRequest;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

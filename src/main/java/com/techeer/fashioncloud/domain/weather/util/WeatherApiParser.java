@@ -1,7 +1,7 @@
 package com.techeer.fashioncloud.domain.weather.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.techeer.fashioncloud.domain.weather.dto.WeatherApiResponse;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiResponse;
 import com.techeer.fashioncloud.domain.weather.exception.WeatherApiException;
 
 public class WeatherApiParser {

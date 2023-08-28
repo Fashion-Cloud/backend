@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.weather.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

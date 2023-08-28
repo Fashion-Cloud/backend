@@ -2,7 +2,7 @@
 //
 //import com.fasterxml.jackson.databind.JsonNode;
 //import com.techeer.fashioncloud.domain.weather.dto.VilageFcstResponse;
-//import com.techeer.fashioncloud.domain.weather.dto.WeatherApiResponse;
+//import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiResponse;
 //import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 //import lombok.AllArgsConstructor;
 //import lombok.Getter;

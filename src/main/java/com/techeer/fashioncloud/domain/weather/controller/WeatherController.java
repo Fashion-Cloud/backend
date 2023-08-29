@@ -1,7 +1,9 @@
 package com.techeer.fashioncloud.domain.weather.controller;
 
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
+import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import com.techeer.fashioncloud.domain.weather.service.WeatherService;
+import com.techeer.fashioncloud.domain.weather.util.LocationConverter;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +28,9 @@ public class WeatherController {
             @Parameter(name="longitude") @RequestParam Double longitude
         ) {
 
-        WeatherInfoResponse weather = weatherService.getNowWeather(latitude, longitude);
+        Coordinate coord = LocationConverter.toXY(latitude, longitude);
+        WeatherInfoResponse weather = weatherService.getNowWeather(coord.getNx(), coord.getNy());
+
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.WEATHER_GET_SUCCESS, weather));
     }
 }

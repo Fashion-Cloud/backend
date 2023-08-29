@@ -1,25 +1,16 @@
-package com.techeer.fashioncloud.domain.weather.position;
+package com.techeer.fashioncloud.domain.weather.util;
 
 import com.techeer.fashioncloud.domain.weather.exception.InvalidLocationException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.techeer.fashioncloud.domain.weather.position.Coordinate;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-// 위도, 경도
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-public class Location {
-    private Double latitude;
-    private Double longitude;
-
-    public static Coordinate getCoordinate(Double v1, Double v2) {
+public class LocationConverter {
+    public static Coordinate toXY(Double v1, Double v2) {
 
         if (((v1 >= 21) && (v1 <= 144)) && ((v2 >= 32) && (v2 <= 147))) {
 
@@ -65,7 +56,7 @@ public class Location {
             coordinate.setNx((Integer) map.get("x"));
             coordinate.setNy((Integer) map.get("y"));
 
-            log.debug("Location converted to Coordinate - nx: {}, ny: {}", coordinate.getNx(), coordinate.getNx());
+            log.debug("Location converted to Coordinate - nx: {}, ny: {}", coordinate.getNx(), coordinate.getNy());
 
             return coordinate;
         }
@@ -73,7 +64,6 @@ public class Location {
             throw new InvalidLocationException();
         }
     }
-
 }
 
 

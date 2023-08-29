@@ -54,8 +54,6 @@ public class RedisConfig {
                 .build();
     }
 
-
-
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();

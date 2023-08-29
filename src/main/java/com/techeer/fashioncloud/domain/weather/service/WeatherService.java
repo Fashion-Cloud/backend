@@ -4,15 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
-import com.techeer.fashioncloud.domain.weather.position.Coordinate;
-import com.techeer.fashioncloud.domain.weather.position.Location;
-import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
 import com.techeer.fashioncloud.domain.weather.util.WeatherApiCaller;
-import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
+import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -25,16 +24,14 @@ public class WeatherService {
     private final RedisTemplate<String, WeatherInfoResponse> redisTemplate;
     private final WeatherApiCaller weatherApiCaller;
 
-    //TODO: Redis조회
-    public WeatherInfoResponse getNowWeather(Double latitude, Double longitude) {
+    @Cacheable(value = "weather", key = "#nx + ',' + #ny")
+    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) {
 
-        Coordinate coordinate = Location.getCoordinate(latitude, longitude);
-
-        UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(coordinate.getNx(), coordinate.getNy());
-        UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
+        UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(nx, ny);
+        UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(nx, ny);
 
         WeatherInfoResponse weatherInfo =  WeatherInfoResponse.getWeatherData(ultraSrtFcstResponse, ultraSrtNcstResponse);
-        redisTemplate.opsForValue().set("weatherCache::"+coordinate.getNx()+","+coordinate.getNy(), weatherInfo);
+//        redisTemplate.opsForValue().set("weatherCache::"+nx+","+ny, weatherInfo);
 
         return weatherInfo;
     }
@@ -71,4 +68,3 @@ public class WeatherService {
                 .block();
     }
 }
-

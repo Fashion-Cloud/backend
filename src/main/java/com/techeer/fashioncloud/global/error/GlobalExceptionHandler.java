@@ -69,4 +69,16 @@ public class GlobalExceptionHandler {
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        Integer status = (HttpStatus.INTERNAL_SERVER_ERROR.value());
+        String message = e.getMessage();
+        log.error("Exception occurred ({}) - status: {}, message: {}", e.getClass().getSimpleName(), status, message);
+        return new ResponseEntity<>((ErrorResponse.builder()
+                .status(status)
+                .message(message)
+                .time(LocalDateTime.now())
+                .build()), HttpStatus.valueOf(status));
+    }
 }

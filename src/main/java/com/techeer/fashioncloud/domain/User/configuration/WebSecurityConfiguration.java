@@ -15,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static io.lettuce.core.AclCategory.ADMIN;
+import static org.hibernate.cfg.AvailableSettings.USER;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -25,9 +28,22 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/v1/users/authenticate", "/api/v1/users/sign-up").permitAll()
-                .and()
+                .authorizeHttpRequests(authorize -> authorize
+//                .requestMatchers("/api/v1/address").hasRole("ADMIN")
+                .requestMatchers("/api/v1/address").hasRole("ROLE_USER")
+                .requestMatchers("/**").permitAll()
+                )
+//
+//                .requestMatchers("/api/v1/users/authenticate", "/api/v1/users/sign-up").permitAll()
+//                .requestMatchers("/api/v1/**").hasRole("ROLE_USER")
+//                .requestMatchers("/api/v1/address").hasRole("ROLE_ADMIN")
+//
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .antMatchers("/orders/**").hasRole("ADMIN")
+//                        .antMatchers("/members/my-page").hasRole("USER")
+//                        .antMatchers("/**").permitAll()
+
+
                 .authorizeHttpRequests().requestMatchers("/api/v1/**")
                 .authenticated().and()
                 .sessionManagement()

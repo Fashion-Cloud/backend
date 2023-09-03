@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.User.dto.responseDto;
 
+import com.techeer.fashioncloud.domain.User.model.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +20,7 @@ public class UserDTO {
     private String nickname;
 
     private String email;
+    private String password;
+    private ERole eRole;
 
 }

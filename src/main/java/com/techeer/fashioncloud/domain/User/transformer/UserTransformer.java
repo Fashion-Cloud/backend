@@ -3,6 +3,7 @@ package com.techeer.fashioncloud.domain.User.transformer;
 
 import com.techeer.fashioncloud.domain.User.dto.requestDto.SignupDTO;
 import com.techeer.fashioncloud.domain.User.dto.responseDto.UserDTO;
+import com.techeer.fashioncloud.domain.User.model.ERole;
 import com.techeer.fashioncloud.domain.User.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -13,6 +14,7 @@ public class UserTransformer {
                 .profileUrl(signupDTO.getProfileUrl())
                 .address(signupDTO.getAddress())
                 .email(signupDTO.getEmail())
+                .role(ERole.ROLE_USER)
                 .password(new BCryptPasswordEncoder().encode(signupDTO.getPassword()))
                 .build();
     }
@@ -24,6 +26,7 @@ public class UserTransformer {
                 .profileUrl(user.getProfileUrl())
                 .address(user.getAddress())
                 .email(user.getEmail())
+
                 .build();
     }
 }

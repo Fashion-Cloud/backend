@@ -1,5 +1,5 @@
 package com.techeer.fashioncloud.domain.User.model;
 
 public enum ERole {
-    USER,ADMID
+    ROLE_USER,ROLE_ADMID
 }

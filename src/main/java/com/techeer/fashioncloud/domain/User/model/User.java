@@ -38,6 +38,14 @@ public class User {
     @NotNull
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole role;
+
+    public void setUserTypeRole(ERole role) {
+        this.role = role;
+    }
+
 //    @Column
 //    @ColumnDefault("USER")
 //    @NotNull

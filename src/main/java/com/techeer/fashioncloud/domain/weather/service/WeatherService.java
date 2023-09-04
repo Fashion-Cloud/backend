@@ -25,24 +25,18 @@ public class WeatherService {
     private final RedisTemplate<String, WeatherInfoResponse> redisTemplate;
     private final WeatherApiCaller weatherApiCaller;
 
-    //TODO: Redis조회
-    public WeatherInfoResponse getNowWeather(Double latitude, Double longitude) {
+//    @Cacheable(value = "weather", key = "#nx + ',' + #ny")
+    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) {
 
-        Coordinate coordinate = Location.getCoordinate(latitude, longitude);
+        UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(new UltraSrtNcst(nx, ny));
+        UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(new UltraSrtFcst(nx, ny));
 
-        UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(coordinate.getNx(), coordinate.getNy());
-        UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(coordinate.getNx(), coordinate.getNy());
-
-        WeatherInfoResponse weatherInfo =  WeatherInfoResponse.getWeatherData(ultraSrtFcstResponse, ultraSrtNcstResponse);
-        redisTemplate.opsForValue().set("weatherCache::"+coordinate.getNx()+","+coordinate.getNy(), weatherInfo);
-
-        return weatherInfo;
+        return WeatherInfoResponse.getWeatherData(ultraSrtFcstResponse, ultraSrtNcstResponse);
     }
 
     // 초단기예보 (하늘상태)
-    public UltraSrtFcstResponse getUltraSrtFcst(Integer nx, Integer ny) {
+    public UltraSrtFcstResponse getUltraSrtFcst(UltraSrtFcst ultraSrtFcst) {
 
-        UltraSrtFcst ultraSrtFcst = new UltraSrtFcst(nx, ny);
         WeatherApiRequest weatherApiReqest = WeatherApiRequest.builder()
                 .path(UltraSrtFcst.REQ_URL)
                 .queryParams(ultraSrtFcst.getReqQueryParams())
@@ -56,9 +50,8 @@ public class WeatherService {
     }
 
     // 초단기실황예보 (하늘상태 외 날씨 데이터)
-    public UltraSrtNcstResponse getUltraSrtNcst(Integer nx, Integer ny) {
 
-        UltraSrtNcst ultraSrtNcst = new UltraSrtNcst(nx, ny);
+    public UltraSrtNcstResponse getUltraSrtNcst(UltraSrtNcst ultraSrtNcst) {
 
         WeatherApiRequest weatherApiRequest = WeatherApiRequest.builder()
                 .path(UltraSrtNcst.REQ_URL)

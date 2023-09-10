@@ -44,6 +44,7 @@ public class WeatherService {
             return objectMapper.readValue(value, UltraSrtFcstResponse.class);
         }
 
+        log.debug("cache miss: {}", key);
         WeatherApiRequest weatherApiReqest = WeatherApiRequest.builder()
                 .path(UltraSrtFcst.REQ_URL)
                 .queryParams(ultraSrtFcst.getReqQueryParams())
@@ -72,6 +73,7 @@ public class WeatherService {
             return objectMapper.readValue(value, UltraSrtNcstResponse.class);
         }
 
+        log.debug("cache miss: {}", key);
         WeatherApiRequest weatherApiRequest = WeatherApiRequest.builder()
                 .path(UltraSrtNcst.REQ_URL)
                 .queryParams(ultraSrtNcst.getReqQueryParams())

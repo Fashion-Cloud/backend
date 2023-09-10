@@ -62,6 +62,6 @@ public class UltraSrtFcst extends Forecast implements WeatherApiCallable {
     }
 
     public String getKey() {
-        return keyPrefix + nx + "," + ny + ":" + baseTime;
+        return keyPrefix + nx + "," + ny + ":" + baseDate + "-"+ baseTime;
     }
 }

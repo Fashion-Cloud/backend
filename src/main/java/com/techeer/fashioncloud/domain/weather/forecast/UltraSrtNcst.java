@@ -49,7 +49,7 @@ public class UltraSrtNcst extends Forecast implements WeatherApiCallable {
 
     @Override
     public String getKey() {
-        return keyPrefix + nx + "," + ny + ":" + baseTime;
+        return keyPrefix + nx + "," + ny + ":" + baseDate + "-" + baseTime;
     }
 
     @Override

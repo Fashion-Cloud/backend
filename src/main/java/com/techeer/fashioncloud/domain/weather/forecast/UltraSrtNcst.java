@@ -18,6 +18,7 @@ public class UltraSrtNcst extends Forecast implements WeatherApiCallable {
     public static final String BASE_MINUTE = "00";
     public static final Integer API_AVALIABLE_MINUTE = 40;
     public static final String DATE_CHANGE_TIME = "2300";
+    public static final String keyPrefix = "ultraSrtNcst:";
 
     private Integer nx;
     private Integer ny;
@@ -44,6 +45,11 @@ public class UltraSrtNcst extends Forecast implements WeatherApiCallable {
         }
 
         if(baseTime.equals(DATE_CHANGE_TIME)) setPreviousDate();
+    }
+
+    @Override
+    public String getKey() {
+        return keyPrefix + nx + "," + ny + ":" + baseTime;
     }
 
     @Override

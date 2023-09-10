@@ -41,7 +41,7 @@ public class RedisConfig {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(fromSerializer(new StringRedisSerializer()))
-                .entryTtl(Duration.ofMinutes(3L)); //임시 설정값
+                .entryTtl(Duration.ofMinutes(3L));
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory)
@@ -49,29 +49,14 @@ public class RedisConfig {
                 .build();
     }
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.registerModule(new JavaTimeModule());
-////        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-////        objectMapper.deactivateDefaultTyping(); // 타입 정보 비활성화
-//
-//        return objectMapper;
-//    }
-
     @Bean
     public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
         RedisTemplate<?, ?> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
-//        // key-value serializer
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-//
-//        // hash key-value serializer
-//        template.setHashKeySerializer(new StringRedisSerializer());
-//        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
 
         return template;
     }

@@ -1,16 +1,16 @@
 package com.techeer.fashioncloud.domain.weather.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtFcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.UltraSrtNcstResponse;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
+import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
-import com.techeer.fashioncloud.domain.weather.position.Coordinate;
-import com.techeer.fashioncloud.domain.weather.position.Location;
-import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
 import com.techeer.fashioncloud.domain.weather.util.WeatherApiCaller;
-import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiRequest;
+import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,11 +22,11 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class WeatherService {
 
-    private final RedisTemplate<String, WeatherInfoResponse> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
     private final WeatherApiCaller weatherApiCaller;
 
-//    @Cacheable(value = "weather", key = "#nx + ',' + #ny")
-    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) {
+    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) throws JsonProcessingException {
 
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(new UltraSrtNcst(nx, ny));
         UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(new UltraSrtFcst(nx, ny));
@@ -35,7 +35,14 @@ public class WeatherService {
     }
 
     // 초단기예보 (하늘상태)
-    public UltraSrtFcstResponse getUltraSrtFcst(UltraSrtFcst ultraSrtFcst) {
+    public UltraSrtFcstResponse getUltraSrtFcst(UltraSrtFcst ultraSrtFcst) throws JsonProcessingException {
+
+        String key = ultraSrtFcst.getKey();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            log.debug("cache hit: {}", key);
+            String value = redisTemplate.opsForValue().get(key);
+            return objectMapper.readValue(value, UltraSrtFcstResponse.class);
+        }
 
         WeatherApiRequest weatherApiReqest = WeatherApiRequest.builder()
                 .path(UltraSrtFcst.REQ_URL)
@@ -43,25 +50,40 @@ public class WeatherService {
                 .build();
 
         Mono<JsonNode> apiResponse = weatherApiCaller.get(weatherApiReqest);
-        return  apiResponse
+        UltraSrtFcstResponse ultraSrtFcstResponse = apiResponse
                 .map(WeatherApiParser::parse)
                 .map(UltraSrtFcstResponse::of)
                 .block();
+
+
+        redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(ultraSrtFcstResponse));
+        return ultraSrtFcstResponse;
     }
 
     // 초단기실황예보 (하늘상태 외 날씨 데이터)
 
-    public UltraSrtNcstResponse getUltraSrtNcst(UltraSrtNcst ultraSrtNcst) {
+    public UltraSrtNcstResponse getUltraSrtNcst(UltraSrtNcst ultraSrtNcst) throws JsonProcessingException {
+
+        String key = ultraSrtNcst.getKey();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            log.debug("cache hit: {}", key);
+
+            String value = redisTemplate.opsForValue().get(key);
+            return objectMapper.readValue(value, UltraSrtNcstResponse.class);
+        }
 
         WeatherApiRequest weatherApiRequest = WeatherApiRequest.builder()
                 .path(UltraSrtNcst.REQ_URL)
                 .queryParams(ultraSrtNcst.getReqQueryParams())
                 .build();
 
-        return  weatherApiCaller.get(weatherApiRequest)
+        UltraSrtNcstResponse ultraSrtNcstResponse = weatherApiCaller.get(weatherApiRequest)
                 .map(WeatherApiParser::parse)
                 .map(UltraSrtNcstResponse::of)
                 .block();
+
+        redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(ultraSrtNcstResponse));
+        return ultraSrtNcstResponse;
     }
 }
 

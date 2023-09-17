@@ -1,6 +1,9 @@
 package com.techeer.fashioncloud.domain.weather.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.techeer.fashioncloud.domain.weather.dto.WeatherInfoResponse;
+import com.techeer.fashioncloud.domain.weather.position.Coordinate;
+import com.techeer.fashioncloud.domain.weather.position.LocationConverter;
 import com.techeer.fashioncloud.domain.weather.service.WeatherService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
@@ -24,9 +27,10 @@ public class WeatherController {
     public ResponseEntity<ResultResponse> getWeatherHere(
             @Parameter(name="latitude") @RequestParam Double latitude,
             @Parameter(name="longitude") @RequestParam Double longitude
-        ) {
+        ) throws JsonProcessingException {
 
-        WeatherInfoResponse weather = weatherService.getNowWeather(latitude, longitude);
+        Coordinate coord = LocationConverter.toCoord(latitude, longitude);
+        WeatherInfoResponse weather = weatherService.getNowWeather(coord.getNx(), coord.getNy());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.WEATHER_GET_SUCCESS, weather));
     }
 }

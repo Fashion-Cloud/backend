@@ -19,6 +19,7 @@ public class UltraSrtFcst extends Forecast implements WeatherApiCallable {
     public static final Integer API_AVALIABLE_MINUTE = 45;
     public static final String BASE_MINUTE = "30";
     public static final String DATE_CHANGE_TIME = "2330";
+    public static final String keyPrefix = "ultraSrtFcst:";
 
     private Integer nx;
     private Integer ny;
@@ -58,5 +59,9 @@ public class UltraSrtFcst extends Forecast implements WeatherApiCallable {
         reqQueryParams.put("ny", ny);
 
         return reqQueryParams;
+    }
+
+    public String getKey() {
+        return keyPrefix + nx + "," + ny + ":" + baseDate + "-"+ baseTime;
     }
 }

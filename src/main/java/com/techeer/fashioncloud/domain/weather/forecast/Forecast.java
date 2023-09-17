@@ -18,9 +18,12 @@ public abstract class Forecast {
         this.baseDate = now.format(formatter);
     }
 
+    public abstract String getKey();
+
     public void setPreviousDate() {
         LocalDate localDateBaseDate = LocalDate.parse(baseDate, DateTimeFormatter.ofPattern(BASE_DATE_FORMAT));
         LocalDate previousDate = localDateBaseDate.minusDays(1);
         this.baseDate =  previousDate.format(DateTimeFormatter.ofPattern(BASE_DATE_FORMAT));
     }
+
 }

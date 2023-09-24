@@ -2,6 +2,11 @@ package com.techeer.fashioncloud.global.error;
 
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;
@@ -69,4 +74,40 @@ public class GlobalExceptionHandler {
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));
     }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
+        Integer status;
+        String message;
+
+        if (e instanceof ExpiredJwtException) {
+            status = HttpStatus.UNAUTHORIZED.value();
+            message = "JWT 토큰 만료";
+            log.error("ExpiredJwtException occurred - status: {}, message: {}", status, message);
+        } else if (e instanceof UnsupportedJwtException) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = "지원하지 않는 JWT 토큰";
+            log.error("UnsupportedJwtException occurred - status: {}, message: {}", status, message);
+        } else if (e instanceof MalformedJwtException) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = "잘못된 형식의 JWT 토큰";
+            log.error("MalformedJwtException occurred - status: {}, message: {}", status, message);
+        } else if (e instanceof SignatureException) {
+            status = HttpStatus.UNAUTHORIZED.value();
+            message = "JWT 서명 오류";
+            log.error("SignatureException occurred - status: {}, message: {}", status, message);
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            message = "JWT 토큰 에러";
+            log.error("JwtException occurred (JWT) - status: {}, message: {}", status, message);
+        }
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(status)
+                .message(message)
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(status));
+    }
+
+
 }

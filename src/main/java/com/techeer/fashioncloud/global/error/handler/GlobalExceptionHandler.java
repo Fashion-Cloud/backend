@@ -1,14 +1,13 @@
 package com.techeer.fashioncloud.global.error.handler;
 
+import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.ErrorResponse;
 import com.techeer.fashioncloud.global.error.ExternalErrorResponse;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;
@@ -79,37 +78,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
-        Integer status;
-        String message;
+        ErrorCode errorCode;
+
+
 
         if (e instanceof ExpiredJwtException) {
-            status = HttpStatus.UNAUTHORIZED.value();
-            message = "JWT 토큰 만료";
-            log.error("ExpiredJwtException occurred - status: {}, message: {}", status, message);
+            errorCode = ErrorCode.JWT_EXPIRED;
         } else if (e instanceof UnsupportedJwtException) {
-            status = HttpStatus.BAD_REQUEST.value();
-            message = "지원하지 않는 JWT 토큰";
-            log.error("UnsupportedJwtException occurred - status: {}, message: {}", status, message);
-        } else if (e instanceof MalformedJwtException) {
-            status = HttpStatus.BAD_REQUEST.value();
-            message = "잘못된 형식의 JWT 토큰";
-            log.error("MalformedJwtException occurred - status: {}, message: {}", status, message);
-        } else if (e instanceof SignatureException) {
-            status = HttpStatus.UNAUTHORIZED.value();
-            message = "JWT 서명 오류";
-            log.error("SignatureException occurred - status: {}, message: {}", status, message);
+            errorCode = ErrorCode.JWT_UNSUPPORTED;
         } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            message = "JWT 토큰 에러";
-            log.error("JwtException occurred (JWT) - status: {}, message: {}", status, message);
+            errorCode = ErrorCode.JWT_INVALID;
         }
 
+        log.error("JWT Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
+
         return new ResponseEntity<>(ErrorResponse.builder()
-                .status(status)
-                .message(message)
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
                 .time(LocalDateTime.now())
-                .build(), HttpStatus.valueOf(status));
+                .build(), HttpStatus.valueOf(errorCode.getStatus()));
     }
-
-
 }

@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.global.filter;
 
-import com.techeer.fashioncloud.global.auth.util.TokenProvider;
+import com.techeer.fashioncloud.domain.auth.util.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

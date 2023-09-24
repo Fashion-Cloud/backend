@@ -1,4 +1,4 @@
-package com.techeer.fashioncloud.global.auth.util;
+package com.techeer.fashioncloud.domain.auth.util;
 
 import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
@@ -6,8 +6,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,11 +23,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
 
     public static final String TOKEN_PREFIX = "Bearer ";
@@ -101,13 +100,15 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseAccessClaims(accessToken);
         if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new BusinessException(ErrorCode.AUTHORITY_NOT_FOUND);
+            throw new BusinessException(ErrorCode.JWT_AUTHORITY_NOT_FOUND);
         }
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
+
+        log.debug("인증 성공: {}", claims.getSubject());
 
         UserDetails principal = new User(claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);

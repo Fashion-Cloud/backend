@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.global.config;
 
-import com.techeer.fashioncloud.global.auth.util.TokenProvider;
+import com.techeer.fashioncloud.domain.auth.util.TokenProvider;
 import com.techeer.fashioncloud.global.error.handler.JwtAccessDeniedHandler;
 import com.techeer.fashioncloud.global.error.handler.JwtAuthenticationEntryPoint;
 import com.techeer.fashioncloud.global.filter.JwtAuthenticationFilter;
@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,6 +27,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CorsFilter corsFilter;
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -53,7 +59,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 
                 // 로그인, 회원가입 api는 토큰 없이도 호출 가능
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**").permitAll() // 인증되지 않은 사용자도 허용
+                .requestMatchers("/api/v1/auth/**").permitAll() // 인증되지 않은 사용자도 허용
                 .anyRequest().authenticated()
 
                 .and()

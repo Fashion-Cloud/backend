@@ -20,6 +20,9 @@ public enum ResponseCode {
     //LOOK_BOOK_POST
     LOOK_BOOK_POST_CREATE_SUCCESS(201, "룩북게시글 생성 성공"),
 
+    // AUTH
+    SIGNUP_SUCCESS(201, "회원가입 성공"),
+    LOGIN_SUCCESS(201, "로그인 성공"),
 
     ADDRESS_GET_SUCCESS(200, "주소 조회 성공"),
 

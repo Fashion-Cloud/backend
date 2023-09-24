@@ -1,5 +1,7 @@
-package com.techeer.fashioncloud.global.error;
+package com.techeer.fashioncloud.global.error.handler;
 
+import com.techeer.fashioncloud.global.error.ErrorResponse;
+import com.techeer.fashioncloud.global.error.ExternalErrorResponse;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
 import io.jsonwebtoken.ExpiredJwtException;

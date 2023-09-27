@@ -18,11 +18,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
 public class Region extends BaseEntity {
     @Id
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2") 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 

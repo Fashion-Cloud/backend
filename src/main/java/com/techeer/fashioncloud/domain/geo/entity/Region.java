@@ -25,7 +25,7 @@ public class Region extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
-    private int parentRegionId;
+    private Integer parentRegionId;
 
     @NotNull
     private String fullName;
@@ -36,15 +36,15 @@ public class Region extends BaseEntity {
     @Min(1)
     @Max(3)
     @NotNull
-    private int depth;
+    private Integer depth;
 
     @NotNull
-    private float lat;
+    private Double lat;
 
     @NotNull
-    private float lng;
+    private Double lng;
 
-    private int ordering;
+    private Integer ordering;
 
 
 

@@ -20,14 +20,14 @@ public class Location extends BaseEntity {
     private Long id;
 
     @NotNull
-    private String latitude; //위도
+    private String latitude; // 위도
 
     @NotNull
-    private String longitude; //경도
+    private String longitude; // 경도
 
     @NotNull
-    private String address; //주소
+    private String address; // 주소
 
     @NotNull
-    private String weatherAreaCode; //기상특보 구역 코드
+    private String weatherAreaCode; // 기상특보 구역 코드
 }

@@ -23,11 +23,12 @@ public enum ResponseCode {
     // AUTH
     SIGNUP_SUCCESS(201, "회원가입 성공"),
     LOGIN_SUCCESS(201, "로그인 성공"),
+    REISSUE_SUCCESS(201, "액세스 토큰 재발급 성공"),
 
     ADDRESS_GET_SUCCESS(200, "주소 조회 성공"),
 
     IMAGE_UPLOAD_SUCCESS(201, "이미지 업로드 성공"),
-    IMAGE_DELETE_SUCCESS(204,"이미지 삭제 성공"),
+    IMAGE_DELETE_SUCCESS(204, "이미지 삭제 성공"),
     WEATHER_GET_SUCCESS(200, "날씨 조회 성공");
 
     private final Integer status;

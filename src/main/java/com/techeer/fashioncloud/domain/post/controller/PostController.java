@@ -99,7 +99,7 @@ public class PostController {
     @Operation(summary = "게시물 수정", description ="postId를 통해 게시물을 수정한다.")
     public ResponseEntity<ResultResponse> update (@Parameter(name="id",description = "PostId") UUID id, @RequestBody PostUpdateRequestDto dto) {
 
-        Post post=postService.update(id,dto);
+        Post post = postService.update(id,dto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
     }
 }

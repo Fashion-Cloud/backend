@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 public class Location extends BaseEntity {
 
     @Id

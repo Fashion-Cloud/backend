@@ -43,6 +43,8 @@ public class LookBookServiceTest {
     private PostRepository postRepository;
     private LookBook lookBook;
 
+    @Mock
+    private LookBookMapper lookBookMapper;
 
     @BeforeEach
     @Transactional

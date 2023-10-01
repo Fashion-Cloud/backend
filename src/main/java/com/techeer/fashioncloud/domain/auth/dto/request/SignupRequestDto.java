@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.auth.dto.request;
 
-import com.techeer.fashioncloud.domain.auth.AuthEnums;
+import com.techeer.fashioncloud.domain.auth.ROLE;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -28,7 +28,7 @@ public class SignupRequestDto {
                 .email(email)
                 .password(encodedPasword)
                 .username(username)
-                .role(AuthEnums.ROLE.ROLE_USER)
+                .role(ROLE.USER)
                 .build();
     }
 }

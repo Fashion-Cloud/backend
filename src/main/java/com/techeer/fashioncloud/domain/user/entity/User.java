@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.user.entity;
 
-import com.techeer.fashioncloud.domain.auth.AuthEnums;
+import com.techeer.fashioncloud.domain.auth.ROLE;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -42,9 +42,9 @@ public class User {
     @ColumnDefault("USER")
     @NotNull
     @Column(length = 20)
-    private AuthEnums.ROLE role;
+    private ROLE role;
 
-    public void setUserRole(AuthEnums.ROLE role) {
+    public void setUserRole(ROLE role) {
         this.role = role;
     }
 }

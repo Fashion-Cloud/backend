@@ -24,7 +24,7 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "날씨 반환", description ="위경도를 이용해 날씨를 반환한다.")
     public ResponseEntity<ResultResponse> getWeatherHere(
             @Parameter(name="latitude") @RequestParam Double latitude,

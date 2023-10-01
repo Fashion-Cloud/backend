@@ -2,7 +2,10 @@ package com.techeer.fashioncloud.domain.auth.util;
 
 import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +34,6 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     public static final String TOKEN_PREFIX = "Bearer ";
-
 
 
     @Value("${jwt.access-token-expire-minute}")
@@ -114,21 +116,20 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String jwtToken) {
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(accessKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean validateAccessToken(String accessToken) {
+        accessTokenParser.parseClaimsJws(accessToken);
+        return true;
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        accessTokenParser.parseClaimsJws(refreshToken);
+        return true;
     }
 
     private Claims parseAccessClaims(String accessToken) {
-
-        return accessTokenParser
+        return refreshTokenParser
                 .parseClaimsJws(accessToken)
                 .getBody();
-
     }
 
     private Claims parseRefreshClaims(String refreshToken) {
@@ -136,7 +137,6 @@ public class TokenProvider {
         return refreshTokenParser
                 .parseClaimsJws(refreshToken)
                 .getBody();
-
     }
 
     private String extractJwtToken(String authorizationHeader) {

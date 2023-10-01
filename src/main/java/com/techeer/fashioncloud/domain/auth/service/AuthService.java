@@ -72,7 +72,7 @@ public class AuthService {
     public Token reissue(Token token) {
 
         // refreshToken 검증
-        if (!tokenProvider.validateToken(token.getRefreshToken())) {
+        if (!tokenProvider.validateRefreshToken(token.getRefreshToken())) {
             throw new BusinessException(ErrorCode.REFRESH_TOKEN_INVALID);
         }
 
@@ -81,7 +81,7 @@ public class AuthService {
         // accessToken의 사용자 이메일 정보로 refreshToken 조회
         String existRefreshToken = redisTemplate.opsForValue().get(refreshTokenKeyPrefix + authentication.getName()
         );
-        
+
         if (!Objects.equals(existRefreshToken, token.getRefreshToken())) {
             throw new BusinessException(ErrorCode.REFRESH_TOKEN_INVALID);
         }

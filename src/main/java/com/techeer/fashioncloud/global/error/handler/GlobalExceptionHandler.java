@@ -80,8 +80,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
         ErrorCode errorCode;
 
-
-
         if (e instanceof ExpiredJwtException) {
             errorCode = ErrorCode.JWT_EXPIRED;
         } else if (e instanceof UnsupportedJwtException) {
@@ -91,6 +89,19 @@ public class GlobalExceptionHandler {
         }
 
         log.error("JWT Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+
+        log.error("Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
 
         return new ResponseEntity<>(ErrorResponse.builder()
                 .status(errorCode.getStatus())

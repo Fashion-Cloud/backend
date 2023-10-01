@@ -1,7 +1,13 @@
-package com.techeer.fashioncloud.global.error;
+package com.techeer.fashioncloud.global.error.handler;
 
+import com.techeer.fashioncloud.global.error.ErrorCode;
+import com.techeer.fashioncloud.global.error.ErrorResponse;
+import com.techeer.fashioncloud.global.error.ExternalErrorResponse;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import com.techeer.fashioncloud.global.error.exception.ExternalApiException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;
@@ -68,5 +74,28 @@ public class GlobalExceptionHandler {
                 .message(message)
                 .time(LocalDateTime.now())
                 .build()), HttpStatus.valueOf(status));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
+        ErrorCode errorCode;
+
+
+
+        if (e instanceof ExpiredJwtException) {
+            errorCode = ErrorCode.JWT_EXPIRED;
+        } else if (e instanceof UnsupportedJwtException) {
+            errorCode = ErrorCode.JWT_UNSUPPORTED;
+        } else {
+            errorCode = ErrorCode.JWT_INVALID;
+        }
+
+        log.error("JWT Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(errorCode.getStatus())
+                .message(errorCode.getMessage())
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(errorCode.getStatus()));
     }
 }

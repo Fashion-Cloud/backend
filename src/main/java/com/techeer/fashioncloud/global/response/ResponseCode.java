@@ -25,6 +25,10 @@ public enum ResponseCode {
     LOGIN_SUCCESS(201, "로그인 성공"),
     REISSUE_SUCCESS(201, "액세스 토큰 재발급 성공"),
 
+    // USER
+    USER_FOLLOW_SUCCESS(201, "유저 팔로우 성공"),
+    USER_UNFOLLOW_SUCCESS(201, "유저 언팔로우 성공"),
+
     ADDRESS_GET_SUCCESS(200, "주소 조회 성공"),
 
     IMAGE_UPLOAD_SUCCESS(201, "이미지 업로드 성공"),

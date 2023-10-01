@@ -7,6 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -43,6 +45,12 @@ public class User {
     @NotNull
     @Column(length = 20)
     private ROLE role;
+
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Follow> followingUserList; // 현재 사용자가 팔로우중
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Follow> followerUserList;  // 현재 사용자를 팔로우중
 
     public void setUserRole(ROLE role) {
         this.role = role;

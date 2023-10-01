@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -26,6 +27,7 @@ public class WeatherService {
     private final ObjectMapper objectMapper;
     private final WeatherApiCaller weatherApiCaller;
 
+    @Transactional(readOnly = true)
     public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) throws JsonProcessingException {
 
         UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(new UltraSrtNcst(nx, ny));
@@ -35,7 +37,7 @@ public class WeatherService {
     }
 
     // 초단기예보 (하늘상태)
-    public UltraSrtFcstResponse getUltraSrtFcst(UltraSrtFcst ultraSrtFcst) throws JsonProcessingException {
+    private UltraSrtFcstResponse getUltraSrtFcst(UltraSrtFcst ultraSrtFcst) throws JsonProcessingException {
 
         String key = ultraSrtFcst.getKey();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
@@ -63,7 +65,7 @@ public class WeatherService {
 
     // 초단기실황예보 (하늘상태 외 날씨 데이터)
 
-    public UltraSrtNcstResponse getUltraSrtNcst(UltraSrtNcst ultraSrtNcst) throws JsonProcessingException {
+    private UltraSrtNcstResponse getUltraSrtNcst(UltraSrtNcst ultraSrtNcst) throws JsonProcessingException {
 
         String key = ultraSrtNcst.getKey();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {

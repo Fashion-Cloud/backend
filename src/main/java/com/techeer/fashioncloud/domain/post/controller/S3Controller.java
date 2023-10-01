@@ -30,12 +30,12 @@ public class S3Controller {
     @PostMapping(consumes = "multipart/form-data")
     @Operation(summary = "이미지 업로드", description = "이미지를 업로드하면 url을 반환합니다.")
     public ResponseEntity<ResultResponse> uploadImage
-            (  @Parameter(
-                    name="image",
+            (@Parameter(
+                    name = "image",
                     description = "Files to be uploaded",
                     content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE)
-            )  @RequestParam("image")  @RequestBody MultipartFile image
-    ) throws IOException {
+            ) @RequestParam("image") @RequestBody MultipartFile image
+            ) throws IOException {
 
         return ResponseEntity
                 .ok()
@@ -49,9 +49,9 @@ public class S3Controller {
     @Operation(summary = "이미지 삭제", description = "업로드한 이미지를 삭제합니다.")
     public ResponseEntity<ResultResponse> deleteImages(
             @Parameter(
-                    name="filename",
+                    name = "filename",
                     description = "filename to be deleted"
-            )@RequestParam String filename) {
+            ) @RequestParam String filename) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResultResponse.of(

@@ -56,10 +56,15 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .addFilter(corsFilter)
                 .formLogin().disable()
                 .httpBasic().disable()
-
-                // 로그인, 회원가입 api는 토큰 없이도 호출 가능
+                
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**").permitAll() // 인증되지 않은 사용자도 허용
+                .requestMatchers(
+                        "/api/v1/auth/**",
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs/**"
+                )
+                .permitAll() // 인증되지 않은 사용자도 허용
                 .anyRequest().authenticated()
 
                 .and()

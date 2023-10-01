@@ -5,6 +5,7 @@ import com.techeer.fashioncloud.domain.user.service.UserService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "유저 팔로우", description = "userId를 통해 유저를 팔로우한다")
     public ResponseEntity<ResultResponse> follow(
-            @PathVariable Long id,
+            @Parameter(name = "id", description = "팔로우할 유저 id") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails loginUser
     ) {
         userService.follow(loginUser, id);
@@ -35,7 +36,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "유저 언팔로우", description = "userId를 통해 유저를 언팔로우한다")
     public ResponseEntity<ResultResponse> unfollow(
-            @PathVariable Long id,
+            @Parameter(name = "id", description = "언팔로우할 유저 id") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails loginUser
     ) {
         userService.unfollow(loginUser, id);

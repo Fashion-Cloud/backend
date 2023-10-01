@@ -28,6 +28,7 @@ public enum ResponseCode {
     // USER
     USER_FOLLOW_SUCCESS(201, "유저 팔로우 성공"),
     USER_UNFOLLOW_SUCCESS(201, "유저 언팔로우 성공"),
+    USER_FOLLOW_LIST_GET_SUCCESS(200, "유저 팔로우 리스트 조회 성공"),
 
     ADDRESS_GET_SUCCESS(200, "주소 조회 성공"),
 

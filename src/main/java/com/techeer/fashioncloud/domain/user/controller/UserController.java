@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.user.controller;
 
+import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
 import com.techeer.fashioncloud.domain.user.service.UserService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
@@ -10,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -42,5 +40,15 @@ public class UserController {
     ) {
         userService.unfollow(loginUser, id);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_UNFOLLOW_SUCCESS));
+    }
+
+    @GetMapping("/follow")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "팔로우/팔로잉 사용자 목록 조회", description = "로그인한 사용자의 팔로우/팔로잉 사용자 목록을 조회한다")
+    public ResponseEntity<ResultResponse> follow(
+            @AuthenticationPrincipal UserDetails loginUser
+    ) {
+        FollowListResponseDto followListResDto = userService.getFollowList(loginUser);
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_FOLLOW_LIST_GET_SUCCESS, followListResDto));
     }
 }

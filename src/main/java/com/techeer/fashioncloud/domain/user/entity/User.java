@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.user.entity;
 
-import com.techeer.fashioncloud.domain.auth.ROLE;
+import com.techeer.fashioncloud.domain.auth.enums.ROLE;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;

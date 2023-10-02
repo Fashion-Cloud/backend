@@ -1,6 +1,6 @@
 package com.techeer.fashioncloud.domain.auth.dto.request;
 
-import com.techeer.fashioncloud.domain.auth.ROLE;
+import com.techeer.fashioncloud.domain.auth.enums.ROLE;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import jakarta.validation.constraints.Email;
 import lombok.*;

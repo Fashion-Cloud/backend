@@ -9,11 +9,8 @@ import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.user.repository.UserRepository;
 import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
-import com.techeer.fashioncloud.global.error.ErrorCode;
-import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,14 +25,11 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostCreateResponseDto create(UserDetails loginUser, PostCreateRequestDto reqDto) {
-
-        User user = userRepository.findByEmail(loginUser.getUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    public PostCreateResponseDto create(User loginUser, PostCreateRequestDto reqDto) {
 
         Double windChill = WindChillCalculator.getWindChill(reqDto.getTemperature(), reqDto.getWindSpeed());
 
-        Post post = postRepository.save(reqDto.toEntity(user, windChill));
+        Post post = postRepository.save(reqDto.toEntity(loginUser, windChill));
 
         // Save Images
         String postImage = reqDto.getImage();
@@ -46,7 +40,7 @@ public class PostService {
 
         postImageRepository.save(imageEntity);
 
-        return PostCreateResponseDto.of(post, user);
+        return PostCreateResponseDto.of(post, loginUser);
     }
 //
 //    public List<WeatherPostResponse> findPostsByWeather(Integer skyCode, Integer rainfallCode, Double windChill) {

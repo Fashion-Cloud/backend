@@ -1,8 +1,10 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
+import com.techeer.fashioncloud.domain.auth.util.LoginUser;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.service.PostService;
+import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,8 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +30,7 @@ public class PostController {
     @Operation(summary = "게시물 생성", description = "오늘 날씨에 맞는 게시물을 생성한다.")
     public ResponseEntity<ResultResponse> create(
             @RequestBody PostCreateRequestDto postCreateReqDto,
-            @AuthenticationPrincipal UserDetails loginUser
+            @LoginUser User loginUser
     ) {
         PostCreateResponseDto resDto = postService.create(loginUser, postCreateReqDto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));

@@ -1,25 +1,24 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 
-import com.techeer.fashioncloud.domain.post.entity.Review;
+import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.enums.Review;
+import com.techeer.fashioncloud.domain.user.entity.User;
+import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
+import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostCreateRequestDto {
-
+    
     @NotNull
-    private UUID userId; // user 정보를 조회하여 PostRequest에 넣기 위함.
-
-    @NotNull
-    private String name;
+    private String title;
 
     @NotNull
     private String image;
@@ -39,4 +38,21 @@ public class PostCreateRequestDto {
 
     @NotNull
     private Review review;
+
+
+    public Post toEntity(
+            User user,
+            Double windChill
+    ) {
+        return Post.builder()
+                .user(user)
+                .title(title)
+                .image(image)
+                .temperature(temperature)
+                .skyStatus(SkyStatus.findOf(skyStatus))
+                .rainfallType(RainfallType.findOf(rainfallType))
+                .review(review)
+                .windChill(windChill)
+                .build();
+    }
 }

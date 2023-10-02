@@ -1,29 +1,21 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
-import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
-import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
-import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -32,77 +24,72 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
-    private final PostMapper postMapper;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 생성", description = "오늘 날씨에 맞는 게시물을 생성한다.")
     public ResponseEntity<ResultResponse> create(
-            @RequestBody PostCreateRequestDto dto,
+            @RequestBody PostCreateRequestDto postCreateReqDto,
             @AuthenticationPrincipal UserDetails loginUser
     ) {
-        Post entity = postService.create(postMapper.toServiceDto(dto));
-        PostResponseDto response = postMapper.toResponseDto(entity);
-
-
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
+        PostCreateResponseDto resDto = postService.create(loginUser, postCreateReqDto);
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));
     }
-
-    //현재 날씨 기반으로 비슷한 날씨의 post 리턴
-    @GetMapping("/weather")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "날씨 반환", description = "실시간 날씨를 반환한다.")
-    public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            @Parameter(name = "skyCode") @RequestParam Integer skyCode,
-            @Parameter(name = "rainfallCode") @RequestParam Integer rainfallCode,
-            @Parameter(name = "windChill") @RequestParam Double windChill
-    ) {
-        List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyCode, rainfallCode, windChill);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
-    }
-
-    @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "게시물 전체 조회", description = "페이지네이션을 통해 10개씩 게시물을 반환한다.")
-    public ResponseEntity<ResultResponse> getAllPosts(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size,
-            @RequestParam(name = "sort", defaultValue = "createdAt") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort.split(",")));
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
-    }
-
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "id로 게시물 조회", description = "postId를 통해 게시물을 조회한다.")
-    public ResponseEntity<ResultResponse> getOnePost(@Parameter(name = "id", description = "PostId") @PathVariable UUID id) {
-
-
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
-    }
-
-    @GetMapping("/user/{id}")
-    @Operation(summary = "userId로 게시물 조회", description = "userId를 통해 게시물을 조회한다.")
-    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") UUID id) {
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "게시물 삭제", description = "postId를 통해 게시물을 삭제한다.")
-    public ResponseEntity<ResultResponse> delete(@Parameter(name = "id", description = "PostId") @PathVariable("id") UUID id) {
-        postService.deleteRequestById(id); // Post ID로 삭제
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
-
-    }
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "게시물 수정", description = "postId를 통해 게시물을 수정한다.")
-    public ResponseEntity<ResultResponse> update(@Parameter(name = "id", description = "PostId") UUID id, @RequestBody PostUpdateRequestDto dto) {
-
-        Post post = postService.update(id, dto);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
-    }
+//
+//    //현재 날씨 기반으로 비슷한 날씨의 post 리턴
+//    @GetMapping("/weather")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @Operation(summary = "날씨 반환", description = "실시간 날씨를 반환한다.")
+//    public ResponseEntity<ResultResponse> getNowWeatherPosts(
+//            @Parameter(name = "skyCode") @RequestParam Integer skyCode,
+//            @Parameter(name = "rainfallCode") @RequestParam Integer rainfallCode,
+//            @Parameter(name = "windChill") @RequestParam Double windChill
+//    ) {
+//        List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyCode, rainfallCode, windChill);
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
+//    }
+//
+//    @GetMapping
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @Operation(summary = "게시물 전체 조회", description = "페이지네이션을 통해 10개씩 게시물을 반환한다.")
+//    public ResponseEntity<ResultResponse> getAllPosts(
+//            @RequestParam(name = "page", defaultValue = "0") int page,
+//            @RequestParam(name = "size", defaultValue = "10") int size,
+//            @RequestParam(name = "sort", defaultValue = "createdAt") String sort) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(sort.split(",")));
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
+//    }
+//
+//    @GetMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @Operation(summary = "id로 게시물 조회", description = "postId를 통해 게시물을 조회한다.")
+//    public ResponseEntity<ResultResponse> getOnePost(@Parameter(name = "id", description = "PostId") @PathVariable UUID id) {
+//
+//
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
+//    }
+//
+//    @GetMapping("/user/{id}")
+//    @Operation(summary = "userId로 게시물 조회", description = "userId를 통해 게시물을 조회한다.")
+//    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") UUID id) {
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @Operation(summary = "게시물 삭제", description = "postId를 통해 게시물을 삭제한다.")
+//    public ResponseEntity<ResultResponse> delete(@Parameter(name = "id", description = "PostId") @PathVariable("id") UUID id) {
+//        postService.deleteRequestById(id); // Post ID로 삭제
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
+//
+//    }
+//
+//    @PutMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+//    @Operation(summary = "게시물 수정", description = "postId를 통해 게시물을 수정한다.")
+//    public ResponseEntity<ResultResponse> update(@Parameter(name = "id", description = "PostId") UUID id, @RequestBody PostUpdateRequestDto dto) {
+//
+//        Post post = postService.update(id, dto);
+//        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
+//    }
 }

@@ -1,7 +1,7 @@
 package com.techeer.fashioncloud.domain.post.dto.request;
 
 
-import com.techeer.fashioncloud.domain.post.entity.Review;
+import com.techeer.fashioncloud.domain.post.enums.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

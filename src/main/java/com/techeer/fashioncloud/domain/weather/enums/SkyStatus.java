@@ -30,8 +30,14 @@ public enum SkyStatus {
 
     public static List<Integer> getGroupCodes(Integer code) {
         return skyStatusCodes.values().stream()
-                .filter(skyStatus -> skyStatus.getGroup().equals(findOf(code).getGroup()))
+                .filter(s -> s.getGroup().equals(findOf(code).getGroup()))
                 .map(SkyStatus::getCode)
+                .collect(Collectors.toList());
+    }
+
+    public static List<SkyStatus> getGroup(SkyStatus skyStatus) {
+        return skyStatusCodes.values().stream()
+                .filter(s -> s.getGroup().equals(skyStatus.getGroup()))
                 .collect(Collectors.toList());
     }
 

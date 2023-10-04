@@ -6,6 +6,7 @@ import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
+import com.techeer.fashioncloud.global.util.validation.ValidEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,19 +26,20 @@ public class PostCreateRequestDto {
     private String image;
     // S3 API를 이용하여 Image를 먼저 S3에 올린 후에 반환된 URL을 저장함.
 
+    @ValidEnum(enumClass = SkyStatus.class)
+    private SkyStatus skyStatus;
+
     @NotNull
-    private Integer skyStatus;
+    @ValidEnum(enumClass = RainfallType.class)
+    private RainfallType rainfallType;
 
     @NotNull
     private Double temperature;
 
     @NotNull
-    private Integer rainfallType;
-
-    @NotNull
     private Double windSpeed;
 
-    @NotNull
+    @ValidEnum(enumClass = Review.class)
     private Review review;
 
 
@@ -47,8 +49,8 @@ public class PostCreateRequestDto {
                 .title(title)
                 .image(image)
                 .temperature(temperature)
-                .skyStatus(SkyStatus.findOf(skyStatus))
-                .rainfallType(RainfallType.findOf(rainfallType))
+                .skyStatus(skyStatus)
+                .rainfallType(rainfallType)
                 .review(review)
                 .windChill(WindChillCalculator.getWindChill(temperature, windSpeed))
                 .build();

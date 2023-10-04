@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.post.dto.request;
 
 
 import com.techeer.fashioncloud.domain.post.enums.Review;
+import com.techeer.fashioncloud.global.util.validation.ValidEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,5 +24,6 @@ public class PostUpdateRequestDto {
     private String image;
 
     @NotNull
+    @ValidEnum(enumClass = Review.class)
     private Review review;
 }

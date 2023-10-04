@@ -39,6 +39,12 @@ public enum RainfallType {
                 .collect(Collectors.toList());
     }
 
+    public static List<RainfallType> getGroup(RainfallType rainfallType) {
+        return rainfallCodes.values().stream()
+                .filter(s -> s.getGroup().equals(rainfallType.getGroup()))
+                .collect(Collectors.toList());
+    }
+
     public enum Group {
         CLEAR, RAINY, SNOWY
     }

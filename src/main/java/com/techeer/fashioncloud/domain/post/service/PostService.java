@@ -46,10 +46,10 @@ public class PostService {
 
     // TODO 페이지네이션
     @Transactional(readOnly = true)
-    public List<WeatherPostResponse> getPostsByWeather(Integer skyCode, Integer rainfallCode, Double windChill) {
+    public List<WeatherPostResponse> getPostsByWeather(SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
         List<Post> postList = postRepository.findPostsByWeather(
-                SkyStatus.getGroupCodes(skyCode),
-                RainfallType.getGroupCodes(rainfallCode),
+                SkyStatus.getGroup(skyStatus),
+                RainfallType.getGroup(rainfallType),
                 windChill);
 
         return postList.stream().map(WeatherPostResponse::of).toList();
@@ -63,18 +63,21 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PaginatedResponse<PostInfoResponseDto> getPostPages(Pageable pageable) {
+    public PaginatedResponse<PostInfoResponseDto> getPosts(Pageable pageable) {
         Page<Post> postPage = postRepository.findAll(pageable);
 
         return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
     }
 
-    public Post findPostById(UUID id) {
-        return postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+    public PostInfoResponseDto findPostById(UUID id) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+
+        return PostInfoResponseDto.of(post);
     }
 
-    public List<Post> findPostByUserId(UUID id) {
-        return postRepository.findByUserId(id);
+    public List<PostInfoResponseDto> findPostByUserId(Long id) {
+        List<Post> posts = postRepository.findByUserId(id);
+        return posts.stream().map(PostInfoResponseDto::of).toList();
     }
 
     public void deletePostById(UUID id) {

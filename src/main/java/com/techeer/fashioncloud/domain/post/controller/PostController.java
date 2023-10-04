@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.post.controller;
 
 import com.techeer.fashioncloud.domain.auth.util.LoginUser;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostGetRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +38,7 @@ public class PostController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 생성", description = "오늘 날씨에 맞는 게시물을 생성한다.")
     public ResponseEntity<ResultResponse> create(
-            @RequestBody PostCreateRequestDto reqDto,
+            @Valid @RequestBody PostCreateRequestDto reqDto,
             @LoginUser User loginUser
     ) {
         PostCreateResponseDto resDto = postService.create(loginUser, reqDto);
@@ -48,12 +50,9 @@ public class PostController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "날씨에 따른 게시글 목록 조회", description = "날씨가 비슷한 지역의 게시글 목록을 반환한다")
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            // TODO: ModelAttribute
-            @Parameter(name = "skyCode", description = "기상청 하늘상태 코드") @RequestParam Integer skyCode,
-            @Parameter(name = "rainfallCode", description = "기상청 강수상태 코드") @RequestParam Integer rainfallCode,
-            @Parameter(name = "windChill", description = "체감온도") @RequestParam Double windChill
+            @ParameterObject @ModelAttribute PostGetRequestDto reqDto
     ) {
-        List<WeatherPostResponse> responseData = postService.getPostsByWeather(skyCode, rainfallCode, windChill);
+        List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainFallType(), reqDto.getWindChill());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
@@ -71,9 +70,9 @@ public class PostController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 전체 조회", description = "조건에 따라 게시물 전체를 조회한다")
     public ResponseEntity<ResultResponse> getAllPosts(
-            @ModelAttribute @ParameterObject CustomPageRequest pageReqDto) {
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto) {
 
-        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPostPages(pageReqDto.of());
+        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.of());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
     }
 
@@ -89,7 +88,7 @@ public class PostController {
 
     @GetMapping("/user/{id}")
     @Operation(summary = "userId로 게시물 조회", description = "userId를 통해 게시물을 조회한다.")
-    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") UUID id) {
+    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") Long id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
     }
 
@@ -100,7 +99,7 @@ public class PostController {
             @Parameter(name = "id", description = "PostId")
             @PathVariable("id") UUID id) {
         postService.deletePostById(id);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
@@ -108,7 +107,7 @@ public class PostController {
     @Operation(summary = "게시물 수정", description = "postId를 통해 게시물을 수정한다.")
     public ResponseEntity<ResultResponse> update(
             @Parameter(name = "id", description = "PostId") UUID id,
-            @RequestBody PostUpdateRequestDto dto) {
+            @Valid @RequestBody PostUpdateRequestDto dto) {
 
         postService.update(id, dto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));

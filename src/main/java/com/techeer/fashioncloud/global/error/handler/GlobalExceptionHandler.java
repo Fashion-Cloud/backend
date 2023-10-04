@@ -12,11 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -97,16 +100,35 @@ public class GlobalExceptionHandler {
                 .build(), HttpStatus.valueOf(errorCode.getStatus()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
-        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+    // Validation Error
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(MethodArgumentNotValidException e) {
 
-        log.error("Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        String message = "invalid field: " + fieldErrors;
+
+        log.error(String.valueOf(e.getClass()));
+        log.error(message);
+        e.printStackTrace();
 
         return new ResponseEntity<>(ErrorResponse.builder()
-                .status(errorCode.getStatus())
-                .message(errorCode.getMessage())
+                .status(500)
+                .message(e.getMessage())
                 .time(LocalDateTime.now())
-                .build(), HttpStatus.valueOf(errorCode.getStatus()));
+                .build(), HttpStatus.valueOf(500));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
+
+        log.error(String.valueOf(e.getClass()));
+        log.error(e.getLocalizedMessage());
+        e.printStackTrace();
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(500)
+                .message(e.getLocalizedMessage())
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(500));
     }
 }

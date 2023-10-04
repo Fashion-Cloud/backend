@@ -47,9 +47,11 @@ public class Post extends BaseEntity {
     private Double temperature;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private SkyStatus skyStatus;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private RainfallType rainfallType;
 
     private Double windChill;

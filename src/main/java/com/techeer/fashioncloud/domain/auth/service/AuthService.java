@@ -5,11 +5,11 @@ import com.techeer.fashioncloud.domain.auth.dto.request.SignupRequestDto;
 import com.techeer.fashioncloud.domain.auth.dto.response.SignupResponseDto;
 import com.techeer.fashioncloud.domain.auth.dto.response.Token;
 import com.techeer.fashioncloud.domain.auth.util.TokenProvider;
+import com.techeer.fashioncloud.domain.post.service.S3Service;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.user.repository.UserRepository;
 import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
-import com.techeer.fashioncloud.domain.post.service.S3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -47,9 +46,9 @@ public class AuthService {
 
         String encodedPassword = passwordEncoder.encode(signupReqDto.getPassword());
         //에러 처리?d
-        String profileImageUrl = s3Service.uploaImage(signupReqDto.getProfileImage());
+        String profileImageUrl = s3Service.uploadImage(signupReqDto.getProfileImage());
 
-        User user = signupReqDto.toEntity(encodedPassword,profileImageUrl);
+        User user = signupReqDto.toEntity(encodedPassword, profileImageUrl);
 
         return SignupResponseDto.of(userRepository.save(user));
     }
@@ -87,7 +86,7 @@ public class AuthService {
         // accessToken의 사용자 이메일 정보로 refreshToken 조회
         String existRefreshToken = redisTemplate.opsForValue().get(refreshTokenKeyPrefix + authentication.getName()
         );
-        
+
         if (!Objects.equals(existRefreshToken, token.getRefreshToken())) {
             throw new BusinessException(ErrorCode.REFRESH_TOKEN_INVALID);
         }

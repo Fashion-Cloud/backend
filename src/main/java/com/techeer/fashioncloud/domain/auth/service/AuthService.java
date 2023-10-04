@@ -9,6 +9,7 @@ import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.user.repository.UserRepository;
 import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
+import com.techeer.fashioncloud.domain.post.service.S3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,6 +35,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate<String, String> redisTemplate;
+    private final S3Service s3Service;
     private final String refreshTokenKeyPrefix = "refreshToken:";
 
     @Transactional
@@ -43,7 +46,10 @@ public class AuthService {
         }
 
         String encodedPassword = passwordEncoder.encode(signupReqDto.getPassword());
-        User user = signupReqDto.toEntity(encodedPassword);
+        //에러 처리?d
+        String profileImageUrl = s3Service.uploaImage(signupReqDto.getProfileImage());
+
+        User user = signupReqDto.toEntity(encodedPassword,profileImageUrl);
 
         return SignupResponseDto.of(userRepository.save(user));
     }

@@ -98,4 +98,18 @@ public class GlobalExceptionHandler {
                 .time(LocalDateTime.now())
                 .build(), HttpStatus.valueOf(errorCode.getStatus()));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
+
+        log.error(String.valueOf(e.getClass()));
+        log.error(e.getLocalizedMessage());
+        e.printStackTrace();
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(500)
+                .message(e.getLocalizedMessage())
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(500));
+    }
 }

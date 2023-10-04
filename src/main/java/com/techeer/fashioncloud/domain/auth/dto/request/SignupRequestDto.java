@@ -4,6 +4,7 @@ import com.techeer.fashioncloud.domain.auth.ROLE;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,12 +24,15 @@ public class SignupRequestDto {
     @NotBlank(message = "이름을 입력하세요.")
     private String username;
 
-    public User toEntity(String encodedPasword) {
+    private MultipartFile profileImage;
+
+    public User toEntity(String encodedPasword, String profileImageUrl) {
         return User.builder()
                 .email(email)
                 .password(encodedPasword)
                 .username(username)
                 .role(ROLE.USER)
+                .profileUrl(profileImageUrl) // 프로필 URL 저장
                 .build();
     }
 }

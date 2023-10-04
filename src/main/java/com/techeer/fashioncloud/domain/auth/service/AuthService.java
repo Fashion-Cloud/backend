@@ -45,7 +45,6 @@ public class AuthService {
         }
 
         String encodedPassword = passwordEncoder.encode(signupReqDto.getPassword());
-        //에러 처리?d
         String profileImageUrl = s3Service.uploadImage(signupReqDto.getProfileImage());
 
         User user = signupReqDto.toEntity(encodedPassword, profileImageUrl);

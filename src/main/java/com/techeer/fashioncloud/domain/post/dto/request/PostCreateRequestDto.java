@@ -5,6 +5,7 @@ import com.techeer.fashioncloud.domain.post.enums.Review;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
+import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostCreateRequestDto {
-    
+
     @NotNull
     private String title;
 
@@ -40,10 +41,7 @@ public class PostCreateRequestDto {
     private Review review;
 
 
-    public Post toEntity(
-            User user,
-            Double windChill
-    ) {
+    public Post toEntity(User user) {
         return Post.builder()
                 .user(user)
                 .title(title)
@@ -52,7 +50,7 @@ public class PostCreateRequestDto {
                 .skyStatus(SkyStatus.findOf(skyStatus))
                 .rainfallType(RainfallType.findOf(rainfallType))
                 .review(review)
-                .windChill(windChill)
+                .windChill(WindChillCalculator.getWindChill(temperature, windSpeed))
                 .build();
     }
 }

@@ -52,7 +52,6 @@ public class Post extends BaseEntity {
     @NotNull
     private RainfallType rainfallType;
 
-    @Column(nullable = true)
     private Double windChill;
 
     @Builder
@@ -66,5 +65,16 @@ public class Post extends BaseEntity {
         this.rainfallType = rainfallType;
         this.review = review;
         this.windChill = windChill;
+    }
+
+    public Post update(
+            String title,
+            String image,
+            Review review
+    ) {
+        this.title = title;
+        this.image = image;
+        this.review = review;
+        return this;
     }
 }

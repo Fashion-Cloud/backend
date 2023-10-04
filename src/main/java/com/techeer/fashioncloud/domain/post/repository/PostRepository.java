@@ -17,20 +17,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     List<Post> findByUserId(UUID userId);
 
-    // 맑거나 흐림 - 하늘상태, 강수형태, 체감온도 필터링
-    @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyCodeList " +
-            "AND p.rainfallType IN :rainfallCodeList " +
+    @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyCodes " +
+            "AND p.rainfallType IN :rainfallCodes " +
             "AND ABS(p.windChill - :windChill) <= 1 ")
-    List<Post> findNoRainfallPosts(
-            @Param("windChill") Double windChill,
-            @Param("skyCodeList") List<Integer> skyCodeList,
-            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
-
-    //눈 혹은 비 - 강수형태와 체감온도로만 필터링
-    @Query("SELECT p FROM Post p WHERE p.rainfallType IN :rainfallCodeList " +
-            "AND ABS(p.windChill - :windChill) <= 1 ")
-    List<Post> findRainfallPosts(
-            @Param("windChill") Double windChill,
-            @Param("rainfallCodeList") List<Integer> rainfallCodeList);
-
+    List<Post> findPostsByWeather(
+            @Param("skyCodes") List<Integer> skyCodeList,
+            @Param("rainfallCodes") List<Integer> rainfallCodeList,
+            @Param("windChill") Double windChill);
 }

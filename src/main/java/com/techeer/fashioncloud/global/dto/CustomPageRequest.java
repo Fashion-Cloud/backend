@@ -8,9 +8,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 @Getter
+@Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomPageRequest {
 
     @Min(value = 0)

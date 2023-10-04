@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -18,7 +19,8 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-@SQLDelete(sql = "UPDATE user SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -52,7 +54,7 @@ public class User extends BaseEntity {
     private ROLE role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Post> postList; // 현재 사용자가 팔로우중
+    private List<Post> postList;
 
     @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Follow> followingUserList; // 현재 사용자가 팔로우중

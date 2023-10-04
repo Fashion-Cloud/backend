@@ -3,6 +3,7 @@ package com.techeer.fashioncloud.domain.post.entity;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
 import javax.validation.constraints.NotNull;
 
 @Setter
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "locations")
 public class Location extends BaseEntity {
 
     @Id

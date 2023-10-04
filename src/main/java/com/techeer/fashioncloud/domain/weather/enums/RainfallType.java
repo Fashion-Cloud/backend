@@ -34,14 +34,14 @@ public enum RainfallType {
 
     public static List<Integer> getGroupCodes(Integer code) {
         return rainfallCodes.values().stream()
-                .filter(skyStatus -> skyStatus.getGroup().equals(findOf(code).getGroup()))
+                .filter(r -> r.getGroup().equals(findOf(code).getGroup()))
                 .map(RainfallType::getCode)
                 .collect(Collectors.toList());
     }
 
     public static List<RainfallType> getGroup(RainfallType rainfallType) {
         return rainfallCodes.values().stream()
-                .filter(s -> s.getGroup().equals(rainfallType.getGroup()))
+                .filter(r -> r.getGroup().equals(rainfallType.getGroup()))
                 .collect(Collectors.toList());
     }
 

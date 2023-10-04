@@ -45,6 +45,16 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "게시물 전체 조회", description = "조건에 따라 게시물 전체를 조회한다")
+    public ResponseEntity<ResultResponse> getAllPosts(
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
+    ) {
+        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.of());
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
+    }
+
     // TODO 페이지네이션
     @GetMapping("/weather")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -52,7 +62,7 @@ public class PostController {
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
             @ParameterObject @ModelAttribute PostGetRequestDto reqDto
     ) {
-        List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainFallType(), reqDto.getWindChill());
+        List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainfallType(), reqDto.getWindChill());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
@@ -64,16 +74,6 @@ public class PostController {
     ) {
 //        List<WeatherPostResponse> responseData = postService.getFollowTimeline();
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS));
-    }
-
-    @GetMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "게시물 전체 조회", description = "조건에 따라 게시물 전체를 조회한다")
-    public ResponseEntity<ResultResponse> getAllPosts(
-            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto) {
-
-        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.of());
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
     }
 
     @GetMapping("/{id}")
@@ -106,10 +106,11 @@ public class PostController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 수정", description = "postId를 통해 게시물을 수정한다.")
     public ResponseEntity<ResultResponse> update(
-            @Parameter(name = "id", description = "PostId") UUID id,
-            @Valid @RequestBody PostUpdateRequestDto dto) {
+            @Parameter(name = "id", description = "PostId") @PathVariable("id") UUID id,
+            @Valid @RequestBody PostUpdateRequestDto reqDto) {
 
-        postService.update(id, dto);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
+        PostInfoResponseDto updatedPost = PostInfoResponseDto.of(postService.update(id, reqDto));
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS, updatedPost));
     }
 }

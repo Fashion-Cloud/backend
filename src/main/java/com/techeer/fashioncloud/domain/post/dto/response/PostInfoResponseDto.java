@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.post.dto.response;
 
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.enums.Review;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,8 @@ public class PostInfoResponseDto {
 
     private Double windChill;
 
+    private Review review;
+
     private SkyStatus skyStatus;
 
     private RainfallType rainfallType;
@@ -51,6 +54,7 @@ public class PostInfoResponseDto {
                 .title(post.getTitle())
                 .image(post.getImage())
                 .temperature(post.getTemperature())
+                .review(post.getReview())
                 .skyStatus(post.getSkyStatus())
                 .rainfallType(post.getRainfallType())
                 .windChill(post.getWindChill())

@@ -15,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Table(name = "lookbooks")
 public class LookBook extends BaseEntity {
 
     @Id

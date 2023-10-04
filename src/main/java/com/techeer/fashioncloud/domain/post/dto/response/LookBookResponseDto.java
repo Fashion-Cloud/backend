@@ -1,23 +1,21 @@
 package com.techeer.fashioncloud.domain.post.dto.response;
 
-import com.techeer.fashioncloud.global.entity.BaseEntity;
+import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class LookBookResponseDto extends BaseEntity {
+public class LookBookResponseDto {
 
     @NotNull
-    private UUID id; // post id
+    private Long id; //
 
     @NotNull
-    private UUID userId;
+    private Long userId;
 
     @NotNull
     private String title;
@@ -25,4 +23,12 @@ public class LookBookResponseDto extends BaseEntity {
     @NotNull
     private String image;
 
+    public static LookBookResponseDto of(LookBook lookBook) {
+        return LookBookResponseDto.builder()
+                .id(lookBook.getId())
+                .userId(lookBook.getUser().getId())
+                .title(lookBook.getTitle())
+                .image(lookBook.getImage())
+                .build();
+    }
 }

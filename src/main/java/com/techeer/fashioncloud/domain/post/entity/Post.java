@@ -21,7 +21,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE posts SET deleted_at = CURRENT_TIMESTAMP where id = ?")
-@Table(name = "posts")
+@Table(name = "posts", indexes = {
+        @Index(name = "idx_posts_weather", columnList = "skyStatus, rainfallType, windChill")
+})
 public class Post extends BaseEntity {
 
     @Id

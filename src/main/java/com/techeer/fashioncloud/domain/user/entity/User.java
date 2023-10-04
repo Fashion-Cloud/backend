@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.user.entity;
 
 import com.techeer.fashioncloud.domain.auth.enums.ROLE;
+import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -55,6 +56,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Post> postList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LookBook> lookBookList;
 
     @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Follow> followingUserList; // 현재 사용자가 팔로우중

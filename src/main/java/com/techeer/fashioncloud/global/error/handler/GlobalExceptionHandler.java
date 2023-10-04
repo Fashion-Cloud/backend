@@ -99,14 +99,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
-        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
-        log.error("Exception occurred - status: {}, message: {}", errorCode.getStatus(), errorCode.getMessage());
+        log.error(e.getClass().toString());
+        log.error(e.getLocalizedMessage());
 
         return new ResponseEntity<>(ErrorResponse.builder()
-                .status(errorCode.getStatus())
-                .message(errorCode.getMessage())
+                .status(500)
+                .message(e.getLocalizedMessage())
                 .time(LocalDateTime.now())
-                .build(), HttpStatus.valueOf(errorCode.getStatus()));
+                .build(), HttpStatus.valueOf(500));
     }
 }

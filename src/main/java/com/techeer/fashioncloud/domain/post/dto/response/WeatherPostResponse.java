@@ -4,11 +4,13 @@ import com.techeer.fashioncloud.domain.post.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class WeatherPostResponse {
     private UUID id;

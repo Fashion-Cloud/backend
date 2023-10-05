@@ -4,11 +4,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class LookBookPostDataResponseDto {
 
     private Long postId; // post id

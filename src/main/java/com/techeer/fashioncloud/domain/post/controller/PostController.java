@@ -52,7 +52,7 @@ public class PostController {
     public ResponseEntity<ResultResponse> getAllPosts(
             @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
     ) {
-        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.of());
+        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.set());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
     }
 
@@ -62,7 +62,8 @@ public class PostController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "날씨에 따른 게시글 목록 조회", description = "날씨가 비슷한 지역의 게시글 목록을 반환한다")
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            @ParameterObject @ModelAttribute PostGetRequestDto reqDto
+            @ParameterObject @ModelAttribute PostGetRequestDto reqDto,
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
     ) {
         List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainfallType(), reqDto.getWindChill());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
@@ -89,7 +90,7 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     @Operation(summary = "userId로 게시물 조회", description = "userId를 통해 게시물을 조회한다.")
     public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") Long id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));

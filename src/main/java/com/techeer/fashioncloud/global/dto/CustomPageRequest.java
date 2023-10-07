@@ -29,7 +29,7 @@ public class CustomPageRequest {
     @Parameter(description = "정렬 조건 (default: createdAt)")
     private String[] sort = {"createdAt"};
 
-    public PageRequest of() {
+    public PageRequest set() {
         return PageRequest.of(page, size, order, sort);
     }
 }

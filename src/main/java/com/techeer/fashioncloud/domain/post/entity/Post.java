@@ -59,8 +59,12 @@ public class Post extends BaseEntity {
 
     private Double windChill;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer viewCount;
+
+
     @Builder
-    public Post(UUID id, User user, String title, String image, Double temperature, Review review, SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
+    Post(UUID id, User user, String title, String image, Double temperature, Review review, SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
         this.id = id;
         this.user = user;
         this.image = image;

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class LookBookResponseDto {
 
     @NotNull
-    private Long id; //
+    private Long id; //룩북 ID
 
     @NotNull
     private Long userId;

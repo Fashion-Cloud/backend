@@ -1,6 +1,7 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.response.LookBookGetResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
@@ -11,6 +12,8 @@ import com.techeer.fashioncloud.domain.post.repository.LookBookPostRepository;
 import com.techeer.fashioncloud.domain.post.repository.LookBookRepository;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 import com.techeer.fashioncloud.domain.user.entity.User;
+import com.techeer.fashioncloud.global.error.ErrorCode;
+import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,9 @@ public class LookBookService {
 
     @Transactional
     public LookBookResponseDto lookBookCreate(User loginUser, LookBookCreateRequestDto dto) {
+        if (lookBookRepository.existsByTitle(dto.getTitle())) {
+            throw new BusinessException(ErrorCode.LOOK_BOOK_TITLE_DUPLICATED);
+        }
         LookBook lookBook = LookBook.builder()
                 .user(loginUser)
                 .title(dto.getTitle())
@@ -37,13 +43,11 @@ public class LookBookService {
     }
 
     @Transactional(readOnly = true)
-    public List<LookBookResponseDto> findBookByUserId(Long userId) {
-        List<LookBookResponseDto> lookbooklist = lookBookRepository.findByUserId(userId)
+    public List<LookBookResponseDto> findLookBooksByUserId(Long userId) {
+        return lookBookRepository.findByUserId(userId)
                 .stream()
                 .map(LookBookResponseDto::of)
                 .toList();
-
-        return lookbooklist;
     }
 
     @Transactional
@@ -51,21 +55,26 @@ public class LookBookService {
         LookBook lookBook = lookBookRepository.findById(lookBookId).orElseThrow(() -> new LookBookNotFoundException());
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
-        // TODO 사용자의 게시글인지 체크, 이미 추가했는지 체크
-        LookBookPost entity = lookBookPostRepository.save(
+        // TODO 이미 추가했는지 체크 (민지님)
+        if (!hasAccess(userId, lookBook.getUser().getId())) {
+            throw new BusinessException(ErrorCode.PERMISSION_DENIED);
+        }
+
+        lookBookPostRepository.save(
                 LookBookPost.builder()
                         .lookBook(lookBook)
                         .post(post).build());
     }
 
+    public LookBookGetResponseDto getLookBookById(Long id) {
+        LookBook lookBook = lookBookRepository.findById(id).orElseThrow(LookBookNotFoundException::new);
+        List<Post> posts = postRepository.getLookBookPosts(lookBook);
 
-// TODO 삭제
-//
-//    public List<LookBookPostDataResponseDto> findLookBookById(UUID id) {
-//        LookBook lookBook = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException());
-//        List<LookBookPost> lookbooklist = lookBookPostRepository.findByLookBook(lookBook);
-//        List<Post> postList = lookbooklist.stream().map(LookBookPost::getPost).collect(Collectors.toList());
-//
-//        return postList.stream().map(lookBookMapper::toDataDto).collect(Collectors.toList());
-//    }
+        return LookBookGetResponseDto.of(lookBook, posts);
+    }
+
+    private boolean hasAccess(Long loginUserId, Long ownerId) {
+        return loginUserId.equals(ownerId);
+    }
+
 }

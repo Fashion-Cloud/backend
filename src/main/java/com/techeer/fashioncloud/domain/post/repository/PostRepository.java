@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.post.repository;
 
+import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
@@ -18,6 +19,10 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     boolean existsById(UUID uuid);
 
     List<Post> findByUserId(Long userId);
+
+
+    @Query("SELECT p FROM Post p LEFT JOIN LookBookPost lbp WHERE lbp.lookBook = :lookBook")
+    List<Post> getLookBookPosts(@Param("lookBook") LookBook lookBook);
 
     @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyStatusList " +
             "AND p.rainfallType IN :rainfallTypeList " +

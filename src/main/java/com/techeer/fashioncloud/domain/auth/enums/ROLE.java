@@ -1,11 +1,11 @@
-package com.techeer.fashioncloud.domain.auth;
+package com.techeer.fashioncloud.domain.auth.enums;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public enum ROLE {
 
     USER("USER"),

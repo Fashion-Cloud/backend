@@ -1,27 +1,28 @@
 package com.techeer.fashioncloud.domain.post.controller;
 
-import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
+import com.techeer.fashioncloud.domain.auth.util.LoginUser;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostGetRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
-import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.service.PostService;
+import com.techeer.fashioncloud.domain.user.entity.User;
+import com.techeer.fashioncloud.global.dto.CustomPageRequest;
+import com.techeer.fashioncloud.global.dto.PaginatedResponse;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,77 +33,88 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
-    private final PostMapper postMapper;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 생성", description = "오늘 날씨에 맞는 게시물을 생성한다.")
     public ResponseEntity<ResultResponse> create(
-            @RequestBody PostCreateRequestDto dto,
-            @AuthenticationPrincipal UserDetails loginUser
+            @Valid @RequestBody PostCreateRequestDto reqDto,
+            @LoginUser User loginUser
     ) {
-        Post entity = postService.create(postMapper.toServiceDto(dto));
-        PostResponseDto response = postMapper.toResponseDto(entity);
-
-
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, response));
+        PostCreateResponseDto resDto = postService.create(loginUser, reqDto);
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));
     }
 
-    //현재 날씨 기반으로 비슷한 날씨의 post 리턴
+    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
+    @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "게시물 전체 조회", description = "조건에 따라 게시물 전체를 조회한다")
+    public ResponseEntity<ResultResponse> getAllPosts(
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
+    ) {
+        PaginatedResponse<PostInfoResponseDto> paginatedPosts = postService.getPosts(pageReqDto.set());
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
+    }
+
+    // TODO 페이지네이션
+    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping("/weather")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "날씨 반환", description = "실시간 날씨를 반환한다.")
+    @Operation(summary = "날씨에 따른 게시글 목록 조회", description = "날씨가 비슷한 지역의 게시글 목록을 반환한다")
     public ResponseEntity<ResultResponse> getNowWeatherPosts(
-            @Parameter(name = "skyCode") @RequestParam Integer skyCode,
-            @Parameter(name = "rainfallCode") @RequestParam Integer rainfallCode,
-            @Parameter(name = "windChill") @RequestParam Double windChill
+            @ParameterObject @ModelAttribute PostGetRequestDto reqDto,
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
     ) {
-        List<WeatherPostResponse> responseData = postService.findPostsByWeather(skyCode, rainfallCode, windChill);
+        List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainfallType(), reqDto.getWindChill());
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
-    @GetMapping
+    // TODO 페이지네이션, 마무리
+    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
+    @GetMapping("/follow/timeline")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "게시물 전체 조회", description = "페이지네이션을 통해 10개씩 게시물을 반환한다.")
-    public ResponseEntity<ResultResponse> getAllPosts(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size,
-            @RequestParam(name = "sort", defaultValue = "createdAt") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort.split(",")));
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.pageList(pageable)));
+    @Operation(summary = "팔로우 사용자 타임라인 조회", description = "내가 팔로우하는 사용자의 타임라인을 조회한다")
+    public ResponseEntity<ResultResponse> getNowWeatherPosts(
+    ) {
+//        List<WeatherPostResponse> responseData = postService.getFollowTimeline();
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS));
     }
-
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "id로 게시물 조회", description = "postId를 통해 게시물을 조회한다.")
-    public ResponseEntity<ResultResponse> getOnePost(@Parameter(name = "id", description = "PostId") @PathVariable UUID id) {
-
+    public ResponseEntity<ResultResponse> getPost(
+            @Parameter(name = "id", description = "PostId")
+            @PathVariable UUID id) {
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     @Operation(summary = "userId로 게시물 조회", description = "userId를 통해 게시물을 조회한다.")
-    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") UUID id) {
+    public ResponseEntity<ResultResponse> getPostByUserId(@Parameter(name = "id", description = "UserId") @PathVariable("id") Long id) {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostByUserId(id)));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 삭제", description = "postId를 통해 게시물을 삭제한다.")
-    public ResponseEntity<ResultResponse> delete(@Parameter(name = "id", description = "PostId") @PathVariable("id") UUID id) {
-        postService.deleteRequestById(id); // Post ID로 삭제
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_DELETE_SUCCESS));
-
+    public ResponseEntity<ResultResponse> delete(
+            @Parameter(name = "id", description = "PostId")
+            @PathVariable("id") UUID id) {
+        postService.deletePostById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 수정", description = "postId를 통해 게시물을 수정한다.")
-    public ResponseEntity<ResultResponse> update(@Parameter(name = "id", description = "PostId") UUID id, @RequestBody PostUpdateRequestDto dto) {
+    public ResponseEntity<ResultResponse> update(
+            @Parameter(name = "id", description = "PostId") @PathVariable("id") UUID id,
+            @Valid @RequestBody PostUpdateRequestDto reqDto) {
 
-        Post post = postService.update(id, dto);
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS));
+        PostInfoResponseDto updatedPost = PostInfoResponseDto.of(postService.update(id, reqDto));
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_UPDATE_SUCCESS, updatedPost));
     }
 }

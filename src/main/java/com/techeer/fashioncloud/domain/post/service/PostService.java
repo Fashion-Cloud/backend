@@ -1,18 +1,20 @@
 package com.techeer.fashioncloud.domain.post.service;
 
-import com.techeer.fashioncloud.domain.post.dto.mapper.PostMapper;
-import com.techeer.fashioncloud.domain.post.dto.request.PostCreateServiceDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
-import com.techeer.fashioncloud.domain.post.dto.response.PostResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.entity.PostImage;
 import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
 import com.techeer.fashioncloud.domain.post.repository.PostImageRepository;
 import com.techeer.fashioncloud.domain.post.repository.PostRepository;
-import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
-import com.techeer.fashioncloud.domain.weather.constant.SkyStatus;
-import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
+import com.techeer.fashioncloud.domain.user.entity.User;
+import com.techeer.fashioncloud.domain.user.repository.UserRepository;
+import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
+import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
+import com.techeer.fashioncloud.global.dto.PaginatedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,98 +31,68 @@ import java.util.UUID;
 public class PostService {
 
     @Autowired
-    private final WindChillCalculator calculator;
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
     private final PostImageRepository postImageRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
+    public PostCreateResponseDto create(User loginUser, PostCreateRequestDto dto) {
 
-    public Post create(PostCreateServiceDto dto) {
-        Double windChill = calculator.getWindChill(dto.getTemperature(),dto.getWindSpeed());
-        Post entity = postRepository.save(Post.builder()
-                .userId(dto.getUserId())
-                .name(dto.getName())
-                .image(dto.getImage())
-                .temperature(dto.getTemperature())
-                .skyStatus(dto.getSkyStatus())
-                .rainfallType(dto.getRainfallType())
-                .review(dto.getReview())
-                .windChill(windChill)
-                .build());
+        Post post = postRepository.save(dto.toEntity(loginUser));
+        savePostImage(post, dto.getImage());
 
-        // Save Images
-        String postImage = dto.getImage();
-        PostImage imageEntity = PostImage.builder()
-                .post(entity)
-                .url(postImage)
-                .build();
-        postImageRepository.save(imageEntity);
-        
-        return entity;
+        return PostCreateResponseDto.of(post, loginUser);
     }
 
-    public List<WeatherPostResponse> findPostsByWeather(Integer skyCode, Integer rainfallCode, Double windChill) {
-        //TODO: 분기처리 개선
-        List<Post> postEntityList = new ArrayList<>();
+    // TODO 페이지네이션
+    @Transactional(readOnly = true)
+    public List<WeatherPostResponse> getPostsByWeather(SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
+        List<Post> postList = postRepository.findPostsByWeather(
+                SkyStatus.getGroup(skyStatus),
+                RainfallType.getGroup(rainfallType),
+                windChill);
 
-        //맑음
-        if (skyCode == SkyStatus.CLEAR
-                & rainfallCode == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.clearCodeList, RainfallType.clearCodeList);
-        }
-        //흐림
-        else if (SkyStatus.cloudyCodeList.contains(skyCode)
-                & rainfallCode == RainfallType.CLEAR) {
-            postEntityList = postRepository.findNoRainfallPosts(windChill, SkyStatus.cloudyCodeList, RainfallType.clearCodeList);
-        }
-        //비
-        else if (RainfallType.RainyCodeList.contains(rainfallCode)) {
-            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.RainyCodeList);
-        }
-        //눈
-        else if (RainfallType.SnowyCodeList.contains(rainfallCode)) {
-            postEntityList = postRepository.findRainfallPosts(windChill, RainfallType.SnowyCodeList);
-        }
-        else {
-            throw new RuntimeException("날씨 정보 오류");
-        }
-
-        return postMapper.toPostDtoList(postEntityList);
+        return postList.stream().map(WeatherPostResponse::of).toList();
     }
 
+    @Transactional
     public Post update(UUID id, PostUpdateRequestDto dto) {
-        Post entity= postRepository.findById(id).get();
-        entity.setName(dto.getName());
-        entity.setImage(dto.getImage());
-        entity.setReview(dto.getReview());
-        return entity;
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+
+        return post.update(dto.getTitle(), dto.getImage(), dto.getReview());
     }
 
+    @Transactional(readOnly = true)
+    public PaginatedResponse<PostInfoResponseDto> getPosts(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAll(pageable);
 
-    public List<PostResponseDto> pageList(Pageable pageable) {
-        Page<Post> postList = postRepository.findAll(pageable);
-        return postMapper.toDtoPageList(postList).getContent();
+        return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
     }
 
+    public PostInfoResponseDto findPostById(UUID id) {
+        Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
 
-//     public List<PostResponseDto> findAllPosts() {
-//     return postRepository.findAll().stream()
-//              .map(PostResponseDto::fromEntity)
-//              .collect(Collectors.toList());
-//    }
-
-    public Post findPostById(UUID id) {
-        return postRepository.findById(id).orElseThrow(()-> new PostNotFoundException());
+        return PostInfoResponseDto.of(post);
     }
 
-    public List<Post> findPostByUserId(UUID id){
-        return postRepository.findByUserId(id);
+    public List<PostInfoResponseDto> findPostByUserId(Long id) {
+        List<Post> posts = postRepository.findByUserId(id);
+        return posts.stream().map(PostInfoResponseDto::of).toList();
     }
 
-    public void deleteRequestById(UUID id) {
-        if(!postRepository.existsById(id)){
+    public void deletePostById(UUID id) {
+        if (!postRepository.existsById(id)) {
             throw new PostNotFoundException();
         }
         postRepository.deleteById(id);
+    }
+
+    private void savePostImage(Post post, String url) {
+        PostImage postImage = PostImage.builder()
+                .post(post)
+                .url(url)
+                .build();
+
+        postImageRepository.save(postImage);
     }
 }

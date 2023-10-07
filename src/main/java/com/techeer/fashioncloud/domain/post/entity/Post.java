@@ -1,23 +1,29 @@
 package com.techeer.fashioncloud.domain.post.entity;
 
+import com.techeer.fashioncloud.domain.post.enums.Review;
+import com.techeer.fashioncloud.domain.user.entity.User;
+import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
+import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.UUID;
+
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
+@SQLDelete(sql = "UPDATE posts SET deleted_at = CURRENT_TIMESTAMP where id = ?")
+@Table(name = "posts", indexes = {
+        @Index(name = "idx_posts_weather", columnList = "skyStatus, rainfallType, windChill")
+})
 public class Post extends BaseEntity {
 
     @Id
@@ -26,13 +32,11 @@ public class Post extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
-    @Column(length = 36, nullable = false, updatable = false)
-    private UUID userId;
-
     @NotNull
-    private String name;
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @NotNull
     @Column(length = 500)
@@ -46,26 +50,40 @@ public class Post extends BaseEntity {
     private Double temperature;
 
     @NotNull
-    private Integer skyStatus;
+    @Enumerated(EnumType.STRING)
+    private SkyStatus skyStatus;
 
     @NotNull
-    private Integer rainfallType;
+    @Enumerated(EnumType.STRING)
+    private RainfallType rainfallType;
 
-
-    // TODO: 디폴트값은 개발용으로 넣어둔것. 이후 제거
-    @Column(nullable = true, columnDefinition = "DOUBLE PRECISION DEFAULT 11.5")
     private Double windChill;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer viewCount;
+
+
     @Builder
-    public Post(UUID id, UUID userId, String name, String image, Double temperature, Review review, Integer skyStatus, Integer rainfallType, Double windChill) {
+    Post(UUID id, User user, String title, String image, Double temperature, Review review, SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
         this.id = id;
-        this.userId = userId;
-        this.name = name;
+        this.user = user;
         this.image = image;
+        this.title = title;
         this.temperature = temperature;
         this.skyStatus = skyStatus;
         this.rainfallType = rainfallType;
         this.review = review;
         this.windChill = windChill;
+    }
+
+    public Post update(
+            String title,
+            String image,
+            Review review
+    ) {
+        this.title = title;
+        this.image = image;
+        this.review = review;
+        return this;
     }
 }

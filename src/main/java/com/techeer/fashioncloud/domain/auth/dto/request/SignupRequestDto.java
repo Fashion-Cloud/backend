@@ -1,16 +1,19 @@
 package com.techeer.fashioncloud.domain.auth.dto.request;
 
-import com.techeer.fashioncloud.domain.auth.ROLE;
+import com.techeer.fashioncloud.domain.auth.enums.ROLE;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignupRequestDto {
 
     @NotBlank(message = "이메일을 입력하세요.")

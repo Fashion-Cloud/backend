@@ -4,27 +4,24 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 public class LookBookPostDataResponseDto {
 
-    private UUID id; // post id
+    private Long postId; // post id
 
-    private UUID userId; // 임시 유저
+    private Long userId; // 임시 유저
 
     @NotNull
-    private String name;
+    private String title;
 
     @NotNull
     private String image;
 
     @NotNull
-    private  Double temperature;
-
-
+    private Double temperature;
 }

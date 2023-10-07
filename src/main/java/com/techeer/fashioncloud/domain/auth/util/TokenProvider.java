@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.auth.util;
 
+import com.techeer.fashioncloud.domain.auth.service.CustomUserDetailService;
 import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import io.jsonwebtoken.Claims;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +54,8 @@ public class TokenProvider {
 
     private JwtParser accessTokenParser;
     private JwtParser refreshTokenParser;
+
+    private final CustomUserDetailService customUserDetailsService;
 
     @PostConstruct
     public void init() {
@@ -110,9 +112,7 @@ public class TokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        log.debug("인증 성공: {}", claims.getSubject());
-
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        UserDetails principal = customUserDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

@@ -12,11 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -97,11 +100,30 @@ public class GlobalExceptionHandler {
                 .build(), HttpStatus.valueOf(errorCode.getStatus()));
     }
 
+    // Validation Error
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleUnhandledException(MethodArgumentNotValidException e) {
+
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+        String message = "invalid field: " + fieldErrors;
+
+        log.error(String.valueOf(e.getClass()));
+        log.error(message);
+        e.printStackTrace();
+
+        return new ResponseEntity<>(ErrorResponse.builder()
+                .status(500)
+                .message(e.getMessage())
+                .time(LocalDateTime.now())
+                .build(), HttpStatus.valueOf(500));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnhandledException(Exception e) {
 
-        log.error(e.getClass().toString());
+        log.error(String.valueOf(e.getClass()));
         log.error(e.getLocalizedMessage());
+        e.printStackTrace();
 
         return new ResponseEntity<>(ErrorResponse.builder()
                 .status(500)

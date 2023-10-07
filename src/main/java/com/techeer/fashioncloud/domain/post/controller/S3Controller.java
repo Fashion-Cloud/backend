@@ -26,7 +26,6 @@ public class S3Controller {
     private final S3Service s3Service;
     private final S3Mapper s3Mapper;
 
-
     @PostMapping(consumes = "multipart/form-data")
     @Operation(summary = "이미지 업로드", description = "이미지를 업로드하면 url을 반환합니다.")
     public ResponseEntity<ResultResponse> uploadImage
@@ -45,7 +44,7 @@ public class S3Controller {
                                 .toUploadResponseDto(s3Service.uploadImage(image))));
     }
 
-    @GetMapping
+    @DeleteMapping
     @Operation(summary = "이미지 삭제", description = "업로드한 이미지를 삭제합니다.")
     public ResponseEntity<ResultResponse> deleteImages(
             @Parameter(

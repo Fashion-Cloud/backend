@@ -1,11 +1,16 @@
 package com.techeer.fashioncloud.domain.user.entity;
 
-import com.techeer.fashioncloud.domain.auth.ROLE;
+import com.techeer.fashioncloud.domain.auth.enums.ROLE;
+import com.techeer.fashioncloud.domain.post.entity.LookBook;
+import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 
@@ -15,11 +20,14 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private Long id;
 
     @Column(length = 50, unique = true)
@@ -45,6 +53,12 @@ public class User {
     @NotNull
     @Column(length = 20)
     private ROLE role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Post> postList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LookBook> lookBookList;
 
     @OneToMany(mappedBy = "fromUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Follow> followingUserList; // 현재 사용자가 팔로우중

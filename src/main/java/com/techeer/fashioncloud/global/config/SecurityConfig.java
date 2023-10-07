@@ -56,10 +56,11 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .addFilter(corsFilter)
                 .formLogin().disable()
                 .httpBasic().disable()
-                
+
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/api/v1/auth/**",
+                        "/api/v1/**", //TODO 임시 설정, 제거필요
                         "/swagger-ui/**",
                         "/swagger-resources/**",
                         "/v3/api-docs/**"

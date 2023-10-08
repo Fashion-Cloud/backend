@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,11 +13,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Region extends BaseEntity {
+
     @Id
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid2")
-    @Column(length = 36, nullable = false, updatable = false)
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
+    private Integer id;
 
     private Integer parentRegionId;
 
@@ -33,17 +30,20 @@ public class Region extends BaseEntity {
     @Min(1)
     @Max(3)
     @NotNull
+    @Column(columnDefinition = "tinyint")
     private Integer depth;
 
     @NotNull
+    @Column(columnDefinition = "decimal(10, 6)")
     private Double lat;
 
     @NotNull
+    @Column(columnDefinition = "decimal(10, 6)")
     private Double lng;
 
+    @NotNull
+    @Column(columnDefinition = "default 0")
     private Integer ordering;
-
-
 
 
 }

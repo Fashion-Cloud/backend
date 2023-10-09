@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    // 살려주세요
     @PostMapping("/follow/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "유저 팔로우", description = "userId를 통해 유저를 팔로우한다")

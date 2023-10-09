@@ -60,7 +60,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/api/v1/auth/**",
-                        "/api/v1/**", //TODO 임시 설정, 제거필요
+                        "/api/v1/weather/**",
+                        "/api/v1/address/**",
                         "/swagger-ui/**",
                         "/swagger-resources/**",
                         "/v3/api-docs/**"

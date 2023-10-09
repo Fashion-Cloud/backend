@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
@@ -45,5 +46,7 @@ public class Region extends BaseEntity {
     @Column(columnDefinition = "default 0")
     private Integer ordering;
 
-
+    // 위경도 좌표계로 지리정보 point 저장
+    @Column(columnDefinition = "geometry(Point, 4326)")
+    private Point position;
 }

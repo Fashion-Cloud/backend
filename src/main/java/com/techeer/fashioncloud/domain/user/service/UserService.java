@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.user.service;
 
 import com.techeer.fashioncloud.domain.user.dto.response.FollowInfoResponseDto;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
+import com.techeer.fashioncloud.domain.user.dto.response.UserInfoResponse;
 import com.techeer.fashioncloud.domain.user.entity.Follow;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.user.repository.FollowRepository;
@@ -71,6 +72,22 @@ public class UserService {
                 .followerCount(followerIdList.size())
                 .followingIdList(followingIdList)
                 .followerIdList(followerIdList)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        return UserInfoResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .image(user.getProfileUrl())
+                .address(user.getAddress())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 

@@ -10,7 +10,6 @@ import com.techeer.fashioncloud.global.error.ErrorCode;
 import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +24,8 @@ public class UserService {
     private final FollowRepository followRepository;
 
     @Transactional
-    public void follow(UserDetails LoginUser, Long userId) {
+    public void follow(User fromUser, Long userId) {
 
-        User fromUser = userRepository.findByEmail(LoginUser.getUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         User toUser = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
@@ -48,10 +45,8 @@ public class UserService {
     }
 
     @Transactional
-    public void unfollow(UserDetails LoginUser, Long userId) {
+    public void unfollow(User fromUser, Long userId) {
 
-        User fromUser = userRepository.findByEmail(LoginUser.getUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         User toUser = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
@@ -66,13 +61,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public FollowListResponseDto getFollowList(UserDetails loginUser) {
+    public FollowListResponseDto getFollowList(User loginUser) {
 
-        User user = userRepository.findByEmail(loginUser.getUsername())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        List<FollowInfoResponseDto> followingIdList = followRepository.findFollowingsByUserId(user.getId());
-        List<FollowInfoResponseDto> followerIdList = followRepository.findFollowersByUserId(user.getId());
+        List<FollowInfoResponseDto> followingIdList = followRepository.findFollowingsByUserId(loginUser.getId());
+        List<FollowInfoResponseDto> followerIdList = followRepository.findFollowersByUserId(loginUser.getId());
 
         return FollowListResponseDto.builder()
                 .followingCount(followingIdList.size())

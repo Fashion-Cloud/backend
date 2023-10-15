@@ -71,6 +71,11 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
+        // 로그아웃 설정
+//                .logout()
+//                .logoutUrl("/api/v1/auth/logout")
+//                .logoutSuccessUrl("/login"); //TODO: 로그인 페이지로 리다이렉트
+
         return http.build();
     }
 }

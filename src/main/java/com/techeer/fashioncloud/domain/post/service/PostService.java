@@ -1,10 +1,10 @@
 package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.post.dto.request.PostGetRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
-import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.post.entity.PostImage;
 import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
@@ -16,7 +16,6 @@ import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import com.techeer.fashioncloud.global.dto.PaginatedResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ import java.util.UUID;
 @Transactional
 public class PostService {
 
-    @Autowired
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final UserRepository userRepository;
@@ -43,16 +41,16 @@ public class PostService {
 
         return PostCreateResponseDto.of(post, loginUser);
     }
-
-    // TODO 페이지네이션
+    
     @Transactional(readOnly = true)
-    public List<WeatherPostResponse> getPostsByWeather(SkyStatus skyStatus, RainfallType rainfallType, Double windChill) {
-        List<Post> postList = postRepository.findPostsByWeather(
-                SkyStatus.getGroup(skyStatus),
-                RainfallType.getGroup(rainfallType),
-                windChill);
+    public PaginatedResponse<PostInfoResponseDto> getPostsByWeather(Pageable pageReqDto, PostGetRequestDto reqDto) {
+        Page<Post> postPage = postRepository.findPostsByWeather(
+                SkyStatus.getGroup(reqDto.getSkyStatus()),
+                RainfallType.getGroup(reqDto.getRainfallType()),
+                reqDto.getWindChill(),
+                pageReqDto);
 
-        return postList.stream().map(WeatherPostResponse::of).toList();
+        return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
     }
 
     @Transactional

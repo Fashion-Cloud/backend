@@ -6,7 +6,6 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostGetRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
-import com.techeer.fashioncloud.domain.post.dto.response.WeatherPostResponse;
 import com.techeer.fashioncloud.domain.post.service.PostService;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.global.dto.CustomPageRequest;
@@ -23,7 +22,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -56,7 +54,6 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
     }
 
-    // TODO 페이지네이션
     // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping("/weather")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -65,7 +62,7 @@ public class PostController {
             @ParameterObject @ModelAttribute PostGetRequestDto reqDto,
             @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
     ) {
-        List<WeatherPostResponse> responseData = postService.getPostsByWeather(reqDto.getSkyStatus(), reqDto.getRainfallType(), reqDto.getWindChill());
+        PaginatedResponse<PostInfoResponseDto> responseData = postService.getPostsByWeather(pageReqDto.set(), reqDto);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
@@ -74,7 +71,7 @@ public class PostController {
     @GetMapping("/follow/timeline")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "팔로우 사용자 타임라인 조회", description = "내가 팔로우하는 사용자의 타임라인을 조회한다")
-    public ResponseEntity<ResultResponse> getNowWeatherPosts(
+    public ResponseEntity<ResultResponse> getFollowTimeline(
     ) {
 //        List<WeatherPostResponse> responseData = postService.getFollowTimeline();
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS));

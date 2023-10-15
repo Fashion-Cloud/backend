@@ -4,6 +4,8 @@ import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.Post;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,8 +29,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyStatusList " +
             "AND p.rainfallType IN :rainfallTypeList " +
             "AND ABS(p.windChill - :windChill) <= 1 ")
-    List<Post> findPostsByWeather(
+    Page<Post> findPostsByWeather(
             @Param("skyStatusList") List<SkyStatus> skyStatusList,
             @Param("rainfallTypeList") List<RainfallType> rainfallTypeList,
-            @Param("windChill") Double windChill);
+            @Param("windChill") Double windChill,
+            Pageable pageReqDto);
 }

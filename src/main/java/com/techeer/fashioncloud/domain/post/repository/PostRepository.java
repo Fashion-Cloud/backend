@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.post.repository;
 
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import org.springframework.data.domain.Page;
@@ -36,4 +37,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             @Param("minWindChill") Double minWindChill,
             @Param("maxWindChill") Double maxWindChill,
             Pageable pageReqDto);
+
+    @Query("SELECT p FROM Post p WHERE p.user IN (SELECT f.toUser FROM Follow f WHERE f.fromUser = :loginUser) OR p.user = :loginUser")
+    Page<Post> getFollowTimeline(@Param("loginUser") User loginUser, Pageable pageReqDto);
 }

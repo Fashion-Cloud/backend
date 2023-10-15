@@ -66,15 +66,16 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
-    // TODO 페이지네이션, 마무리
     // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping("/follow/timeline")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "팔로우 사용자 타임라인 조회", description = "내가 팔로우하는 사용자의 타임라인을 조회한다")
     public ResponseEntity<ResultResponse> getFollowTimeline(
+            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto,
+            @LoginUser User loginUser
     ) {
-//        List<WeatherPostResponse> responseData = postService.getFollowTimeline();
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS));
+        PaginatedResponse<PostInfoResponseDto> timeline = postService.getFollowTimeline(loginUser, pageReqDto.set());
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, timeline));
     }
 
     @GetMapping("/{id}")

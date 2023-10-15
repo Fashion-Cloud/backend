@@ -54,6 +54,13 @@ public class PostService {
         return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
     }
 
+    @Transactional(readOnly = true)
+    public PaginatedResponse<PostInfoResponseDto> getFollowTimeline(User loginUser, Pageable pageReqDto) {
+        Page<Post> postPage = postRepository.getFollowTimeline(loginUser, pageReqDto);
+
+        return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
+    }
+
     @Transactional
     public Post update(UUID id, PostUpdateRequestDto dto) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);

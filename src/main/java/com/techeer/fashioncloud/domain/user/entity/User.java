@@ -28,7 +28,7 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-    private Long id;
+    private Long id; //TODO: 타입 int로 변경
 
     @Column(length = 50, unique = true)
     @NotNull

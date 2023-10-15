@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.user.controller;
 
 import com.techeer.fashioncloud.domain.auth.util.LoginUser;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
+import com.techeer.fashioncloud.domain.user.dto.response.UserInfoResponse;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.domain.user.service.UserService;
 import com.techeer.fashioncloud.global.response.ResponseCode;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    // 살려주세요
     @PostMapping("/follow/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "유저 팔로우", description = "userId를 통해 유저를 팔로우한다")
@@ -32,8 +32,6 @@ public class UserController {
         userService.follow(loginUser, id);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_FOLLOW_SUCCESS));
     }
-
-    // 커밋지연 테스트용
 
     @PostMapping("/unfollow/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -54,5 +52,16 @@ public class UserController {
     ) {
         FollowListResponseDto followListResDto = userService.getFollowList(loginUser);
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_FOLLOW_LIST_GET_SUCCESS, followListResDto));
+    }
+
+    @GetMapping("/info/me")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "로그인 유저 정보 조회", description = "로그인한 사용자의 정보를 조회한다")
+    public ResponseEntity<ResultResponse> getMyInfo(
+            @LoginUser User loginUser
+    ) {
+        UserInfoResponse myInfo = userService.getUserInfo(loginUser.getId());
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
     }
 }

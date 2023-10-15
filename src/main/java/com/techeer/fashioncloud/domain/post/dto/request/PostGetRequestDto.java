@@ -21,6 +21,9 @@ public class PostGetRequestDto {
     @ValidEnum(enumClass = RainfallType.class)
     private RainfallType rainfallType;
 
-    @Parameter(description = "체감온도")
-    private Double windChill;
+    @Parameter(description = "최저 체감온도")
+    private Double minWindChill;
+
+    @Parameter(description = "최고 체감온도")
+    private Double maxWindChill;
 }

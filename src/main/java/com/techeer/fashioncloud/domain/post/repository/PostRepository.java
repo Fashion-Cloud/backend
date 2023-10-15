@@ -28,10 +28,12 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Query("SELECT p FROM Post p WHERE p.skyStatus IN :skyStatusList " +
             "AND p.rainfallType IN :rainfallTypeList " +
-            "AND ABS(p.windChill - :windChill) <= 1 ")
+            "AND p.windChill >= :minWindChill " +
+            "AND p.windChill <= :maxWindChill")
     Page<Post> findPostsByWeather(
             @Param("skyStatusList") List<SkyStatus> skyStatusList,
             @Param("rainfallTypeList") List<RainfallType> rainfallTypeList,
-            @Param("windChill") Double windChill,
+            @Param("minWindChill") Double minWindChill,
+            @Param("maxWindChill") Double maxWindChill,
             Pageable pageReqDto);
 }

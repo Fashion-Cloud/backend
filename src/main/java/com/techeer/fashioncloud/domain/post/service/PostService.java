@@ -41,13 +41,14 @@ public class PostService {
 
         return PostCreateResponseDto.of(post, loginUser);
     }
-    
+
     @Transactional(readOnly = true)
     public PaginatedResponse<PostInfoResponseDto> getPostsByWeather(Pageable pageReqDto, PostGetRequestDto reqDto) {
         Page<Post> postPage = postRepository.findPostsByWeather(
                 SkyStatus.getGroup(reqDto.getSkyStatus()),
                 RainfallType.getGroup(reqDto.getRainfallType()),
-                reqDto.getWindChill(),
+                reqDto.getMinWindChill(),
+                reqDto.getMaxWindChill(),
                 pageReqDto);
 
         return PaginatedResponse.of(postPage, PostInfoResponseDto::of);

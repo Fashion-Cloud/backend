@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface LookBookPostRepository extends JpaRepository<LookBookPost, Long> {
     List<LookBookPost> findLookBookIdByPostId(UUID postId);
+
+    boolean existsByLookBookIdAndPostId(Long lookBook, UUID post_id);
 }

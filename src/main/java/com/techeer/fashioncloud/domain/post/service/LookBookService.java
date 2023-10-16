@@ -65,12 +65,14 @@ public class LookBookService {
 
     @Transactional
     public void addPostToLookBook(Long userId, Long lookBookId, UUID postId) {
-        LookBook lookBook = lookBookRepository.findById(lookBookId).orElseThrow(() -> new LookBookNotFoundException());
+        LookBook lookBook = lookBookRepository.findById(lookBookId).orElseThrow(LookBookNotFoundException::new);
         Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 
-        // TODO 이미 추가했는지 체크 (민지님)
         if (!hasAccess(userId, lookBook.getUser().getId())) {
             throw new BusinessException(ErrorCode.PERMISSION_DENIED);
+        }
+        if (lookBookPostRepository.existsByLookBookIdAndPostId(lookBook.getId(), post.getId())) {
+            throw new BusinessException(ErrorCode.LOOK_BOOK_POST_DUPLICATED);
         }
 
         lookBookPostRepository.save(

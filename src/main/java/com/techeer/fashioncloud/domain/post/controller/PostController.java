@@ -43,7 +43,6 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));
     }
 
-    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "게시물 전체 조회", description = "조건에 따라 게시물 전체를 조회한다")
@@ -54,7 +53,6 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, paginatedPosts));
     }
 
-    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping("/weather")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "날씨에 따른 게시글 목록 조회", description = "날씨가 비슷한 지역의 게시글 목록을 반환한다")
@@ -66,7 +64,6 @@ public class PostController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, responseData));
     }
 
-    // TODO 룩북에 추가한 게시글인지 여부, 어디에 추가했는지 체크
     @GetMapping("/follow/timeline")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "팔로우 사용자 타임라인 조회", description = "내가 팔로우하는 사용자의 타임라인을 조회한다")

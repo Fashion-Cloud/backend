@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.post.service;
 
 import com.techeer.fashioncloud.domain.post.dto.request.LookBookCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookGetResponseDto;
+import com.techeer.fashioncloud.domain.post.dto.response.LookBookPostResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
 import com.techeer.fashioncloud.domain.post.entity.LookBookPost;
@@ -43,11 +44,23 @@ public class LookBookService {
     }
 
     @Transactional(readOnly = true)
-    public List<LookBookResponseDto> findLookBooksByUserId(Long userId) {
-        return lookBookRepository.findByUserId(userId)
-                .stream()
-                .map(LookBookResponseDto::of)
-                .toList();
+    public List<? extends LookBookResponseDto> findUserLookBooks(User loginUser, UUID postId) {
+
+        List<LookBook> userLookBooks = lookBookRepository.findByUserId(loginUser.getId());
+
+        if (postId != null) {
+            List<Long> postLookBooks = lookBookPostRepository.findLookBookIdByPostId(postId)
+                    .stream()
+                    .map(l -> l.getLookBook().getId())
+                    .toList();
+
+            return userLookBooks.stream()
+                    .map(lookBook -> LookBookPostResponseDto.of(lookBook, postLookBooks.contains(lookBook.getId())))
+                    .toList();
+        } else
+            return userLookBooks.stream()
+                    .map(LookBookResponseDto::of)
+                    .toList();
     }
 
     @Transactional

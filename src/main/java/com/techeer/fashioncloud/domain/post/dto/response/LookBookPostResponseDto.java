@@ -1,26 +1,29 @@
 package com.techeer.fashioncloud.domain.post.dto.response;
 
 import com.techeer.fashioncloud.domain.post.entity.LookBook;
-import com.techeer.fashioncloud.domain.post.entity.Post;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LookBookPostResponseDto {
+public class LookBookPostResponseDto extends LookBookResponseDto {
 
     @NotNull
-    private Long lookBookId;
+    private boolean inLookbook;
 
-    @NotNull
-    private LookBook lookBook;
-
-    @NotNull
-    private Post post;
+    public static LookBookPostResponseDto of(LookBook lookBook, boolean isContained) {
+        return LookBookPostResponseDto.builder()
+                .id(lookBook.getId())
+                .userId(lookBook.getUser().getId())
+                .title(lookBook.getTitle())
+                .image(lookBook.getImage())
+                .inLookbook(isContained)
+                .build();
+    }
 }

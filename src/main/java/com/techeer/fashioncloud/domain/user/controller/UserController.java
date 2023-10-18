@@ -69,15 +69,15 @@ public class UserController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
     }
 
-    @PostMapping("/profile/{id}")
+    @PostMapping("/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Operation(summary = "로그인 유저 정보 수정", description = "로그인한 사용자의 정보를 수정한다")
     public ResponseEntity<ResultResponse> updateProfile(
             @Valid @RequestBody UserProfile reqDto,
-            @Parameter(name = "id", description = "회원 id") @PathVariable Long id
+            @LoginUser User loginUser
     ) {
 
-        userService.updateProfile(reqDto, id);
+        userService.updateProfile(reqDto, loginUser.getId());
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_PROFILE_POST_SUCCESS));
     }

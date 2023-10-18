@@ -97,7 +97,9 @@ public class UserService {
     public void updateProfile(UserProfile reqDto, Long id){
 
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        user.update(reqDto.getAddress(),reqDto.getEmail(),reqDto.getProfileUrl(), reqDto.getUsername(), reqDto.getIntroduction());
+
+        user=user.update(reqDto.getAddress(),reqDto.getEmail(),reqDto.getProfileUrl(), reqDto.getUsername(), reqDto.getIntroduction());
+        userRepository.save(user);
     }
 
 

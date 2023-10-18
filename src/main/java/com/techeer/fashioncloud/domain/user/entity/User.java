@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -79,19 +80,30 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    public void update(
+    public User update(
             String address,
             String email,
             String profileUrl,
             String username,
             String introduction
     ) {
-        this.address = address;
-        this.email = email;
-        this.profileUrl = profileUrl;
-        this.username=username;
-        this.introduction=introduction;
-
+        if (address != null) {
+            this.address =address;
+        }
+        if (email != null) {
+            this.email =email;
+        }
+        if (profileUrl != null) {
+            this.profileUrl =profileUrl;
+        }
+        if (username != null) {
+            this.username =username;
+        }
+        if (introduction != null) {
+            this.introduction =introduction;
+        }
+        return this;
     }
+
 
 }

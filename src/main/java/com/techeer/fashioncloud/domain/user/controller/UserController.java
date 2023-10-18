@@ -1,6 +1,8 @@
 package com.techeer.fashioncloud.domain.user.controller;
 
 import com.techeer.fashioncloud.domain.auth.util.LoginUser;
+import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
+import com.techeer.fashioncloud.domain.user.dto.request.UserProfile;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
 import com.techeer.fashioncloud.domain.user.dto.response.UserInfoResponse;
 import com.techeer.fashioncloud.domain.user.entity.User;
@@ -14,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -63,5 +67,18 @@ public class UserController {
         UserInfoResponse myInfo = userService.getUserInfo(loginUser.getId());
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
+    }
+
+    @PostMapping("/profile/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "로그인 유저 정보 수정", description = "로그인한 사용자의 정보를 수정한다")
+    public ResponseEntity<ResultResponse> updateProfile(
+            @Valid @RequestBody UserProfile reqDto,
+            @Parameter(name = "id", description = "회원 id") @PathVariable Long id
+    ) {
+
+        userService.updateProfile(reqDto, id);
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_PROFILE_POST_SUCCESS));
     }
 }

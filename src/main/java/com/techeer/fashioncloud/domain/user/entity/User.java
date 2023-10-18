@@ -14,6 +14,7 @@ import org.hibernate.annotations.Where;
 
 import java.util.List;
 
+
 @Entity
 @Getter
 @Builder
@@ -48,6 +49,14 @@ public class User extends BaseEntity {
     @Column(length = 100)
     private String address;
 
+
+    @Column(length=100)
+    private String introduction;
+
+//    @NotNull
+//    @Column(length=10)
+//    private Boolean isDeleted=false;
+
     @Enumerated(EnumType.STRING)
     @ColumnDefault("USER")
     @NotNull
@@ -69,4 +78,20 @@ public class User extends BaseEntity {
     public void setUserRole(ROLE role) {
         this.role = role;
     }
+
+    public void update(
+            String address,
+            String email,
+            String profileUrl,
+            String username,
+            String introduction
+    ) {
+        this.address = address;
+        this.email = email;
+        this.profileUrl = profileUrl;
+        this.username=username;
+        this.introduction=introduction;
+
+    }
+
 }

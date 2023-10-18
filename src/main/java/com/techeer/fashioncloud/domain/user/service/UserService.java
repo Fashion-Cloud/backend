@@ -1,5 +1,8 @@
 package com.techeer.fashioncloud.domain.user.service;
 
+import com.techeer.fashioncloud.domain.post.entity.Post;
+import com.techeer.fashioncloud.domain.post.exception.PostNotFoundException;
+import com.techeer.fashioncloud.domain.user.dto.request.UserProfile;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowInfoResponseDto;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
 import com.techeer.fashioncloud.domain.user.dto.response.UserInfoResponse;
@@ -90,6 +93,13 @@ public class UserService {
                 .updatedAt(user.getUpdatedAt())
                 .build();
     }
+
+    public void updateProfile(UserProfile reqDto, Long id){
+
+        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        user.update(reqDto.getAddress(),reqDto.getEmail(),reqDto.getProfileUrl(), reqDto.getUsername(), reqDto.getIntroduction());
+    }
+
 
     private boolean checkFollowed(User fromUser, User toUser) {
         return followRepository.countByFromUserIdAndToUserId(fromUser.getId(), toUser.getId()) > 0;

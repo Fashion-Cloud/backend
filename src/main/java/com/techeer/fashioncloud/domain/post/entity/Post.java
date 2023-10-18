@@ -32,6 +32,8 @@ public class Post extends BaseEntity {
     @Column(length = 36, nullable = false, updatable = false)
     private UUID id = UUID.randomUUID();
 
+
+
     @NotNull
     private String title;
 

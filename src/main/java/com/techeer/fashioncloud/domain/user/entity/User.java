@@ -12,7 +12,9 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -48,6 +50,14 @@ public class User extends BaseEntity {
     @Column(length = 100)
     private String address;
 
+
+    @Column(length=100)
+    private String introduction;
+
+//    @NotNull
+//    @Column(length=10)
+//    private Boolean isDeleted=false;
+
     @Enumerated(EnumType.STRING)
     @ColumnDefault("USER")
     @NotNull
@@ -69,4 +79,31 @@ public class User extends BaseEntity {
     public void setUserRole(ROLE role) {
         this.role = role;
     }
+
+    public User update(
+            String address,
+            String email,
+            String profileUrl,
+            String username,
+            String introduction
+    ) {
+        if (address != null) {
+            this.address =address;
+        }
+        if (email != null) {
+            this.email =email;
+        }
+        if (profileUrl != null) {
+            this.profileUrl =profileUrl;
+        }
+        if (username != null) {
+            this.username =username;
+        }
+        if (introduction != null) {
+            this.introduction =introduction;
+        }
+        return this;
+    }
+
+
 }

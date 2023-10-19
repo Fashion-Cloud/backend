@@ -64,4 +64,15 @@ public class UserController {
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
     }
+
+    @DeleteMapping("/withdrawal")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "회원 탈퇴", description = "회원탈퇴를 진행한다")
+    public ResponseEntity<ResultResponse> Withdrawal(
+            @LoginUser User loginUser
+    ) {
+       userService.deleteUser(loginUser.getId());
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_DELETE_SUCCESS));
+    }
 }

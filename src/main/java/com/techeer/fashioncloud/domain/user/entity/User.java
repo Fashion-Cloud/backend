@@ -22,6 +22,7 @@ import java.util.List;
 @DynamicInsert
 @Where(clause = "deleted_at IS NULL")
 @SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?")
+
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -48,6 +49,9 @@ public class User extends BaseEntity {
     @Column(length = 100)
     private String address;
 
+    @Column(length = 30, columnDefinition = "boolean default false")
+    private Boolean isDeleted;
+
     @Enumerated(EnumType.STRING)
     @ColumnDefault("USER")
     @NotNull
@@ -69,4 +73,5 @@ public class User extends BaseEntity {
     public void setUserRole(ROLE role) {
         this.role = role;
     }
+
 }

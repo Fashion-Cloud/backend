@@ -2,6 +2,7 @@ package com.techeer.fashioncloud.domain.weather.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.techeer.fashioncloud.domain.weather.dto.external.WeatherApiResponse;
+import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +22,10 @@ public class UltraSrtNcstResponse {
     private Double temperature;
     private Double hourRainfall;
     private Integer humidity;
-    private Integer rainfallType;
+    private RainfallType rainfallType;
     private Double windSpeed;
 
-    public static UltraSrtNcstResponse of (WeatherApiResponse weatherApiResponse) {
+    public static UltraSrtNcstResponse of(WeatherApiResponse weatherApiResponse) {
 
         JsonNode weatherJsonData = weatherApiResponse.getItem();
         Map<String, String> weatherData = new HashMap<>();
@@ -35,11 +36,11 @@ public class UltraSrtNcstResponse {
             }
         }
 
-        return  UltraSrtNcstResponse.builder()
+        return UltraSrtNcstResponse.builder()
                 .temperature(Double.parseDouble(weatherData.get("T1H")))
                 .hourRainfall(Double.parseDouble(weatherData.get("RN1")))
                 .humidity(Integer.parseInt(weatherData.get("REH")))
-                .rainfallType(Integer.parseInt(weatherData.get("PTY")))
+                .rainfallType(RainfallType.findOf(Integer.parseInt(weatherData.get("PTY"))))
                 .windSpeed(Double.parseDouble(weatherData.get("WSD")))
                 .build();
     }

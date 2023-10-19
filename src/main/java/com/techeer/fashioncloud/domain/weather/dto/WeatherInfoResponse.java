@@ -1,5 +1,7 @@
 package com.techeer.fashioncloud.domain.weather.dto;
 
+import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
+import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import com.techeer.fashioncloud.domain.weather.util.WindChillCalculator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,18 +13,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class WeatherInfoResponse {
-    private Integer sky;
+
     private Double temperature;
     private Double hourRainfall;
     private Integer humidity;
-    private Integer rainfallType;
+    private SkyStatus sky;
+    private RainfallType rainfallType;
     private Double windSpeed;
     private Double windChill;
 
-    public static WeatherInfoResponse getWeatherData (
+    public static WeatherInfoResponse getWeatherData(
             UltraSrtFcstResponse ultraSrtFcstResponse,
-            UltraSrtNcstResponse ultraSrtNcstResponse)
-    {
+            UltraSrtNcstResponse ultraSrtNcstResponse) {
         return WeatherInfoResponse.builder()
                 .sky(ultraSrtFcstResponse.getSkyStatus())
                 .temperature(ultraSrtNcstResponse.getTemperature())

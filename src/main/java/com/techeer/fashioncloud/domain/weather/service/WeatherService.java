@@ -11,11 +11,12 @@ import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtFcst;
 import com.techeer.fashioncloud.domain.weather.forecast.UltraSrtNcst;
 import com.techeer.fashioncloud.domain.weather.util.WeatherApiCaller;
 import com.techeer.fashioncloud.domain.weather.util.WeatherApiParser;
+import com.techeer.fashioncloud.global.error.ErrorCode;
+import com.techeer.fashioncloud.global.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -27,13 +28,15 @@ public class WeatherService {
     private final ObjectMapper objectMapper;
     private final WeatherApiCaller weatherApiCaller;
 
-    @Transactional(readOnly = true)
-    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) throws JsonProcessingException {
+    public WeatherInfoResponse getNowWeather(Integer nx, Integer ny) {
+        try {
+            UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(new UltraSrtNcst(nx, ny));
+            UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(new UltraSrtFcst(nx, ny));
 
-        UltraSrtNcstResponse ultraSrtNcstResponse = getUltraSrtNcst(new UltraSrtNcst(nx, ny));
-        UltraSrtFcstResponse ultraSrtFcstResponse = getUltraSrtFcst(new UltraSrtFcst(nx, ny));
-
-        return WeatherInfoResponse.getWeatherData(ultraSrtFcstResponse, ultraSrtNcstResponse);
+            return WeatherInfoResponse.getWeatherData(ultraSrtFcstResponse, ultraSrtNcstResponse);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.WEATHER_GET_FAILED);
+        }
     }
 
     // 초단기예보 (하늘상태)

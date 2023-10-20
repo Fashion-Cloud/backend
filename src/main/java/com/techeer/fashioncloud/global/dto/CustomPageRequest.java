@@ -14,9 +14,9 @@ import org.springframework.data.domain.Sort;
 @AllArgsConstructor
 public class CustomPageRequest {
 
-    @Min(value = 0)
-    @Parameter(description = "(default: 0)")
-    private int page = 0;
+    @Min(value = 1)
+    @Parameter(description = "(default: 1)")
+    private int page = 1;
 
     @Min(value = 1)
     @Parameter(description = "(default: 10)")
@@ -30,6 +30,6 @@ public class CustomPageRequest {
     private String[] sort = {"createdAt"};
 
     public PageRequest set() {
-        return PageRequest.of(page, size, order, sort);
+        return PageRequest.of(page - 1, size, order, sort);
     }
 }

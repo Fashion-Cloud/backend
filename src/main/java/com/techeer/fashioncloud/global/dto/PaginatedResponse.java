@@ -24,7 +24,7 @@ public class PaginatedResponse<T> {
     public static <E> PaginatedResponse<E> of(Page<E> pageResult) {
         return PaginatedResponse.<E>builder()
                 .size(pageResult.getSize())
-                .currentPage(pageResult.getPageable().getPageNumber())
+                .currentPage(pageResult.getPageable().getPageNumber() + 1)
                 .totalPages(pageResult.getTotalPages())
                 .totalElements(pageResult.getTotalElements())
                 .content(pageResult.getContent())
@@ -35,7 +35,7 @@ public class PaginatedResponse<T> {
     public static <E, D> PaginatedResponse<D> of(Page<E> pageResult, Function<E, D> function) {
         return PaginatedResponse.<D>builder()
                 .size(pageResult.getSize())
-                .currentPage(pageResult.getPageable().getPageNumber())
+                .currentPage(pageResult.getPageable().getPageNumber() + 1)
                 .totalPages(pageResult.getTotalPages())
                 .totalElements(pageResult.getTotalElements())
                 .content(pageResult.getContent().stream().map(function).toList())

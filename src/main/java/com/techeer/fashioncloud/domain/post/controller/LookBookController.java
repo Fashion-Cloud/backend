@@ -6,14 +6,12 @@ import com.techeer.fashioncloud.domain.post.dto.response.LookBookGetResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.LookBookResponseDto;
 import com.techeer.fashioncloud.domain.post.service.LookBookService;
 import com.techeer.fashioncloud.domain.user.entity.User;
-import com.techeer.fashioncloud.global.dto.CustomPageRequest;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,14 +38,14 @@ public class LookBookController {
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_CREATE_SUCCESS, lookBookDto));
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @Operation(summary = "유저 아이디 이용해 룩북 불러오기", description = "유저 아이디를 이용해 해당 룩북 불러온다.")
+    @Operation(summary = "로그인한 사용자 룩북 리스트 불러오기", description = "로그인한 사용자 룩북 리스트를 불러온다.")
     public ResponseEntity<ResultResponse> getLookBookByUserId(
-            @Parameter(name = "userId") @PathVariable Long userId,
-            @ParameterObject @ModelAttribute CustomPageRequest pageReqDto
+            @Parameter(name = "postId", description = "비필수: 미지정시 inLookBook필드 제공 X") @RequestParam(required = false) UUID postId,
+            @LoginUser User loginUser
     ) {
-        List<LookBookResponseDto> lookBookDto = lookBookService.findLookBooksByUserId(userId);
+        List<? extends LookBookResponseDto> lookBookDto = lookBookService.findUserLookBooks(loginUser, postId);
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.LOOK_BOOK_GET_SUCCESS, lookBookDto));
     }

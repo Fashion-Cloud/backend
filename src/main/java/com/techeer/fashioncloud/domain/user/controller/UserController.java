@@ -64,4 +64,14 @@ public class UserController {
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
     }
+
+    @GetMapping("/info/{id}")
+    @Operation(summary = "유저 id로 유저 정보 조회", description = "유저 id를 통해 유저 정보를 조회한다")
+    public ResponseEntity<ResultResponse> getMyInfo(
+            @Parameter(name = "id", description = "정보를 조회할 유저 id") @PathVariable Long id
+    ) {
+        UserInfoResponse info = userService.getUserInfo(id);
+
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, info));
+    }
 }

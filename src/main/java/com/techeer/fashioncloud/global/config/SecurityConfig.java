@@ -4,6 +4,7 @@ import com.techeer.fashioncloud.domain.auth.util.TokenProvider;
 import com.techeer.fashioncloud.global.error.handler.JwtAccessDeniedHandler;
 import com.techeer.fashioncloud.global.error.handler.JwtAuthenticationEntryPoint;
 import com.techeer.fashioncloud.global.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +39,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
 
                 // 세션 미사용 설정
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
 
                 // auth exception handler 추가
                 .and()
@@ -51,6 +52,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .headers()
                 .frameOptions()
                 .sameOrigin()
+
 
                 .and()
                 .addFilter(corsFilter)
@@ -69,7 +71,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .anyRequest().authenticated()
 
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+
+                .logout()
+                .logoutUrl("/api/v1/auth/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                });
 
         return http.build();
     }

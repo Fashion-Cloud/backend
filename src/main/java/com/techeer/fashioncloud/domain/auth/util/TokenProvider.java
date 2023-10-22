@@ -113,7 +113,7 @@ public class TokenProvider {
                         .collect(Collectors.toList());
 
         UserDetails principal = customUserDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), authorities);
     }
 
     public boolean validateAccessToken(String accessToken) {

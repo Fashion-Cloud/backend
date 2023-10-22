@@ -42,7 +42,7 @@ public class Region extends BaseEntity {
     private Double lng;
 
     @NotNull
-    @Column(columnDefinition = "default 0")
+    @Column(columnDefinition = "tinyint default 0")
     private Integer ordering;
 
 

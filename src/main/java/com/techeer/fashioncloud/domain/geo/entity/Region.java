@@ -30,7 +30,7 @@ public class Region extends BaseEntity {
     @Min(1)
     @Max(3)
     @NotNull
-    @Column(columnDefinition = "tinyint")
+    @Column(columnDefinition = "smallint")
     private Integer depth;
 
     @NotNull
@@ -42,7 +42,7 @@ public class Region extends BaseEntity {
     private Double lng;
 
     @NotNull
-    @Column(columnDefinition = "tinyint default 0")
+    @Column(columnDefinition = "smallint default 0")
     private Integer ordering;
 
 

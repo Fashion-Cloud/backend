@@ -90,6 +90,17 @@ public class UserService {
                 .updatedAt(user.getUpdatedAt())
                 .build();
     }
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        userRepository.deleteUser(user.getId());
+        userRepository.delete(user);
+
+
+
+    }
 
     private boolean checkFollowed(User fromUser, User toUser) {
         return followRepository.countByFromUserIdAndToUserId(fromUser.getId(), toUser.getId()) > 0;

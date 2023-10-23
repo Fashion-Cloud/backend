@@ -80,7 +80,11 @@ public class PostController {
     @Operation(summary = "id로 게시물 조회", description = "postId를 통해 게시물을 조회한다.")
     public ResponseEntity<ResultResponse> getPost(
             @Parameter(name = "id", description = "PostId")
-            @PathVariable UUID id) {
+            @PathVariable UUID id,
+            @LoginUser User loginUser
+    ) {
+        postService.updateViewCount(loginUser, id);
+        postService.findPostById(id);
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
     }

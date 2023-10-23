@@ -18,6 +18,7 @@ import com.techeer.fashioncloud.global.dto.PaginatedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final UserRepository userRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public PostCreateResponseDto create(User loginUser, PostCreateRequestDto dto) {
@@ -73,6 +75,13 @@ public class PostService {
         Page<Post> postPage = postRepository.findAll(pageable);
 
         return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
+    }
+
+    public void updateViewCount(User loginUser, Long postId) {
+
+        // hit 되냐
+        
+
     }
 
     public PostInfoResponseDto findPostById(UUID id) {

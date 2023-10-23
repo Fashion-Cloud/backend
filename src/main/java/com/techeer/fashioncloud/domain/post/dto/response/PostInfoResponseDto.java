@@ -44,6 +44,8 @@ public class PostInfoResponseDto {
 
     private RainfallType rainfallType;
 
+    private Integer viewCount;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -59,6 +61,25 @@ public class PostInfoResponseDto {
                 .review(post.getReview())
                 .skyStatus(post.getSkyStatus())
                 .rainfallType(post.getRainfallType())
+                .viewCount(post.getViewCount())
+                .windChill(post.getWindChill())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+    }
+
+    public static PostInfoResponseDto getDtoWithViewCount(Post post, Integer viewCount) {
+        return PostInfoResponseDto.builder()
+                .id(post.getId())
+                .email(post.getUser().getEmail())
+                .username(post.getUser().getUsername())
+                .title(post.getTitle())
+                .image(post.getImage())
+                .temperature(post.getTemperature())
+                .review(post.getReview())
+                .skyStatus(post.getSkyStatus())
+                .rainfallType(post.getRainfallType())
+                .viewCount(viewCount)
                 .windChill(post.getWindChill())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())

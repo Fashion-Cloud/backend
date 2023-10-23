@@ -1,5 +1,6 @@
 package com.techeer.fashioncloud.domain.post.service;
 
+import com.techeer.fashioncloud.domain.post.constants.PostKeyPrefix;
 import com.techeer.fashioncloud.domain.post.dto.request.PostCreateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostGetRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
@@ -15,10 +16,11 @@ import com.techeer.fashioncloud.domain.user.repository.UserRepository;
 import com.techeer.fashioncloud.domain.weather.enums.RainfallType;
 import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 import com.techeer.fashioncloud.global.dto.PaginatedResponse;
+import com.techeer.fashioncloud.global.util.CacheService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final UserRepository userRepository;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final CacheService cacheService;
 
     @Transactional
     public PostCreateResponseDto create(User loginUser, PostCreateRequestDto dto) {
@@ -77,15 +79,13 @@ public class PostService {
         return PaginatedResponse.of(postPage, PostInfoResponseDto::of);
     }
 
-    public void updateViewCount(User loginUser, Long postId) {
+    public PostInfoResponseDto getPostInfoById(UUID id) {
 
-        // hit 되냐
-        
-
-    }
-
-    public PostInfoResponseDto findPostById(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(PostNotFoundException::new);
+        if (cacheService.hasKey(PostKeyPrefix.VIEW + id)) {
+            Integer viewCount = Integer.parseInt(cacheService.getRawValueByKey(PostKeyPrefix.VIEW + id));
+            return PostInfoResponseDto.getDtoWithViewCount(post, viewCount);
+        }
 
         return PostInfoResponseDto.of(post);
     }
@@ -102,6 +102,25 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    public void updateViewCount(User loginUser, UUID postId) {
+        String key = PostKeyPrefix.VIEW + postId;
+        if (isLoginUserPost(loginUser, postId)) {
+            return;
+        }
+        if (cacheService.hasKey(key)) {
+            cacheService.increaseByKey(key);
+            return;
+        }
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        cacheService.setValueByKey(key, String.valueOf(post.getViewCount() + 1));
+    }
+
+    @Cacheable(key = PostKeyPrefix.VIEW + "#postId", value = "postViewCount")
+    public Integer getViewCount(UUID postId) {
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        return post.getViewCount();
+    }
+
     private void savePostImage(Post post, String url) {
         PostImage postImage = PostImage.builder()
                 .post(post)
@@ -109,5 +128,11 @@ public class PostService {
                 .build();
 
         postImageRepository.save(postImage);
+    }
+
+    private boolean isLoginUserPost(User loginUser, UUID postId) {
+        Post post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+        Long authorId = post.getUser().getId();
+        return authorId.equals(loginUser.getId());
     }
 }

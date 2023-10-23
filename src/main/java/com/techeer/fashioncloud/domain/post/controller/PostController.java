@@ -84,9 +84,9 @@ public class PostController {
             @LoginUser User loginUser
     ) {
         postService.updateViewCount(loginUser, id);
-        postService.findPostById(id);
+        PostInfoResponseDto resDto = postService.getPostInfoById(id);
 
-        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, postService.findPostById(id)));
+        return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_GET_SUCCESS, resDto));
     }
 
     @GetMapping("/users/{id}")

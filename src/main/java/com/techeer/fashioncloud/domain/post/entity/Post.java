@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
+@DynamicInsert
 @SQLDelete(sql = "UPDATE posts SET deleted_at = CURRENT_TIMESTAMP where id = ?")
 @Table(name = "posts", indexes = {
         @Index(name = "idx_posts_weather", columnList = "skyStatus, rainfallType, windChill")
@@ -60,7 +62,7 @@ public class Post extends BaseEntity {
     private Double windChill;
 
     @Column(columnDefinition = "integer default 0")
-    private Integer viewCount;
+    private Integer viewCount = 0;
 
 
     @Builder

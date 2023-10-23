@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /*
@@ -20,6 +21,8 @@ import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
     boolean existsById(UUID uuid);
+
+    Optional<Post> findById(UUID uuid);
 
     List<Post> findByUserId(Long userId);
 

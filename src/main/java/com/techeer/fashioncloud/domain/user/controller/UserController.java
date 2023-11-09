@@ -60,7 +60,7 @@ public class UserController {
     public ResponseEntity<ResultResponse> getMyInfo(
             @LoginUser User loginUser
     ) {
-        UserInfoResponse myInfo = userService.getUserInfo(loginUser.getId());
+        UserInfoResponse myInfo = userService.getUserInfo(loginUser.getId(), loginUser);
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, myInfo));
     }
@@ -68,9 +68,10 @@ public class UserController {
     @GetMapping("/info/{id}")
     @Operation(summary = "유저 id로 유저 정보 조회", description = "유저 id를 통해 유저 정보를 조회한다")
     public ResponseEntity<ResultResponse> getMyInfo(
-            @Parameter(name = "id", description = "정보를 조회할 유저 id") @PathVariable Long id
+            @Parameter(name = "id", description = "정보를 조회할 유저 id") @PathVariable Long id,
+            @LoginUser User loginUser
     ) {
-        UserInfoResponse info = userService.getUserInfo(id);
+        UserInfoResponse info = userService.getUserInfo(id, loginUser);
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.USER_INFO_GET_SUCCESS, info));
     }

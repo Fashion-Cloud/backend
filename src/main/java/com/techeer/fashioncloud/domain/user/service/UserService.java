@@ -1,7 +1,8 @@
 package com.techeer.fashioncloud.domain.user.service;
 
-import com.techeer.fashioncloud.domain.user.dto.response.FollowInfoResponseDto;
+import com.techeer.fashioncloud.domain.user.dto.response.FollowInfo;
 import com.techeer.fashioncloud.domain.user.dto.response.FollowListResponseDto;
+import com.techeer.fashioncloud.domain.user.dto.response.FollowUserInfoResponseDto;
 import com.techeer.fashioncloud.domain.user.dto.response.UserInfoResponse;
 import com.techeer.fashioncloud.domain.user.entity.Follow;
 import com.techeer.fashioncloud.domain.user.entity.User;
@@ -64,8 +65,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public FollowListResponseDto getFollowList(User loginUser) {
 
-        List<FollowInfoResponseDto> followingIdList = followRepository.findFollowingsByUserId(loginUser.getId());
-        List<FollowInfoResponseDto> followerIdList = followRepository.findFollowersByUserId(loginUser.getId());
+        List<FollowUserInfoResponseDto> followingIdList = followRepository.findFollowingsByUserId(loginUser.getId());
+        List<FollowUserInfoResponseDto> followerIdList = followRepository.findFollowersByUserId(loginUser.getId());
 
         return FollowListResponseDto.builder()
                 .followingCount(followingIdList.size())
@@ -76,7 +77,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserInfoResponse getUserInfo(Long userId) {
+    public UserInfoResponse getUserInfo(Long userId, User loginUser) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
@@ -86,6 +87,7 @@ public class UserService {
                 .username(user.getUsername())
                 .image(user.getProfileUrl())
                 .address(user.getAddress())
+                .followInfo(getFollowInfo(user, loginUser))
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -97,5 +99,13 @@ public class UserService {
 
     private boolean checkSelfFollow(User fromUser, User toUser) {
         return Objects.equals(fromUser.getId(), toUser.getId());
+    }
+
+    private FollowInfo getFollowInfo(User user, User loginUser) {
+        return FollowInfo.builder()
+                .followerCount(followRepository.countByToUser(user))
+                .followingCount(followRepository.countByFromUser(user))
+                .isFollowing(checkFollowed(loginUser, user))
+                .build();
     }
 }

@@ -5,19 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
-    private Long id;
+public class FollowUserInfoResponseDto {
+    private Long userId;
     private String email;
+    private String profileUrl;
     private String username;
-    private String image;
-    private String address;
-    private FollowInfo followInfo;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

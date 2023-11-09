@@ -14,6 +14,6 @@ import java.util.List;
 public class FollowListResponseDto {
     private Integer followingCount;
     private Integer followerCount;
-    private List<FollowInfoResponseDto> followingIdList;
-    private List<FollowInfoResponseDto> followerIdList;
+    private List<FollowUserInfoResponseDto> followingIdList;
+    private List<FollowUserInfoResponseDto> followerIdList;
 }

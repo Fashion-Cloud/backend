@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FollowInfoResponseDto {
-    private Long userId;
-    private String email;
-    private String profileUrl;
-    private String username;
+public class FollowInfo {
+    private Integer followerCount;
+    private Integer followingCount;
+    private Boolean isFollowing;
 }

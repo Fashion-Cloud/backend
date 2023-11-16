@@ -168,3 +168,4 @@ public class UserServiceTest {
         assertNotNull(userInfoResponse.getUpdatedAt());
     }
 }
+//이렇게 작성하는게 맞나요..?

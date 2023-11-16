@@ -23,4 +23,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     @Query("SELECT new com.techeer.fashioncloud.domain.user.dto.response.FollowInfoResponseDto(f.fromUser.id, f.fromUser.email, f.fromUser.profileUrl, f.fromUser.username) FROM Follow f WHERE f.toUser.id = ?1")
     List<FollowInfoResponseDto> findFollowersByUserId(Long toUserId);
+
+    List<Follow> findByToUser_Id(Long toUserId);
+
+
 }

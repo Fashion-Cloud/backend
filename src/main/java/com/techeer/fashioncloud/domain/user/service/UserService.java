@@ -43,6 +43,7 @@ public class UserService {
                 .build();
 
         followRepository.save(follow);
+        //구독 sub
     }
 
     @Transactional

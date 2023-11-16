@@ -60,12 +60,14 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic().disable()
 
                 .authorizeHttpRequests()
+                .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(
                         "/api/v1/auth/**",
                         "/api/v1/**", //TODO 임시 설정, 제거필요
                         "/swagger-ui/**",
                         "/swagger-resources/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/**"
                 )
                 .permitAll() // 인증되지 않은 사용자도 허용
                 .anyRequest().authenticated()

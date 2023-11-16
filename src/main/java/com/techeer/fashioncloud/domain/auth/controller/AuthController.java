@@ -5,6 +5,7 @@ import com.techeer.fashioncloud.domain.auth.dto.request.SignupRequestDto;
 import com.techeer.fashioncloud.domain.auth.dto.response.SignupResponseDto;
 import com.techeer.fashioncloud.domain.auth.dto.response.Token;
 import com.techeer.fashioncloud.domain.auth.service.AuthService;
+import com.techeer.fashioncloud.domain.story.repo.ChatRoomRepository;
 import com.techeer.fashioncloud.global.response.ResponseCode;
 import com.techeer.fashioncloud.global.response.ResultResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입한다.")
@@ -33,6 +35,9 @@ public class AuthController {
             @RequestBody SignupRequestDto signupReqDto
     ) {
         SignupResponseDto signupResDto = authService.signup(signupReqDto);
+
+        chatRoomRepository.createChatRoom(signupResDto.getEmail()); //채팅방 생성
+
 
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.SIGNUP_SUCCESS, signupResDto));
     }

@@ -4,6 +4,7 @@
 //import com.techeer.fashioncloud.domain.post.entity.Post;
 //import com.techeer.fashioncloud.domain.post.repository.PostRepository;
 //import com.techeer.fashioncloud.domain.weather.constant.RainfallType;
+//import com.techeer.fashioncloud.domain.weather.enums.SkyStatus;
 //import com.techeer.fashioncloud.global.entity.BaseEntity;
 //import jakarta.transaction.Transactional;
 //import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,6 @@
 //import java.util.Optional;
 //import java.util.UUID;
 //
-//import static com.techeer.fashioncloud.domain.post.enums.Review.추웠다;
 //import static com.techeer.fashioncloud.fixture.PostFixtures.POST_FIXTURES;
 //import static com.techeer.fashioncloud.fixture.PostFixtures.UPLOAD_POST_FIXTURES;
 //import static org.junit.Assert.assertEquals;

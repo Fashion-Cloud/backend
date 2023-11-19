@@ -44,7 +44,7 @@ public class PostController {
     ) {
         PostCreateResponseDto resDto = postService.create(loginUser, reqDto);
 
-        //pub
+
         ChatMessage message = ChatMessage.builder()
                 .roomId(loginUser.getEmail())  // 팔로워들의 기본키 id를 사용하도록 설정
                 .sender(loginUser.getEmail())

@@ -34,6 +34,9 @@ public class AuthController {
     ) {
         SignupResponseDto signupResDto = authService.signup(signupReqDto);
 
+//        chatRoomRepository.createChatRoom(signupResDto.getEmail()); //채팅방 생성
+
+
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.SIGNUP_SUCCESS, signupResDto));
     }
 

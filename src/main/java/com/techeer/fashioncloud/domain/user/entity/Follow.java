@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+
+
 @Entity
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,4 +26,12 @@ public class Follow extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
     private User fromUser;
+
+    public User getToUser() {
+        return toUser;
+    }
+
+    public User getFromUser() {
+        return fromUser;
+    }
 }

@@ -60,6 +60,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .httpBasic().disable()
 
                 .authorizeHttpRequests()
+                .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(
                         "/api/v1/auth/**",
                         "/api/v1/**", //TODO 임시 설정, 제거필요

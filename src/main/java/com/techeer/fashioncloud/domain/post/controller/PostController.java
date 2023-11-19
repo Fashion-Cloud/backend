@@ -7,6 +7,8 @@ import com.techeer.fashioncloud.domain.post.dto.request.PostUpdateRequestDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostCreateResponseDto;
 import com.techeer.fashioncloud.domain.post.dto.response.PostInfoResponseDto;
 import com.techeer.fashioncloud.domain.post.service.PostService;
+import com.techeer.fashioncloud.domain.story.ChatService;
+import com.techeer.fashioncloud.domain.story.model.ChatMessage;
 import com.techeer.fashioncloud.domain.user.entity.User;
 import com.techeer.fashioncloud.global.dto.CustomPageRequest;
 import com.techeer.fashioncloud.global.dto.PaginatedResponse;
@@ -31,6 +33,7 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+    private final ChatService chatService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -40,6 +43,18 @@ public class PostController {
             @LoginUser User loginUser
     ) {
         PostCreateResponseDto resDto = postService.create(loginUser, reqDto);
+
+
+        ChatMessage message = ChatMessage.builder()
+                .roomId(loginUser.getEmail())  // 팔로워들의 기본키 id를 사용하도록 설정
+                .sender(loginUser.getEmail())
+                .message(resDto)
+                .build();
+
+        // 메시지 전송
+        chatService.sendMessage(message, loginUser);
+
+
         return ResponseEntity.ok(ResultResponse.of(ResponseCode.POST_CREATE_SUCCESS, resDto));
     }
 
